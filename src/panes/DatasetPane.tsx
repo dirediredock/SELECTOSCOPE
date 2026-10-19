@@ -13,6 +13,7 @@ import { LIST_ROWS, VirtualList } from "../components/VirtualList";
 import { Action, AlertDot } from "../components/controls";
 import { attachListPan } from "../interaction/listPan";
 import { DatasetTile } from "./dataset/DatasetTile";
+import { CURATED_INTRO, INTRO } from "./dataset/intros";
 import { scaled } from "../uiScale";
 
 type Row =
@@ -27,13 +28,6 @@ const USER_GROUP = "Uploaded";
 
 // The row that opens uploading.
 const NEW_TITLE = "+ New";
-
-// What uploading is for, under the Uploaded header, in Help's body text.
-const INTRO =
-  "Explore your own network: build it from CSV files, or load a JSON build file saved from Selectoscope; click + New to upload.";
-
-// What the curated datasets are, under their first header, likewise.
-const CURATED_INTRO = "Curated networks, already computed. Click one to explore it.";
 
 // A tile's picture sits this far inside its card, at the top and sides; the
 // caption under it is a little taller than a pill row, to clear the rounded

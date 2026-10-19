@@ -4,7 +4,6 @@ import type { CSSProperties, KeyboardEvent, ReactNode } from "react";
 export interface ChoiceOption<T extends string> {
   id: T;
   label: ReactNode;
-  hint?: string; // its sentence, which its tray's tip adds while it is chosen
   disabled?: boolean;
 }
 

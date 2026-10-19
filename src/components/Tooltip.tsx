@@ -3,15 +3,16 @@ import type { CSSProperties } from "react";
 import { scaled } from "../uiScale";
 import type { TipBlock } from "./report";
 
-// The one tooltip. A tray (or the few elements outside one) carries its text
-// in `data-tip`; this layer, mounted once, shows it after the pointer rests on
+// The one tooltip. A tray (the pane header and the strip's ? are trays)
+// carries its text in `data-tip`; this layer, mounted once, shows it after
+// the pointer rests on
 // it, and at once on keyboard focus: under it, but over it in the bottom
 // strip, so a tip always opens toward the pane row. Every tip is an outlined
 // talk bubble whose pointer marks its anchor. While shown it describes its
 // anchor (`aria-describedby`), and its text follows the anchor's, so a choice
-// or a state change inside a tray reads at once. A file pill also carries its
-// report (`data-tip-report`, report.ts reportTip's blocks as JSON), which the
-// bubble shows in place of the plain tip.
+// or a state change inside a tray reads at once. A file pill's only tip is its
+// report (`data-tip-report`, report.ts reportTip's blocks as JSON), once there
+// is one.
 // Why one layer: a native `title` can't follow the theme
 // and never shows on focus.
 
@@ -67,7 +68,9 @@ const CAPS = /\b([A-Z][A-Z0-9]+(?:\s[A-Z][A-Z0-9]+)*)\b/g;
 export const tipParts = (text: string) => text.split(CAPS);
 
 const tipOf = (target: EventTarget | null): HTMLElement | null =>
-  target instanceof Element ? target.closest<HTMLElement>("[data-tip]") : null;
+  target instanceof Element ? target.closest<HTMLElement>("[data-tip], [data-tip-report]") : null;
+
+const hasTip = (el: HTMLElement) => !!(el.dataset.tip || el.dataset.tipReport);
 
 // When a tip shows and hides, as plain DOM listeners on `doc`, so tests can
 // drive it without React. `onChange` gets the anchor to show, or null to hide;
@@ -87,7 +90,7 @@ export function watchTips(doc: Document, onChange: (el: HTMLElement | null) => v
   // The shown anchor's tip, read again as it changes.
   const watch = new win.MutationObserver(() => {
     if (!shown || !current) return;
-    if (current.dataset.tip) onChange(current);
+    if (hasTip(current)) onChange(current);
     else dismiss();
   });
 
@@ -98,7 +101,7 @@ export function watchTips(doc: Document, onChange: (el: HTMLElement | null) => v
     onChange(el);
   };
   const show = (el: HTMLElement) => {
-    if (el !== current || !el.isConnected || !el.dataset.tip) return;
+    if (el !== current || !el.isConnected || !hasTip(el)) return;
     setShown(el);
   };
   // Hide and keep `current`: a press, Esc, a scroll, a wheel, a blur.
@@ -279,8 +282,8 @@ function TipText({ text }: { text: string }) {
   );
 }
 
-// A file pill's report: its heading, its lines, refused ones in the refusal
-// hue, then the pill's own Help sentence.
+// A file pill's report: its heading, then its lines, refused ones in the
+// refusal hue.
 function TipReport({ blocks }: { blocks: TipBlock[] }) {
   return blocks.map((b, i) => (
     <div key={i} className={`tip-block${b.kind === "head" ? " tip-head" : ""}`}>
@@ -290,14 +293,12 @@ function TipReport({ blocks }: { blocks: TipBlock[] }) {
           {b.file && <span className="tip-muted">{b.file}</span>}
           {b.counts && <span className="tip-muted">{b.counts}</span>}
         </>
-      ) : b.kind === "lines" ? (
+      ) : (
         b.lines.map((l, j) => (
           <p key={j} className={`tip-line${l.refused ? " is-refused" : ""}`}>
             {l.text}
           </p>
         ))
-      ) : (
-        <TipText text={b.text} />
       )}
     </div>
   ));

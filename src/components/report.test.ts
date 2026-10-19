@@ -65,12 +65,8 @@ describe("fileLines", () => {
 });
 
 describe("reportTip", () => {
-  it("heads with the role and the file's own name, refused lines first, the Help sentence last", () => {
-    const blocks = reportTip(
-      { role: "Labels", file: "my_labels.csv" },
-      { refused: ["1 repeated node_id"], notes: ["3 nodes with no label"] },
-      "Remove the file; a row builds again at once.",
-    );
+  it("heads with the role and the file's own name, refused lines first", () => {
+    const blocks = reportTip({ role: "Labels", file: "my_labels.csv" }, { refused: ["1 repeated node_id"], notes: ["3 nodes with no label"] });
     expect(blocks).toEqual([
       { kind: "head", role: "Labels", file: "my_labels.csv", counts: null },
       {
@@ -80,7 +76,6 @@ describe("reportTip", () => {
           { text: "3 nodes with no label.", refused: false },
         ],
       },
-      { kind: "help", text: "Remove the file; a row builds again at once." },
     ]);
   });
 
@@ -90,7 +85,7 @@ describe("reportTip", () => {
     expect(blocks?.at(-1)).toEqual({ kind: "lines", lines: [{ text: "1 self-loop dropped.", refused: false }] });
   });
 
-  it("is null with nothing to report, so the pill keeps its one-line tip", () => {
-    expect(reportTip({ role: "Labels", file: "labels.csv" }, { refused: [], notes: [] }, "Remove the file.")).toBe(null);
+  it("is null with nothing to report, so the pill has no tip", () => {
+    expect(reportTip({ role: "Labels", file: "labels.csv" }, { refused: [], notes: [] })).toBe(null);
   });
 });

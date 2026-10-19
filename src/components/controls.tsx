@@ -9,10 +9,10 @@ import { TEXT } from "../controlText";
 // One labelled group of controls, like the top strip's Selection set, on its own
 // tray. The caps label names the group, so a bare "Run" or "Retry" is read in
 // its context. A live tray is white: the Selection set, the Selection count
-// and Auto Sweep. Every tray has a tip, covering the whole tray, and the
-// controls inside have none (but a file pill's report). Why: one target per
-// question, large enough to rest on.
-export function Section(props: { label: string; tip: string; live?: boolean; idle?: boolean; children: ReactNode }) {
+// and Auto Sweep. A tray's tip (docs/tooltips.txt, where a tray may have
+// none) covers the whole tray, and the controls inside have none (but a file
+// pill's report). Why: one target per question, large enough to rest on.
+export function Section(props: { label: string; tip?: string; live?: boolean; idle?: boolean; children: ReactNode }) {
   const id = useId();
   return (
     <div
@@ -29,8 +29,8 @@ export function Section(props: { label: string; tip: string; live?: boolean; idl
   );
 }
 
-// A tray's tip: its lead, then the chosen option's hint, then why it is idle,
-// leaving out what doesn't apply.
+// A tray's tip: its lead, then why it is idle, leaving out what doesn't
+// apply.
 export const trayTip = (...parts: (string | false | null | undefined)[]) => parts.filter(Boolean).join(" ");
 
 // On or off: a label, then a knob that slides across its track.
@@ -56,10 +56,10 @@ export function Switch(props: { label: string; on: boolean; onToggle: () => void
 // circles, a round tray holding a round track, so it reads as one of the
 // family; on, a pressed-in slate thumb fills the track, as a Choice's does.
 // A Switch's label would take the strip's spare column, and the ? reads
-// without one.
-export function HelpToggle(props: { on: boolean; onToggle: () => void; label: string }) {
+// without one. Its round tray is a tray of its own, with `tip` (the strip's ?).
+export function HelpToggle(props: { on: boolean; onToggle: () => void; label: string; tip?: string }) {
   return (
-    <div className="help-toggle">
+    <div className="help-toggle" data-tip={props.tip}>
       <button
         type="button"
         className="help-track"
@@ -298,7 +298,7 @@ export function Progress(props: { label: string; share: number | null; reserve?:
 // again), and a click anywhere on the pill does it (the Selection count's
 // Clear). The name and its hover word share one cell, so the width never
 // jumps. Refused, it takes the refusal hue and a dot before its name.
-// `report`: the file's report for its tip (report.ts reportTip, as JSON).
+// `report`: the file's report, its only tip (report.ts reportTip, as JSON).
 export function FilePill(props: {
   name: string;
   added: boolean;
@@ -307,7 +307,6 @@ export function FilePill(props: {
   onRemove?: () => void;
   replace?: boolean;
   refused?: boolean;
-  title?: string;
   report?: string | null;
   disabled?: boolean;
   accept?: string;
@@ -353,7 +352,6 @@ export function FilePill(props: {
           type="button"
           className="file-remove control-text"
           onClick={props.replace ? () => input.current?.click() : props.onRemove}
-          data-tip={props.title}
           data-tip-report={props.report ?? undefined}
           disabled={props.disabled}
         >
@@ -369,7 +367,6 @@ export function FilePill(props: {
         type="button"
         className={`action file-pill control-text${accent}${props.sizeAs ? " is-sized" : ""}`}
         onClick={() => input.current?.click()}
-        data-tip={props.title}
         data-tip-report={props.report ?? undefined}
         disabled={props.disabled}
       >

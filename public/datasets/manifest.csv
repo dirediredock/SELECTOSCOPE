@@ -38,12 +38,12 @@ amazon,Amazon,Wikipedia,
 karate_club,Karate Club,Social,
 netscience,Authors (Network Science),Social,
 dolphins,Dolphins (Doubtful Sound),Social,
-plant_pollinator_kato,Kyoto Pollinators,Ecology,2d
-plant_pollinator_robertson,Illinois Pollinators,Ecology,2d
-green_fluorescent_protein,Fluorescent Protein (Jellyfish),Proteins,3d
-hemoglobin,Hemoglobin (Human),Proteins,3d
-groel_ring,Chaperonin (Bacteria),Proteins,3d
-celegans_male_gap_junction,Nematode Synapses (M),Neurological,
+plant_pollinator_kato,Kyoto Pollinators,Biological,2d
+plant_pollinator_robertson,Illinois Pollinators,Biological,2d
+green_fluorescent_protein,Fluorescent Protein (Jellyfish),Biological,3d
+hemoglobin,Hemoglobin (Human),Biological,3d
+groel_ring,Chaperonin (Bacteria),Biological,3d
+celegans_male_gap_junction,Nematode Synapses (M),Biological,
 power,Western Power Grid,Infrastructure,
 european_power_grid,European Power Grid,Infrastructure,2d
 internet_top_pop,Midwest Fiber Internet,Infrastructure,2d

@@ -1,16 +1,21 @@
 import { describe, expect, it } from "vitest";
 import helpText from "../docs/help.txt?raw";
-import { TEXT } from "./controlText";
+import tooltipsText from "../docs/tooltips.txt?raw";
+import { parseTooltips, TEXT, TOOLTIPS, TOOLTIPS_READ } from "./controlText";
+import "./controlOptions";
+import { CURATED_INTRO, INTRO } from "./panes/dataset/intros";
 
-// Tooltips are cut from Help, never written: each tip sentence is Help's
-// words in Help's order from one paragraph, with words left out, its first
-// letter capitalised if need be.
+// Tooltips are read from docs/tooltips.txt. The Data list's sentences are
+// cut from Help: Help's words in Help's order from one paragraph, with words
+// left out.
 
 // A word without the punctuation around it, so a cut can end a clause early.
+// Case is ignored, and "+NEW" reads as "+ NEW".
 const words = (text: string) =>
   text
+    .replace(/\+\s+/g, "+")
     .split(/\s+/)
-    .map((w) => w.replace(/^[^\p{L}\p{N}%+−▲▼]+|[^\p{L}\p{N}%+−▲▼]+$/gu, ""))
+    .map((w) => w.replace(/^[^\p{L}\p{N}%+−▲▼]+|[^\p{L}\p{N}%+−▲▼]+$/gu, "").toLowerCase())
     .filter(Boolean);
 
 const paragraphs = helpText
@@ -19,41 +24,52 @@ const paragraphs = helpText
   .filter(Boolean)
   .map(words);
 
-const capitalised = (w: string) => w.charAt(0).toUpperCase() + w.slice(1);
-
 // The sentence's words in order within the paragraph's. Taking each word at
 // its first place left is never worse than a later one.
 function cutFrom(sentence: string[], paragraph: string[]): boolean {
   let at = 0;
-  for (const [i, w] of sentence.entries()) {
-    while (at < paragraph.length && paragraph[at] !== w && !(i === 0 && capitalised(paragraph[at]!) === w)) at++;
+  for (const w of sentence) {
+    while (at < paragraph.length && paragraph[at] !== w) at++;
     if (at === paragraph.length) return false;
     at++;
   }
   return true;
 }
 
-// Every tooltip in TEXT: keys ending in Tip or tip, and every hint.
+// Every tooltip in TEXT: keys ending in Tip or tip.
 function tips(node: object, path: string[] = []): [string, string][] {
   return Object.entries(node).flatMap(([key, value]): [string, string][] => {
     const at = [...path, key];
     if (typeof value === "object") return tips(value as object, at);
-    const isTip = at[0] === "hints" || /tip$/i.test(key);
+    const isTip = /tip$/i.test(key);
     return isTip && typeof value === "string" ? [[at.join("."), value]] : [];
   });
 }
 
 describe("cutFrom", () => {
   const help = words("Click STOP, or change the selection, to end the sweep.");
-  it("takes words left out and a first letter capitalised", () => {
+  it("takes words left out", () => {
     expect(cutFrom(words("Click STOP to end the sweep."), help)).toBe(true);
     expect(cutFrom(words("Change the selection."), help)).toBe(true);
   });
-  it("refuses a word added, reworded or moved, or a capital mid-sentence", () => {
+  it("refuses a word added, reworded or moved", () => {
     expect(cutFrom(words("Click STOP to end the active sweep."), help)).toBe(false);
     expect(cutFrom(words("Click STOP to stop the sweep."), help)).toBe(false);
     expect(cutFrom(words("End the sweep, click STOP."), help)).toBe(false);
-    expect(cutFrom(words("Click STOP to End the sweep."), help)).toBe(false);
+  });
+});
+
+describe("parseTooltips", () => {
+  it("keys each line by its heading and label, splitting at the first colon", () => {
+    const map = parseTooltips("STRIP\n\nTRAY: One: two.\nTRAY, IDLE: Three.\n");
+    expect([...map]).toEqual([
+      ["STRIP / TRAY", "One: two."],
+      ["STRIP / TRAY, IDLE", "Three."],
+    ]);
+  });
+  it("refuses a repeated label or a line that is neither", () => {
+    expect(() => parseTooltips("STRIP\nTRAY: One.\nTRAY: Two.")).toThrow();
+    expect(() => parseTooltips("STRIP\nA stray line.")).toThrow();
   });
 });
 
@@ -61,20 +77,22 @@ describe("tooltips", () => {
   const all = tips(TEXT);
 
   it("are found", () => {
-    expect(all.length).toBeGreaterThan(50);
+    expect(all.length).toBe(TOOLTIPS.size);
   });
 
-  it("are cut from Help, sentence by sentence", () => {
-    const uncut = all.flatMap(([key, tip]) =>
-      tip
-        .split(/(?<=[.!?])\s+/)
-        .filter((s) => !paragraphs.some((p) => cutFrom(words(s), p)))
-        .map((s) => `${key}: ${s}`),
-    );
-    expect(uncut).toEqual([]);
+  it("use every line of docs/tooltips.txt", () => {
+    expect(parseTooltips(tooltipsText).size).toBe(TOOLTIPS.size);
+    expect([...TOOLTIPS.keys()].filter((k) => !TOOLTIPS_READ.has(k))).toEqual([]);
   });
 
   it("end every sentence with a full stop", () => {
     expect(all.filter(([, tip]) => !tip.endsWith(".")).map(([key]) => key)).toEqual([]);
+  });
+});
+
+describe("the Data list's sentences", () => {
+  it("are cut from Help", () => {
+    const uncut = [INTRO, CURATED_INTRO].filter((s) => !paragraphs.some((p) => cutFrom(words(s), p)));
+    expect(uncut).toEqual([]);
   });
 });

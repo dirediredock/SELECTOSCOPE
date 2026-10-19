@@ -61,21 +61,18 @@ export function fileLines(
 }
 
 // A file pill's tip, block by block: the file's role (shown in caps) and its
-// own name, the edge list's with n / m; then its refusal and its notes; then
-// the pill's Help sentence, last. Null when there is nothing to report, so
-// the pill keeps its one-line tip.
+// own name, the edge list's with n / m; then its refusal and its notes. Null
+// when there is nothing to report, so the pill has no tip.
 export type TipBlock =
   | { kind: "head"; role: string; file: string | null; counts: string | null }
-  | { kind: "lines"; lines: { text: string; refused: boolean }[] }
-  | { kind: "help"; text: string };
+  | { kind: "lines"; lines: { text: string; refused: boolean }[] };
 
 export function reportTip(
   head: { role: string; file: string | null; counts?: string | null },
   lines: { refused: string[]; notes: string[] },
-  help?: string,
 ): TipBlock[] | null {
   if (!lines.refused.length && !lines.notes.length) return null;
-  const blocks: TipBlock[] = [
+  return [
     { kind: "head", role: head.role, file: head.file, counts: head.counts ?? null },
     {
       kind: "lines",
@@ -85,6 +82,4 @@ export function reportTip(
       ],
     },
   ];
-  if (help) blocks.push({ kind: "help", text: help });
-  return blocks;
 }

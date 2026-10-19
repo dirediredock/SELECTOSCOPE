@@ -255,7 +255,7 @@ export function HelpPane() {
             <p>
               In the DATA pane, click a dataset from the list to load it, replacing the already loaded dataset. Loading
               a fresh dataset also clears any node or edge selection set. The bottom control strip then serves that
-              dataset: its export, and for your own data its files (see UPLOADED below).
+              dataset: its export, and for your own data its files (see USING YOUR OWN DATA below).
             </p>
             <p>
               Turn on THUMBNAILS to see a NODELINK preview of the dataset's BESPOKE 2D layout, or else the default
@@ -296,12 +296,11 @@ export function HelpPane() {
             </p>
             <p>
               ONION for a sort based on the onion decomposition, or how deep a node sits in the graph's density gradient:
-              the later a peeling of the least-connected nodes removes the node at hand, the higher its onion value. The
-              deepest nodes come first.
+              the later a peeling of the least-connected nodes removes the node at hand, the higher its onion value.
             </p>
             <p>
-              EIGENVECTOR for a sort based on eigenvector centrality, or how well connected a node's neighbors are,
-              counted recursively, the highest first.
+              EIGENVECTOR for a sort based on eigenvector centrality directly from the Adjacency matrix, or how well
+              connected a node's neighbors are, the highest first.
             </p>
             <p>
               Every sort but LABELS (A–Z) shows each node's value in a column between its number and its label: whole
@@ -369,6 +368,10 @@ export function HelpPane() {
               pattern, surface the strongest contrast between neighborhoods. Next are PC2 and PC3, which explain the next
               most variance, each orthogonal to the PCs before them.
             </p>
+            <p>
+              Every diagonal order starts from its denser pole: from the quarter of nodes at either pole, the higher
+              mean degree faces the top of the pane.
+            </p>
             <Replica>
               <Choice label="Diagonal order by" options={SERIATIONS} value="harm1" onPick={none} />
             </Replica>
@@ -414,7 +417,9 @@ export function HelpPane() {
               Sometimes a k-core shell can have many singleton nodes, which can make the visual pattern crowded.
               Singletons are bare node points with no enclosure, placed vertically according to their onion value. The
               GROUP SINGLETONS toggle collects singletons within a k-core shell, holding one enclosure per onion value
-              that aggregates and counts all of its singletons.
+              that aggregates and counts all of its singletons. A group's enclosure acts as all its singletons:
+              hovering lights them all, a click selects them all, and once some are selected it reads selected over
+              total.
             </p>
             <Replica>
               <Switch label="Group singletons" on={false} onToggle={none} />
@@ -432,7 +437,8 @@ export function HelpPane() {
               for the first time at each hop from the node, starting from its degree at hop 0, until the whole graph is
               traversed. The shape of the polyline comes from the varying stub counts, while the traversal extent in
               hops maps to the length of polyline, or the node's eccentricity (reported as text on the right side of the
-              pane). In the vertical span of the pane, the most central nodes are at the top (shortest polyline lengths,
+              pane). Locally, polylines are drawn within a unit square, all share the same vertical scale; the tallest and longest set the relative extremes within the unit square. In the overall vertical span of the pane,
+              the most central nodes are at the top (shortest polyline lengths,
               the radius nodes), while the nodes on the graph's perimeter are at the bottom (longest polyline lengths,
               the diameter endpoint nodes).
             </p>
@@ -472,7 +478,7 @@ export function HelpPane() {
             <p>
               SKEW moves to the left wave shapes whose bulk arrives early and trails off in a long tail, and moves to the
               right polylines that climb for long and end abruptly. In %, how much further the wave's last tenth of stubs
-              lies past its mean hop than its first tenth lies before it, as a share of its length.
+              lies past its mean hop, versus its first tenth lies before the mean hop, as a share of its length.
             </p>
             <WaveOrder measure="skew" />
             <p>
@@ -488,16 +494,19 @@ export function HelpPane() {
         <Sec id="sweep" title="Auto Sweep">
           <p>
             Click RUN in a pane's bottom control strip to animate a band across the pane, lighting what it covers in
-            every pane. While a sweep is active, BRUSH and EXTEND SET are inactive, and the SELECTION COUNT follows the
-            band. Press ↓ or → to step forward and ↑ or ← to step back. Hold
-            to keep it moving.
+            every pane. The band lights what a drawn area would take in the current SELECTION SET mode, so a sweep
+            previews a selection.
           </p>
           <Replica>
             <Transport cells={RUN_CELLS} state="idle" running={false} onClick={none} />
             <Transport cells={RUN_CELLS} state="running" running onClick={none} />
           </Replica>
           <SweepBand />
-          <p>A step pauses the sweep; click RESUME to carry on.</p>
+          <p>
+            While a sweep is active, BRUSH and EXTEND SET are inactive, and the SELECTION COUNT follows the band. Press
+            ↓ or → to step forward and ↑ or ← to step back. Hold to keep it moving. A step pauses the sweep; click
+            RESUME to carry on.
+          </p>
           <Replica>
             <Transport cells={RUN_CELLS} state="paused" running={false} onClick={none} />
             <HoldStepper
@@ -509,6 +518,11 @@ export function HelpPane() {
               onRelease={none}
             />
           </Replica>
+          <p>
+            Click STOP, or change the selection by drawing an area, clicking an item, or loading a dataset, to end the
+            sweep. In contrast, general navigation like zooming, panning and rotating within panes does not stop an
+            active sweep.
+          </p>
           <p>
             Turn off VERTICAL to sweep left to right. The AREA setting sets how much of the pane the band covers, while
             SPEED sets how fast the band travels.
@@ -522,175 +536,53 @@ export function HelpPane() {
           <Replica>
             <Slider label="Speed" range={SWEEP_SPEED} value={SWEEP_SPEED.opening} onChange={none} />
           </Replica>
-          <p>
-            Click STOP, or change the selection by drawing an area, clicking an item, or loading a dataset, to end the
-            sweep. In contrast, general navigation like zooming, panning and rotating within panes does not stop an
-            active sweep.
-          </p>
         </Sec>
 
-        <Sec id="data" title="Uploaded">
+        <Sec id="data" title="Using your own data">
           <p>
-            Your own networks sit at the top of the DATA pane, under UPLOADED, newest first, for as long as the page stays
-            open. Everything is computed in your browser, and your files never leave it.
-          </p>
-          <p>
-            Click + NEW at the top of UPLOADED, or in ADD DATASET, to upload your own data: it takes the ring, and the
-            bottom control strip turns to UPLOAD YOUR DATA. Choose BUILD FROM CSV to build a dataset from your own CSV
-            files, computed in your browser, or UPLOAD FROM JSON to open a build file saved by EXPORT, without computing
-            anything.
+            Click the +NEW row in the DATA pane to add your own network data. Choose BUILD FROM CSV to create a dataset
+            from an edgelist, or UPLOAD FROM JSON to open a previously built and exported SELECTOSCOPE dataset. All
+            processing happens in your browser, and your files never leave it. Selectoscope supports up to 10,000 nodes
+            and 100,000 edges.
           </p>
           <Replica>
             <Choice label="Upload your data" options={UPLOADS} value="csv" onPick={none} />
           </Replica>
           <p>
-            With BUILD FROM CSV, add an edge list with + EDGELIST, type a NAME if you like, and click ADD to add the
-            dataset to UPLOADED and show it. Once your edge list is read, its row takes the ring and the bottom control
-            strip, and each pane fades in as its part of the build finishes; the force-directed 3D layout comes last.
-            Click STOP to stop the build; the row keeps what has landed.
+            To build a dataset, the main file format is the EDGELIST, a CSV file with 'source' and 'target' columns, one
+            edge per row. Selectoscope automatically cleans the edgelist information: edge direction is ignored,
+            self-loops are removed, duplicate edges are merged, and only the largest connected component is kept. Click ADD to
+            build.
           </p>
           <Replica>
             <FilePill name="Edgelist" added={false} accent="key" onPick={none} />
             <Transport cells={ADD_COPY} state="idle" running={false} onClick={none} />
           </Replica>
           <p>
-            An edge list is a CSV file with a header row and the columns source and target, one edge per row; any other
-            column is ignored. Each node is named by its node_id, exactly as written in the file. Up to 10000 nodes and
-            100000 edges are supported.
-          </p>
-          <p>
-            Once your dataset is built, CHANGE in the bottom control strip shows which files it has and which it lacks,
-            and adds files that join on node_id: LABELS (node_id,label), BESPOKE 2D (node_id,x,y) and BESPOKE 3D
-            (node_id,x,y,z). A pane with nothing to show for want of one offers the same file under its message. Matching
-            their node_id values to the edge list is up to you: a file with a node_id the edge list never names or a
-            repeated node_id is refused whole, with counts, and everything else still loads. A layout must place every
-            node; labels may cover only some, and the report counts the nodes left unlabeled.
+            Per dataset built through CSV, optional files must use the 'node_id' column and match the EDGELIST. There
+            are three optional CSV files to upload. The BESPOKE 2D layout requires 'node_id', 'x', and 'y' columns, and
+            BESPOKE 3D requires 'node_id', 'x', 'y', and 'z' columns, both of which must account for every node in
+            EDGELIST. The LABELS requires 'node_id' and 'label' columns, and in contrast to the bespoke layouts,
+            labels can be partial.
           </p>
           <Replica>
             <FilePill name="Labels" added={false} accent="extra" onPick={none} />
             <FilePill name="Bespoke 2D" added={false} accent="extra" onPick={none} />
             <FilePill name="Bespoke 3D" added={false} accent="extra" onPick={none} />
           </Replica>
-          <p>
-            Your edge list is cleaned rather than refused, and the report says what changed: direction is ignored,
-            self-loops are dropped, repeated edges are merged, and only the largest connected component is kept.
-          </p>
-          <p>
-            Red, the colour of a hovered item, also marks whatever stopped your data loading: a refused file, a part of
-            the build that failed, or a file that could not be read. Rest the pointer on a file to read its report: why
-            it was refused, then what cleaning changed. Hover a file to REPLACE the edge list, or to REMOVE any other
-            file.
-          </p>
+          <p>Once built, the options in CHANGE can add, replace, or remove files.</p>
           <Replica>
             <FilePill name="Edgelist" added accent="key" replace onPick={none} />
-            <FilePill name="Labels" added accent="extra" refused onPick={none} onRemove={none} />
+            <FilePill name="Labels" added accent="extra" onPick={none} onRemove={none} />
           </Replica>
           <p>
-            Click one of your rows to bring its CHANGE back to the bottom control strip: replacing the edge list, or
-            adding or removing another file, builds it again at once. Click REMOVE in DATASET to take the row off the
-            list.
-          </p>
-          <p>
-            A curated dataset shows its download on its own row in the DATA pane; if a download fails, the row reads
-            failed, and clicking it tries again. If the list of datasets can't be read, click RETRY to try the download
-            again.
-          </p>
-          <p>
-            Click EXPORT JSON in DATASET to save a finished dataset as one build file. To open it again, click + NEW and
-            choose UPLOAD FROM JSON: + DATASET takes a build file saved by EXPORT and reads it at once, refusing a file
-            that is not a build. Name it if you like, and click ADD to open it as a new row. The precomputed samples in
-            the list are such builds of their own CSV files.
+            Click EXPORT JSON to save a built dataset. Reopen the dataset using + NEW and UPLOAD FROM JSON, without
+            rebuilding.
           </p>
           <Replica>
             <Action onClick={none}>Export JSON</Action>
-            <FilePill name="Dataset" added={false} accent="key" onPick={none} />
-            <Transport cells={ADD_COPY} state="idle" running={false} onClick={none} />
           </Replica>
-        </Sec>
-
-        {/* One line per tray, strip by strip: the leads its tip is cut from. */}
-        <Sec id="strips" title="Control strips">
-          <p>Rest the pointer on a tray of controls in either control strip to read what it does, in these words.</p>
-          <Block title="Top control strip">
-            <p>SELECTION SET chooses whether a drawn area takes NODES, EDGES or BOTH.</p>
-            <p>SELECTION COUNT shows how much of the graph each set holds; hover it and click CLEAR to empty the selection set.</p>
-            <p>BRUSH chooses a RECTANGLE or a LASSO as the modality for the drawn selection.</p>
-            <p>EXTEND SET grows your selection by one hop with ▲; ▼ steps back, but never removes what you picked yourself.</p>
-            <p>THEME: CONTRAST fades everything but the selection set, and DARK can make selections stand out more.</p>
-          </Block>
-          <Block title="Every pane's bottom control strip">
-            <p>ZOOM: − and + zoom the pane out and in; click the % to fit the visual pattern into the pane.</p>
-            <p>
-              AUTO SWEEP: click RUN to animate a band across the pane, lighting what it covers in every pane. STOP ends
-              the sweep, and RESUME carries on a paused sweep.
-            </p>
-            <p>
-              SWEEP CONTROLS shape the band: VERTICAL sets its direction, AREA how much of the pane it covers, SPEED how
-              fast it travels, and ARROW steps it, as the arrow keys do. They work only while a sweep is active.
-            </p>
-          </Block>
-          <PaneBlock title="Data">
-            <p>UPLOAD YOUR DATA chooses how your data comes in: BUILD FROM CSV or UPLOAD FROM JSON.</p>
-            <p>
-              DATASET, building from CSV: add an edge list with + EDGELIST, type a NAME if you like, and click ADD to add
-              the dataset to UPLOADED and show it.
-            </p>
-            <p>
-              DATASET, uploading from JSON: + DATASET takes a build file saved by EXPORT; type a NAME if you like, and
-              click ADD to open it as a new row.
-            </p>
-            <p>
-              DATASET, for the dataset on screen: EXPORT JSON saves a finished dataset as one build file, and REMOVE
-              takes your own row off the list. While your dataset builds, STOP stops the build; the row keeps what has
-              landed.
-            </p>
-            <p>
-              CHANGE shows which files your dataset has and which it lacks; replacing the edge list, or adding or
-              removing another file, builds it again at once.
-            </p>
-            <p>
-              SHOW: turn on THUMBNAILS to see a NODELINK preview of each dataset's BESPOKE 2D layout, or else the
-              default force-directed 2D, with edges only.
-            </p>
-            <p>ADD DATASET: click + NEW to upload your own data.</p>
-          </PaneBlock>
-          <PaneBlock title="Help">
-            <p>SECTIONS follows the section of Help in view; pick one to go there.</p>
-            <p>SHOW: turn off FIGURES to hide the diagrams and control copies, leaving the text alone.</p>
-          </PaneBlock>
-          <PaneBlock title="Labels">
-            <p>VERTICAL ORDER BY sorts the vertical order of rows by LABELS (A–Z), DEGREE, ONION or EIGENVECTOR.</p>
-          </PaneBlock>
-          <PaneBlock title="NodeLink">
-            <p>
-              LAYOUT shows the network in a force-directed 2D or 3D, or in the dataset's own BESPOKE 2D or BESPOKE 3D,
-              and INTERACTIVE starts a force-directed simulation from the current layout, where nodes can be moved by
-              dragging.
-            </p>
-          </PaneBlock>
-          <PaneBlock title="Matrix">
-            <p>
-              DIAGONAL ORDER BY sets the matrix seriation, or the symmetric ordering of nodes along the side of the
-              matrix: H1, H2 and H3, or PC1, PC2 and PC3.
-            </p>
-            <p>LAYOUT shows the matrix as a DIAMOND, with the diagonal running vertically, or as the traditional SQUARE.</p>
-          </PaneBlock>
-          <PaneBlock title="Cores">
-            <p>
-              HORIZONTAL ORDER BY sets the horizontal order of connected components, by TOP-DOWN or SIZE, and GROUP
-              SINGLETONS collects the singletons within each k-core shell.
-            </p>
-            <p>
-              VERTICAL adjusts the aspect ratio of the visual pattern with SPACING, and GRIDLINES makes visible the
-              vertical lines that bin component locations.
-            </p>
-          </PaneBlock>
-          <PaneBlock title="Hops">
-            <p>
-              HORIZONTAL WAVE ORDER BY orders the polylines by wave shape, by DEGREE, REACH, SPREAD or SKEW; SPACING sets
-              how far they move horizontally, and RANKING sets each set of equal values in one evenly spaced column.
-            </p>
-          </PaneBlock>
+          <p>The curated datasets are already built and ready to use.</p>
         </Sec>
       </div>
     </div>

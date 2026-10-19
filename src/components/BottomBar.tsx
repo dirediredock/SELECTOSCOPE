@@ -12,7 +12,7 @@ import type { PaneType } from "../state/panes";
 import { layout } from "../state/layout";
 import type { SlotId } from "../state/layout";
 import { matrixIn, matrixSettings, setForm, setSeriation } from "../state/matrix";
-import { CENSUS_MEASURES, FORMS, LABEL_SORTS, LAYOUTS, ORDERINGS, SERIATIONS, UPLOADS, hintOf } from "../controlOptions";
+import { CENSUS_MEASURES, FORMS, LABEL_SORTS, LAYOUTS, ORDERINGS, SERIATIONS, UPLOADS } from "../controlOptions";
 import {
   setSweepArea,
   setSweepSideways,
@@ -269,7 +269,7 @@ function JsonControls() {
   // As JSON, so the selector returns a plain value.
   const report = useStore(userData, (s) => {
     const r = s.jsonRefusal;
-    const blocks = r && reportTip({ role: JSON_FILE, file: r.fileName }, { refused: [r.reason], notes: [] }, TEXT.dataset.dataTip);
+    const blocks = r && reportTip({ role: JSON_FILE, file: r.fileName }, { refused: [r.reason], notes: [] });
     return blocks ? JSON.stringify(blocks) : null;
   });
   const name = useStore(userData, (s) => s.jsonName);
@@ -286,7 +286,6 @@ function JsonControls() {
           replace
           refused={refused}
           onPick={pickJson}
-          title={TEXT.dataset.dataTip}
           report={report}
         />
         <NameField
@@ -314,7 +313,7 @@ function JsonControls() {
 function UploadControls({ upload }: { upload: Upload }) {
   return (
     <>
-      <Section label="Upload your data" tip={trayTip(TEXT.dataset.uploadTip, hintOf(UPLOADS, upload))}>
+      <Section label="Upload your data">
         <Choice label="Upload your data" options={UPLOADS} value={upload} onPick={setUpload} />
       </Section>
       {upload === "csv" ? <CsvControls /> : <JsonControls />}
@@ -403,7 +402,7 @@ function HelpControls() {
   const figures = useStore(ui, (s) => s.figures);
   return (
     <>
-      <Section label={TEXT.help.sections} tip={TEXT.help.sectionsTip}>
+      <Section label={TEXT.help.sections}>
         <Choice label={TEXT.help.sections} options={HELP_SECTIONS} value={section} onPick={goToSection} />
       </Section>
       <Section label="Show" tip={TEXT.help.figuresTip}>
@@ -437,6 +436,7 @@ export function StripHelp() {
       on={on}
       onToggle={toggleFromStrip}
       label={TEXT.help.name}
+      tip={TEXT.help.stripTip}
     />
   );
 }
@@ -447,7 +447,7 @@ function LabelsControls({ slot }: { slot: SlotId }) {
   const g = useStore(data, (st) => st.graph);
   return (
     <>
-      <Section label="Vertical order by" tip={trayTip(TEXT.labels.sortTip, hintOf(LABEL_SORTS, sort))}>
+      <Section label="Vertical order by" tip={TEXT.labels.sortTip}>
         <Choice label="Vertical order by" options={LABEL_SORTS} value={sort} onPick={(v) => setLabelSort(slot, v)} />
       </Section>
       <SweepSection slot={slot} type="labels" blocked={labelsMissing(g, sort)} />
@@ -470,7 +470,7 @@ function NodeLinkControls({ slot }: { slot: SlotId }) {
     <>
       <Section
         label="Layout"
-        tip={trayTip(TEXT.nodelink.layoutTip, hintOf(LAYOUTS, s.layout), !liveAllowed(g) && TEXT.nodelink.tooLargeTip)}
+        tip={trayTip(TEXT.nodelink.layoutTip, !liveAllowed(g) && TEXT.nodelink.tooLargeTip)}
       >
         <div className={`veil${s.live ? " is-idle" : ""}`}>
           <Choice
@@ -499,7 +499,7 @@ function MatrixControls({ slot }: { slot: SlotId }) {
   const s = useStore(matrixSettings, (st) => matrixIn(st, slot));
   return (
     <>
-      <Section label="Diagonal order by" tip={trayTip(TEXT.matrix.seriationTip, hintOf(SERIATIONS, s.seriation))}>
+      <Section label="Diagonal order by" tip={TEXT.matrix.seriationTip}>
         <Choice
           label="Diagonal order by"
           options={SERIATIONS}
@@ -523,7 +523,7 @@ function KSnakesControls({ slot }: { slot: SlotId }) {
   const s = useStore(ksnakesSettings, (st) => ksnakesIn(st, slot));
   return (
     <>
-      <Section label="Horizontal order by" tip={trayTip(TEXT.ksnakes.orderingTip, hintOf(ORDERINGS, s.ordering))}>
+      <Section label="Horizontal order by" tip={TEXT.ksnakes.orderingTip}>
         <Choice label="Horizontal order by" options={ORDERINGS} value={s.ordering} onPick={(v) => setOrdering(slot, v)} />
         <Switch
           label="Group singletons"
@@ -557,7 +557,7 @@ function HopCensusControls({ slot }: { slot: SlotId }) {
   const s = useStore(hopcensusSettings, (st) => hopcensusIn(st, slot));
   return (
     <>
-      <Section label="Horizontal wave order by" tip={trayTip(TEXT.hopcensus.measureTip, hintOf(CENSUS_MEASURES, s.measure))}>
+      <Section label="Horizontal wave order by" tip={TEXT.hopcensus.measureTip}>
         <Choice
           label="Horizontal wave order by"
           options={CENSUS_MEASURES}

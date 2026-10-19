@@ -50,7 +50,7 @@ Each pane draws the same loaded network in its own way. Here is what each pane s
 
 DATA + HELP PANE
 
-In the DATA pane, click a dataset from the list to load it, replacing the already loaded dataset. Loading a fresh dataset also clears any node or edge selection set. The bottom control strip then serves that dataset: its export, and for your own data its files (see UPLOADED below).
+In the DATA pane, click a dataset from the list to load it, replacing the already loaded dataset. Loading a fresh dataset also clears any node or edge selection set. The bottom control strip then serves that dataset: its export, and for your own data its files (see USING YOUR OWN DATA below).
 
 Turn on THUMBNAILS to see a NODELINK preview of the dataset's BESPOKE 2D layout, or else the default force-directed 2D, with edges only.
 
@@ -69,9 +69,9 @@ LABELS (A–Z) for an alphabetical sort, ignoring case, with numbers in numeric 
 
 DEGREE for a sort based on degree centrality, or how many neighbors each node has, the most first. Degree is also the tie-breaker in the other numeric sorts.
 
-ONION for a sort based on the onion decomposition, or how deep a node sits in the graph's density gradient: the later a peeling of the least-connected nodes removes the node at hand, the higher its onion value. The deepest nodes come first.
+ONION for a sort based on the onion decomposition, or how deep a node sits in the graph's density gradient: the later a peeling of the least-connected nodes removes the node at hand, the higher its onion value.
 
-EIGENVECTOR for a sort based on eigenvector centrality, or how well connected a node's neighbors are, counted recursively, the highest first.
+EIGENVECTOR for a sort based on eigenvector centrality directly from the Adjacency matrix, or how well connected a node's neighbors are, the highest first.
 
 Every sort but LABELS (A–Z) shows each node's value in a column between its number and its label: whole numbers for DEGREE and ONION, three decimals for EIGENVECTOR. When the pane is narrow, the node number hides first, so the value and the label keep the room.
 
@@ -95,6 +95,8 @@ For positional information: the H1, H2 and H3 diagonal orders are the first thre
 
 For structural information: the PC1, PC2 and PC3 diagonal orders come from the PCA of the nodes' neighborhoods. Each PC places nodes with similar neighborhoods close, whether or not they are linked. The first PC is PC1, which explains the most variance: the diagonal polar ends, or the extremes of the visual pattern, surface the strongest contrast between neighborhoods. Next are PC2 and PC3, which explain the next most variance, each orthogonal to the PCs before them.
 
+Every diagonal order starts from its denser pole: from the quarter of nodes at either pole, the higher mean degree faces the top of the pane.
+
 CORES PANE
 
 This pane is about the graph's density. For selection, a drawn area takes the node points inside it in NODES mode, while edges are drawn only when selected, as orange chords; or hovered, as a red chord. These chords can't be clicked, but a drawn area in EDGES or BOTH mode does select the edges between the nodes it covers.
@@ -109,13 +111,13 @@ SIZE packs components within a k-core shell horizontally from sparse to dense: b
 
 The aspect ratio of the visual pattern can be adjusted with the SPACING slider. The vertical GRIDLINES that bin component locations for horizontal TOP-DOWN or SIZE ordering can be made visible as well.
 
-Sometimes a k-core shell can have many singleton nodes, which can make the visual pattern crowded. Singletons are bare node points with no enclosure, placed vertically according to their onion value. The GROUP SINGLETONS toggle collects singletons within a k-core shell, holding one enclosure per onion value that aggregates and counts all of its singletons.
+Sometimes a k-core shell can have many singleton nodes, which can make the visual pattern crowded. Singletons are bare node points with no enclosure, placed vertically according to their onion value. The GROUP SINGLETONS toggle collects singletons within a k-core shell, holding one enclosure per onion value that aggregates and counts all of its singletons. A group's enclosure acts as all its singletons: hovering lights them all, a click selects them all, and once some are selected it reads selected over total.
 
 HOPS PANE
 
 This pane is about the graph's eccentricity. It shows a new visual idiom we call HopCensus, where nodes are represented by polylines. For selection, a drawn area takes any overlapping node polylines in NODES mode. Edges are never drawn in this pane, but EDGES and BOTH modes take the edges between the polylines the area covers.
 
-Layout: A polyline is drawn from a vector of integers in a shared coordinate system: stubs (edge ends) met for the first time at each hop from the node, starting from its degree at hop 0, until the whole graph is traversed. The shape of the polyline comes from the varying stub counts, while the traversal extent in hops maps to the length of polyline, or the node's eccentricity (reported as text on the right side of the pane). In the vertical span of the pane, the most central nodes are at the top (shortest polyline lengths, the radius nodes), while the nodes on the graph's perimeter are at the bottom (longest polyline lengths, the diameter endpoint nodes).
+Layout: A polyline is drawn from a vector of integers in a shared coordinate system: stubs (edge ends) met for the first time at each hop from the node, starting from its degree at hop 0, until the whole graph is traversed. The shape of the polyline comes from the varying stub counts, while the traversal extent in hops maps to the length of polyline, or the node's eccentricity (reported as text on the right side of the pane). Locally, polylines are drawn within a unit square, all share the same vertical scale; the tallest and longest set the relative extremes within the unit square. In the overall vertical span of the pane, the most central nodes are at the top (shortest polyline lengths, the radius nodes), while the nodes on the graph's perimeter are at the bottom (longest polyline lengths, the diameter endpoint nodes).
 
 The SPACING slider sets how far the polylines move horizontally, following a chosen ordering by polyline wave shape:
 
@@ -125,93 +127,30 @@ REACH moves to the left waves whose bulk shape arrives in a few hops, and those 
 
 SPREAD moves to the left polylines whose wave shapes spread over many of their hops, and moves to the right polyline shapes that form a tight wave. In %, the wave's standard deviation in hops as a share of its length.
 
-SKEW moves to the left wave shapes whose bulk arrives early and trails off in a long tail, and moves to the right polylines that climb for long and end abruptly. In %, how much further the wave's last tenth of stubs lies past its mean hop than its first tenth lies before it, as a share of its length.
+SKEW moves to the left wave shapes whose bulk arrives early and trails off in a long tail, and moves to the right polylines that climb for long and end abruptly. In %, how much further the wave's last tenth of stubs lies past its mean hop, versus its first tenth lies before the mean hop, as a share of its length.
 
 The RANKING toggle converts each set of equal values into one evenly spaced column (so twins share one). When off, each polyline sits at its numeric value, so gaps and outliers show.
 
 AUTO SWEEP
 
-Click RUN in a pane's bottom control strip to animate a band across the pane, lighting what it covers in every pane. While a sweep is active, BRUSH and EXTEND SET are inactive, and the SELECTION COUNT follows the band. Press ↓ or → to step forward and ↑ or ← to step back. Hold to keep it moving.
+Click RUN in a pane's bottom control strip to animate a band across the pane, lighting what it covers in every pane. The band lights what a drawn area would take in the current SELECTION SET mode, so a sweep previews a selection.
 
-A step pauses the sweep; click RESUME to carry on.
-
-Turn off VERTICAL to sweep left to right. The AREA setting sets how much of the pane the band covers, while SPEED sets how fast the band travels.
+While a sweep is active, BRUSH and EXTEND SET are inactive, and the SELECTION COUNT follows the band. Press ↓ or → to step forward and ↑ or ← to step back. Hold to keep it moving. A step pauses the sweep; click RESUME to carry on.
 
 Click STOP, or change the selection by drawing an area, clicking an item, or loading a dataset, to end the sweep. In contrast, general navigation like zooming, panning and rotating within panes does not stop an active sweep.
 
-UPLOADED
+Turn off VERTICAL to sweep left to right. The AREA setting sets how much of the pane the band covers, while SPEED sets how fast the band travels.
 
-Your own networks sit at the top of the DATA pane, under UPLOADED, newest first, for as long as the page stays open. Everything is computed in your browser, and your files never leave it.
+USING YOUR OWN DATA
 
-Click + NEW at the top of UPLOADED, or in ADD DATASET, to upload your own data: it takes the ring, and the bottom control strip turns to UPLOAD YOUR DATA. Choose BUILD FROM CSV to build a dataset from your own CSV files, computed in your browser, or UPLOAD FROM JSON to open a build file saved by EXPORT, without computing anything.
+Click the +NEW row in the DATA pane to add your own network data. Choose BUILD FROM CSV to create a dataset from an edgelist, or UPLOAD FROM JSON to open a previously built and exported SELECTOSCOPE dataset. All processing happens in your browser, and your files never leave it. Selectoscope supports up to 10,000 nodes and 100,000 edges.
 
-With BUILD FROM CSV, add an edge list with + EDGELIST, type a NAME if you like, and click ADD to add the dataset to UPLOADED and show it. Once your edge list is read, its row takes the ring and the bottom control strip, and each pane fades in as its part of the build finishes; the force-directed 3D layout comes last. Click STOP to stop the build; the row keeps what has landed.
+To build a dataset, the main file format is the EDGELIST, a CSV file with 'source' and 'target' columns, one edge per row. Selectoscope automatically cleans the edgelist information: edge direction is ignored, self-loops are removed, duplicate edges are merged, and only the largest connected component is kept. Click ADD to build.
 
-An edge list is a CSV file with a header row and the columns source and target, one edge per row; any other column is ignored. Each node is named by its node_id, exactly as written in the file. Up to 10000 nodes and 100000 edges are supported.
+Per dataset built through CSV, optional files must use the 'node_id' column and match the EDGELIST. There are three optional CSV files to upload. The BESPOKE 2D layout requires 'node_id', 'x', and 'y' columns, and BESPOKE 3D requires 'node_id', 'x', 'y', and 'z' columns, both of which must account for every node in EDGELIST. The LABELS requires 'node_id' and 'label' columns, and in contrast to the bespoke layouts, labels can be partial.
 
-Once your dataset is built, CHANGE in the bottom control strip shows which files it has and which it lacks, and adds files that join on node_id: LABELS (node_id,label), BESPOKE 2D (node_id,x,y) and BESPOKE 3D (node_id,x,y,z). A pane with nothing to show for want of one offers the same file under its message. Matching their node_id values to the edge list is up to you: a file with a node_id the edge list never names or a repeated node_id is refused whole, with counts, and everything else still loads. A layout must place every node; labels may cover only some, and the report counts the nodes left unlabeled.
+Once built, the options in CHANGE can add, replace, or remove files.
 
-Your edge list is cleaned rather than refused, and the report says what changed: direction is ignored, self-loops are dropped, repeated edges are merged, and only the largest connected component is kept.
+Click EXPORT JSON to save a built dataset. Reopen the dataset using + NEW and UPLOAD FROM JSON, without rebuilding.
 
-Red, the colour of a hovered item, also marks whatever stopped your data loading: a refused file, a part of the build that failed, or a file that could not be read. Rest the pointer on a file to read its report: why it was refused, then what cleaning changed. Hover a file to REPLACE the edge list, or to REMOVE any other file.
-
-Click one of your rows to bring its CHANGE back to the bottom control strip: replacing the edge list, or adding or removing another file, builds it again at once. Click REMOVE in DATASET to take the row off the list.
-
-A curated dataset shows its download on its own row in the DATA pane; if a download fails, the row reads failed, and clicking it tries again. If the list of datasets can't be read, click RETRY to try the download again.
-
-Click EXPORT JSON in DATASET to save a finished dataset as one build file. To open it again, click + NEW and choose UPLOAD FROM JSON: + DATASET takes a build file saved by EXPORT and reads it at once, refusing a file that is not a build. Name it if you like, and click ADD to open it as a new row. The precomputed samples in the list are such builds of their own CSV files.
-
-CONTROL STRIPS
-
-Rest the pointer on a tray of controls in either control strip to read what it does, in these words.
-
-TOP CONTROL STRIP
-
-SELECTION SET chooses whether a drawn area takes NODES, EDGES or BOTH.
-SELECTION COUNT shows how much of the graph each set holds; hover it and click CLEAR to empty the selection set.
-BRUSH chooses a RECTANGLE or a LASSO as the modality for the drawn selection.
-EXTEND SET grows your selection by one hop with ▲; ▼ steps back, but never removes what you picked yourself.
-THEME: CONTRAST fades everything but the selection set, and DARK can make selections stand out more.
-
-EVERY PANE'S BOTTOM CONTROL STRIP
-
-ZOOM: − and + zoom the pane out and in; click the % to fit the visual pattern into the pane.
-AUTO SWEEP: click RUN to animate a band across the pane, lighting what it covers in every pane. STOP ends the sweep, and RESUME carries on a paused sweep.
-SWEEP CONTROLS shape the band: VERTICAL sets its direction, AREA how much of the pane it covers, SPEED how fast it travels, and ARROW steps it, as the arrow keys do. They work only while a sweep is active.
-
-DATA PANE
-
-UPLOAD YOUR DATA chooses how your data comes in: BUILD FROM CSV or UPLOAD FROM JSON.
-DATASET, building from CSV: add an edge list with + EDGELIST, type a NAME if you like, and click ADD to add the dataset to UPLOADED and show it.
-DATASET, uploading from JSON: + DATASET takes a build file saved by EXPORT; type a NAME if you like, and click ADD to open it as a new row.
-DATASET, for the dataset on screen: EXPORT JSON saves a finished dataset as one build file, and REMOVE takes your own row off the list. While your dataset builds, STOP stops the build; the row keeps what has landed.
-CHANGE shows which files your dataset has and which it lacks; replacing the edge list, or adding or removing another file, builds it again at once.
-SHOW: turn on THUMBNAILS to see a NODELINK preview of each dataset's BESPOKE 2D layout, or else the default force-directed 2D, with edges only.
-ADD DATASET: click + NEW to upload your own data.
-
-HELP PANE
-
-SECTIONS follows the section of Help in view; pick one to go there.
-SHOW: turn off FIGURES to hide the diagrams and control copies, leaving the text alone.
-
-LABELS PANE
-
-VERTICAL ORDER BY sorts the vertical order of rows by LABELS (A–Z), DEGREE, ONION or EIGENVECTOR.
-
-NODELINK PANE
-
-LAYOUT shows the network in a force-directed 2D or 3D, or in the dataset's own BESPOKE 2D or BESPOKE 3D, and INTERACTIVE starts a force-directed simulation from the current layout, where nodes can be moved by dragging.
-
-MATRIX PANE
-
-DIAGONAL ORDER BY sets the matrix seriation, or the symmetric ordering of nodes along the side of the matrix: H1, H2 and H3, or PC1, PC2 and PC3.
-LAYOUT shows the matrix as a DIAMOND, with the diagonal running vertically, or as the traditional SQUARE.
-
-CORES PANE
-
-HORIZONTAL ORDER BY sets the horizontal order of connected components, by TOP-DOWN or SIZE, and GROUP SINGLETONS collects the singletons within each k-core shell.
-VERTICAL adjusts the aspect ratio of the visual pattern with SPACING, and GRIDLINES makes visible the vertical lines that bin component locations.
-
-HOPS PANE
-
-HORIZONTAL WAVE ORDER BY orders the polylines by wave shape, by DEGREE, REACH, SPREAD or SKEW; SPACING sets how far they move horizontally, and RANKING sets each set of equal values in one evenly spaced column.
+The curated datasets are already built and ready to use.

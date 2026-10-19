@@ -7,8 +7,7 @@ export const HELP_SECTIONS = [
   { id: "navigate", label: "General navigation" },
   { id: "panes", label: "Panes" },
   { id: "sweep", label: "Auto Sweep" },
-  { id: "data", label: "Uploaded" },
-  { id: "strips", label: "Control strips" },
+  { id: "data", label: "Using your own data" },
 ] as const;
 
 export type HelpSection = (typeof HELP_SECTIONS)[number]["id"];
