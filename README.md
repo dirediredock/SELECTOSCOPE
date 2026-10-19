@@ -9,3 +9,5 @@ npm ci
 npm run dev
 npm test
 ```
+
+Curated dataset sources are in [docs/data_sources.md](docs/data_sources.md).
