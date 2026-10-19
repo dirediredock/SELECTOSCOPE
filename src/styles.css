@@ -1,0 +1,2608 @@
+@font-face {
+  font-family: "Roboto Condensed";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("./fonts/roboto-condensed-latin.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+
+/* Cool light theme. Chrome is neutral throughout, because colour here is
+   reserved for data. */
+:root {
+  color-scheme: light;
+
+  /* The share Contrast leaves unselected ink (contrastShare), set by
+     setContrast: Labels'
+     unselected rows fade their text toward the panel by it, as the canvases
+     fade their unselected ink. */
+  --contrast: 1;
+
+  --bg: #e7e9ed;
+  --panel: #ffffff;
+  --panel-2: #f0f2f5;
+  --panel-3: #e0e3e8;
+
+  --edge: #8a909a;
+  --edge-hair: rgba(14, 18, 28, 0.1);
+  /* Gridlines on a canvas: lighter than --edge, since they run through the data. */
+  --grid: #dde0e5;
+  --edge-w: 1px;
+  --ring-w: 0.1667rem; /* 2px, a row's ring: the hovered node's red, the current item's gray */
+  --menu-shadow: 0 6px 20px rgba(14, 18, 28, 0.14), 0 1px 3px rgba(14, 18, 28, 0.08);
+  /* A tooltip's lift: faint enough that Dark needs no value of its own. */
+  --tip-shadow: 0 2px 8px rgba(14, 18, 28, 0.08);
+
+  --text: #121620;
+  --text-strong: #000000;
+  --muted: #5a6170;
+  --ink-disabled: color-mix(in srgb, var(--muted) 35%, var(--panel-2));
+
+  --glow: transparent;
+
+  /* Data colours. Never used for UI state. */
+  --node-sel: #1a4fd6; /* node set: blue */
+  --node-sel-soft: rgba(26, 79, 214, 0.18); /* its tint on list rows */
+  --edge-sel: #d98a00; /* edge set: orange */
+  --edge-sel-soft: rgba(217, 138, 0, 0.22); /* its tint in the selection count */
+  --hover: #d1123f; /* hovered item: red */
+
+  /* Red has a second job: whatever stopped data loading, a refused file, a
+     failed stage, a failed download. The one UI state allowed to use it. */
+  --refused: var(--hover);
+
+  /* Unselected marks: neutral ink, identical whether or not a selection exists. */
+  --mark-node: #2f3540;
+  --mark-edge: rgba(14, 18, 28, 0.28);
+  /* The Data thumbnails' edges: firmer than the panes' edge ink, since a
+     small picture has no zoom to lean on. */
+  --thumb-edge: rgba(14, 18, 28, 0.4);
+
+  /* Pane chrome: one soft gray tray for every pane's banner, with a light
+     hairline on the inner content frame only. Focus turns the banner slate:
+     this pane owns the bottom strip. */
+  --pane-border: #8a909a;
+  --pane-border-w: 1px;
+  --pane-frame: #dadde3;
+  --pane-frame-w: 0.3333rem; /* 4px */
+  --pane-header-h: 2.8rem;
+  --pane-footer-h: 1.5rem; /* 18px */
+  --pane-focused: #2b313c;
+  --pane-title: #4f5665;
+  --body-ring: 0 0 0 1px var(--edge);
+
+  --focus-ring: 0.1333rem solid color-mix(in srgb, var(--text) 60%, transparent);
+  --focus-offset: 0.1333rem;
+
+  --control-h: 2.5rem;
+  /* Both control strips: one height, their controls centred in it. */
+  --strip-h: 6.5rem;
+  /* The bottom strip's extra room under its controls, off the window's edge. */
+  --strip-foot: 0.6rem;
+  /* Controls: each strip section is a gray tray; on it a track is raised and
+     the chosen option pressed in, slate. A live tray (Selection set, Selection
+     count, Auto Sweep) is white, and its tracks recessed. */
+  --tray: #dadde3;
+  --tray-ring: 0 0 0 1px var(--edge);
+  --tray-live: var(--panel);
+  --tray-live-shadow: 0 0 0 1px var(--edge), 0 2px 8px rgba(14, 18, 28, 0.08);
+  --track-raised: var(--panel);
+  --track-raised-ring: 0 0 0 1px rgba(14, 18, 28, 0.08), 0 1px 2px rgba(14, 18, 28, 0.07);
+  --pick: #2b313c;
+  --pick-text: #ffffff;
+  --pick-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.35);
+  --unpicked-text: var(--text);
+  --run-bg: var(--panel);
+  --run-ring: 0 0 0 1px rgba(14, 18, 28, 0.35), 0 1px 2px rgba(14, 18, 28, 0.08);
+  --gauge-track: var(--panel-3);
+  --thumb: #ffffff;
+  --thumb-shadow: 0 1px 2px rgba(14, 18, 28, 0.18), 0 0 0 1px rgba(14, 18, 28, 0.07);
+  --knob-shadow: 0 1px 2px rgba(14, 18, 28, 0.18);
+  --switch-off: #cdd2da;
+  --ease-thumb: cubic-bezier(0.3, 0.7, 0.2, 1);
+  --pad-pill: 0 0.9rem;
+  --radius-pill: 999px;
+  --radius-card: 1.5rem;
+
+  --fs-caps: 0.75rem;
+  --fs-control: 1.0417rem; /* 12.5px */
+  --fs-body: 0.875rem;
+  --fs-title: 0.9375rem;
+  --fs-pane-title: 0.95rem;
+
+  --gap-control: 0.6rem;
+  --gap-strip: 1.5rem;
+
+  /* Pane placement. --pane-inset is the clearance above and below the row; it
+     is also what sizes a pane (height = row − 2×inset). */
+  --pane-inset: 2.25rem;
+  --pane-gap: 2.25rem;
+  --pane-edge: 4.5rem;
+  --stage-h-min: 24rem;
+  /* The Fit row's gap: between panes (each a resize handle) and around them. */
+  --fit-gap: 0.8rem;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #05070b;
+  --panel: #10141c;
+  --panel-2: #171c26;
+  --panel-3: #232a36;
+
+  --edge: #586172;
+  --edge-hair: rgba(255, 255, 255, 0.06);
+  --grid: #262d3a;
+  --menu-shadow: 0 8px 24px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.4);
+
+  --text: #e9edf5;
+  --text-strong: #ffffff;
+  --muted: #8f99ab;
+
+  --glow: transparent;
+
+  --node-sel: #5b8cff;
+  --node-sel-soft: rgba(91, 140, 255, 0.24);
+  --edge-sel: #ffb020;
+  --edge-sel-soft: rgba(255, 176, 32, 0.24);
+  --hover: #ff3d6a;
+
+  --refused: var(--hover);
+
+  --mark-node: #c4ccd9;
+  --mark-edge: rgba(255, 255, 255, 0.22);
+  --thumb-edge: var(--mark-edge);
+
+  --pane-border: #6a7385;
+  --pane-focused: #6b7487;
+  --pane-frame: #1a1f29;
+  --pane-title: #9aa3b5;
+  --body-ring: 0 0 0 1px rgba(255, 255, 255, 0.06);
+
+  --tray: #1a1f29;
+  --tray-ring: none;
+  --tray-live: #232a36;
+  --tray-live-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+  --track-raised: var(--panel-2);
+  --track-raised-ring: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 1px 2px rgba(0, 0, 0, 0.4);
+  --pick: #dfe4ec;
+  --pick-text: #0b0e14;
+  --pick-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+  --unpicked-text: var(--text);
+  --run-bg: #232a36;
+  --run-ring: 0 0 0 1px rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.5);
+
+  /* The panel is darker than the track here, so the thumb takes a lighter step. */
+  --thumb: #232a36;
+  --thumb-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.07);
+  --knob-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --switch-off: #434b5a;
+  /* The live tray is panel-3 here, so the empty share bar takes a lighter step. */
+  --gauge-track: #3b4351;
+}
+
+/* Every px this file gives is a design px at the 12 px root; the root is
+   12 px × UI_SCALE (uiScale.ts), so the whole interface draws at that scale. */
+html {
+  font-size: calc(12px * 0.9);
+  overscroll-behavior-x: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(1100px 480px at 50% -8%, var(--glow), transparent 65%),
+    var(--bg);
+  color: var(--text);
+  font-family:
+    "Roboto Condensed",
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+  font-size-adjust: 0.528;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: hidden;
+  /* The browser's own Cmd+A reaches the page; nothing here is text to copy. */
+  user-select: none;
+}
+
+/* ---------- Strips ---------- */
+
+.topbar,
+.bottombar {
+  flex-shrink: 0;
+  /* The stage's colour: strips and pane row are one surface. */
+  background: var(--bg);
+  overflow-x: auto;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  column-gap: var(--gap-strip);
+  min-height: var(--strip-h);
+  padding: 0 3rem;
+}
+
+/* The focused pane's title at the left, its controls centred (as in .topbar). */
+.bottombar {
+  min-height: calc(var(--strip-h) + var(--strip-foot));
+  padding-bottom: var(--strip-foot);
+}
+
+.topbar-left {
+  justify-self: start;
+  display: flex;
+  align-items: center;
+  gap: var(--gap-control);
+}
+
+.logo {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+}
+
+.logo-button {
+  display: flex;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: default;
+}
+
+.logo-link {
+  stroke: var(--mark-node);
+}
+
+.logo-node {
+  fill: var(--mark-node);
+}
+
+.logo-sel-node {
+  fill: var(--node-sel);
+}
+
+.logo-sel-link {
+  stroke: var(--edge-sel);
+}
+
+.topbar-center {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-strip);
+}
+
+.topbar-right {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: var(--gap-strip);
+}
+
+.title {
+  margin: 0;
+  font-size: 1.4167rem; /* 17px */
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* The tooltip (components/Tooltip.tsx): one layer, laid out hidden so it can be
+   measured at its text's width, then placed toward the pane row as an
+   outlined talk bubble. Sizes are rem; the comments give px on screen. */
+.tooltip {
+  --tip-pointer-w: 2.2222rem; /* 24px */
+  --tip-pointer-h: 1.1111rem; /* 12px */
+  /* The inner triangle, panel-filled, sits 1px inside both slanted edges: its
+     apex 1 / sin(45°) = 1.4142px below the outer's (half width = height, so
+     the half apex angle is 45°), and its base 1px into the body, covering the
+     ring under the pointer. At 45° its half width equals its height. */
+  --tip-inner-h: calc(var(--tip-pointer-h) - 1.4142px + 1px);
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 50;
+  width: max-content;
+  max-width: 25.9rem; /* 280px */
+  padding: 0.8333rem 1.1111rem 0.9259rem; /* 9px 12px 10px */
+  border-radius: 0.7407rem; /* 8px */
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: 0 0 0 1px var(--edge), var(--tip-shadow);
+  font-size: 1.2037rem; /* 13px */
+  font-weight: 400;
+  line-height: 1.42;
+  text-wrap: pretty;
+  white-space: normal;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* A pane header's tip, above the header over the top strip: wide enough that
+   it fits in two lines in the room there. */
+.tooltip.is-wide {
+  max-width: 46.2963rem; /* 500px */
+}
+
+/* It slides in toward its control. */
+.tooltip[data-side="below"] {
+  --tip-slide: 0.3333rem; /* 4px design */
+}
+
+.tooltip[data-side="above"] {
+  --tip-slide: -0.3333rem;
+}
+
+.tooltip.is-shown {
+  visibility: visible;
+  opacity: 1;
+  animation: tooltip-in 140ms ease-out;
+}
+
+@keyframes tooltip-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--tip-slide, 0));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tooltip.is-shown {
+    animation: none;
+  }
+}
+
+/* Another control's name, as Help writes it in caps. */
+.tip-caps {
+  font-size: 0.82em;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+}
+
+/* A file pill's report: its heading (role in caps, its own name and counts
+   muted), its lines, refused ones in the refusal hue, then its Help sentence. */
+.tip-block + .tip-block {
+  margin-top: 0.5rem;
+}
+
+.tip-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.5rem;
+}
+
+.tip-role {
+  text-transform: uppercase;
+}
+
+.tip-muted {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.tip-line {
+  margin: 0;
+}
+
+.tip-line.is-refused {
+  color: var(--refused);
+  font-weight: 600;
+}
+
+/* The pointer: two border-triangles centred on --tip-x, the outer in the
+   outline's colour and the inner in the panel's, so the outline runs
+   unbroken from the body round the apex. */
+.tooltip-pointer {
+  position: absolute;
+  left: var(--tip-x, 50%);
+  width: 0;
+  height: 0;
+}
+
+.tooltip-pointer::before,
+.tooltip-pointer::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  transform: translateX(-50%);
+  border-style: solid;
+  border-color: transparent;
+}
+
+.tooltip-pointer::before {
+  border-width: 0 calc(var(--tip-pointer-w) / 2);
+}
+
+.tooltip-pointer::after {
+  border-width: 0 var(--tip-inner-h);
+}
+
+/* Below its control, the pointer stands on the bubble's top edge. */
+.tooltip[data-side="below"] .tooltip-pointer {
+  top: 0;
+}
+
+.tooltip[data-side="below"] .tooltip-pointer::before {
+  bottom: 0;
+  border-bottom: var(--tip-pointer-h) solid var(--edge);
+}
+
+.tooltip[data-side="below"] .tooltip-pointer::after {
+  bottom: -1px;
+  border-bottom: var(--tip-inner-h) solid var(--panel);
+}
+
+/* Above it (the bottom strip), the pointer hangs from the bottom edge. */
+.tooltip[data-side="above"] .tooltip-pointer {
+  top: 100%;
+}
+
+.tooltip[data-side="above"] .tooltip-pointer::before {
+  top: 0;
+  border-top: var(--tip-pointer-h) solid var(--edge);
+}
+
+.tooltip[data-side="above"] .tooltip-pointer::after {
+  top: -1px;
+  border-top: var(--tip-inner-h) solid var(--panel);
+}
+
+/* A section: a pill tray holding its caps label, then its controls. */
+.control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* 6px */
+  padding: 0.3333rem 0.3333rem 0.3333rem 1.1667rem; /* 4px 4px 4px 14px */
+  background: var(--tray);
+  box-shadow: var(--tray-ring);
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+
+/* A live tray: white, for the Selection set, the Selection count and Auto
+   Sweep's Run. Its tracks flip back to recessed, so they read on white. */
+.control.is-live {
+  background: var(--tray-live);
+  box-shadow: var(--tray-live-shadow);
+}
+
+.control.is-live .track {
+  background: var(--panel-2);
+  box-shadow: inset 0 0 0 1px var(--edge-hair);
+}
+
+/* An idle tray: its label, fill, ring and controls fade together, so the
+   whole section reads as resting. */
+.control.is-idle {
+  opacity: 0.35;
+}
+
+.bottombar > .strip-sections,
+.bottombar > .placeholder {
+  grid-column: 2;
+}
+
+/* Help's ? at the far left, and the focused pane's title at the
+   far right, so the controls stay centred between them. Columns are set
+   explicitly, so the DOM order can't push one onto a second row. */
+.bottombar > .strip-help {
+  grid-column: 1;
+  justify-self: start;
+}
+
+.bottombar > .strip-label {
+  grid-column: 3;
+  justify-self: end;
+}
+
+/* The focused pane's controls, in labelled sections like the top strip's.
+   Never narrower than they are, so they never run under the title: a strip
+   too wide for the window scrolls instead. */
+.strip-sections {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-strip);
+  min-width: max-content;
+}
+
+.strip-label {
+  justify-self: start;
+  color: var(--text);
+  font-size: 1.0417rem; /* 12.5px */
+  font-weight: 600;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.control-label {
+  color: var(--text);
+  font-size: 0.8333rem; /* 10px */
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.placeholder {
+  color: var(--muted);
+  font-size: var(--fs-body);
+  font-style: italic;
+}
+
+.readout {
+  color: var(--text);
+  font-size: var(--fs-body);
+  font-variant-numeric: tabular-nums;
+}
+
+.readout + .readout::before {
+  content: "·";
+  margin-right: var(--gap-control);
+  color: var(--muted);
+}
+
+/* ---------- Controls ----------
+   One look per question the user asks. A track raised
+   on its tray means state lives here (Choice, Switch, Stepper, Slider); an
+   outline with no fill, a one-off action; pressed-in slate, a process running. Only lasting
+   state moves (the thumb, the knob); actions only dip when pressed. All
+   neutral: colour stays with the data. */
+
+.control-text {
+  font-size: var(--fs-control);
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.track {
+  height: var(--control-h);
+  padding: 0.25rem; /* 3px */
+  background: var(--track-raised);
+  border: 0;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--track-raised-ring);
+}
+
+.glyph {
+  display: inline-block;
+  width: 0.75em;
+  height: 0.75em;
+  vertical-align: -0.05em;
+}
+
+.choice button:focus-visible,
+.help-track:focus-visible,
+.switch:focus-visible,
+.action:focus-visible,
+.stepper button:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+
+/* Choice: equal columns, and a pressed-in slate thumb under the chosen one. Squeezed
+   below its natural width, the columns would each shrink to their own text
+   and part from the thumb, so it never shrinks. */
+.choice {
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: repeat(var(--n), 1fr);
+  align-items: stretch;
+  min-width: max-content;
+}
+
+.choice-thumb {
+  position: absolute;
+  top: 0.25rem; /* 3px */
+  bottom: 0.25rem; /* 3px */
+  left: 0.25rem; /* 3px */
+  width: calc((100% - 0.5rem) / var(--n)); /* 6px */
+  background: var(--pick);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--pick-shadow);
+  transform: translateX(calc(var(--i) * 100%));
+  transition: transform 280ms var(--ease-thumb);
+}
+
+.choice-option {
+  position: relative;
+  padding: 0 0.9rem;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-pill);
+  color: var(--unpicked-text);
+  cursor: pointer;
+}
+
+.choice-option:hover:not(:disabled) {
+  color: var(--text);
+}
+
+.choice-option[aria-checked="true"],
+.choice-option[aria-checked="true"]:hover:not(:disabled) {
+  color: var(--pick-text);
+  font-weight: 600;
+}
+
+.choice-option:disabled {
+  color: var(--ink-disabled);
+  cursor: default;
+}
+
+/* A disabled choice keeps its thumb on the value, flattened so it reads idle. */
+.choice.is-disabled .choice-thumb {
+  box-shadow: none;
+  opacity: 0.6;
+}
+
+/* Help toggle: Help's ?, an on-off with no word. A section's
+   nesting drawn as circles: a round tray the tray's height, a round raised
+   track, and on, a pressed-in slate thumb filling it, as a Choice's does. */
+.help-toggle {
+  display: flex;
+  padding: 0.3333rem; /* 4px */
+  background: var(--tray);
+  box-shadow: var(--tray-ring);
+  border-radius: 50%;
+}
+
+.help-track {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--control-h);
+  height: var(--control-h);
+  padding: 0.25rem; /* 3px */
+  background: var(--track-raised);
+  border: 0;
+  border-radius: 50%;
+  box-shadow: var(--track-raised-ring);
+  cursor: pointer;
+}
+
+.help-thumb {
+  position: absolute;
+  inset: 0.25rem; /* 3px */
+  background: var(--pick);
+  border-radius: 50%;
+  box-shadow: var(--pick-shadow);
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    opacity 280ms var(--ease-thumb),
+    transform 280ms var(--ease-thumb);
+}
+
+.help-track[aria-pressed="true"] .help-thumb {
+  opacity: 1;
+  transform: none;
+}
+
+.help-glyph {
+  position: relative;
+  color: var(--text);
+  font-size: 1.3333rem; /* 16px */
+  font-weight: 700;
+  line-height: 1;
+}
+
+.help-track[aria-pressed="true"] .help-glyph {
+  color: var(--pick-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .help-thumb {
+    transition: none;
+  }
+}
+
+/* Switch: its label, then a knob that slides across its track. */
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 0.5rem 0 0.9rem;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.switch:hover:not(:disabled) {
+  color: var(--text-strong);
+}
+
+/* Disabled, a switch dims in place, as a disabled Action does. */
+.switch:disabled {
+  color: var(--ink-disabled);
+  cursor: default;
+}
+
+.switch:disabled .switch-track {
+  opacity: 0.5;
+}
+
+.switch-track {
+  position: relative;
+  flex: none;
+  width: 2.1667rem; /* 26px */
+  height: 1.25rem; /* 15px */
+  background: var(--switch-off);
+  border-radius: var(--radius-pill);
+  transition: background 280ms var(--ease-thumb);
+}
+
+.switch[aria-checked="true"] .switch-track {
+  background: var(--text);
+}
+
+.switch-knob {
+  position: absolute;
+  top: 0.1667rem; /* 2px */
+  left: 0.1667rem; /* 2px */
+  width: 0.9167rem; /* 11px */
+  height: 0.9167rem; /* 11px */
+  background: var(--panel);
+  border-radius: 50%;
+  transition: transform 280ms var(--ease-thumb);
+}
+
+.switch[aria-checked="true"] .switch-knob {
+  transform: translateX(0.9167rem); /* 11px */
+}
+
+/* Action: an outline, no fill; it only dips when pressed. */
+.action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--control-h);
+  padding: 0 0.9rem;
+  background: transparent;
+  border: var(--edge-w) solid var(--edge);
+  border-radius: var(--radius-pill);
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 80ms ease-out;
+}
+
+.action:hover:not(:disabled) {
+  background: var(--panel-2);
+}
+
+.action:active:not(:disabled) {
+  background: var(--panel-3);
+  transform: scale(0.95);
+}
+
+.action.is-small {
+  height: 1.75rem;
+  padding: 0 0.6rem;
+}
+
+.action:disabled {
+  border-color: var(--edge-hair);
+  color: var(--ink-disabled);
+  cursor: default;
+}
+
+/* Transport: Run, Stop and Resume share one cell, so the width never jumps. */
+.transport {
+  display: inline-grid;
+}
+
+.transport > span {
+  grid-area: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.transport > .is-hidden {
+  visibility: hidden;
+}
+
+/* Idle or paused, a raised white button; running, pressed-in slate, as a
+   chosen option is. Disabled (Built), an Action's faint outline. */
+.transport:not(:disabled) {
+  background: var(--run-bg);
+  border-color: transparent;
+  box-shadow: var(--run-ring);
+  color: var(--text-strong);
+  font-weight: 600;
+}
+
+.transport:hover:not(:disabled) {
+  background: var(--panel-2);
+}
+
+.transport.is-running,
+.transport.is-running:hover:not(:disabled),
+.transport.is-running:active:not(:disabled) {
+  background: var(--pick);
+  border-color: transparent;
+  box-shadow: var(--pick-shadow);
+  color: var(--pick-text);
+}
+
+/* Stepper: − and + as round buttons about a readout that is plain text. */
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.stepper-step {
+  display: grid;
+  place-items: center;
+  width: 2rem; /* 24px */
+  height: 2rem;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+  color: var(--text);
+  font-size: 1.25rem; /* 15px: the glyphs read at a glance in the 24px circle */
+  cursor: pointer;
+  transition: transform 80ms ease-out;
+}
+
+/* Hovered or pressed, by the pointer or (Arrow's) a held key, a step turns
+   solid ink with its glyph knocked out, and a press dips as an Action does. */
+.stepper-step:hover:not(:disabled),
+.stepper-step:active:not(:disabled),
+.stepper-step.is-pressed:not(:disabled) {
+  background: var(--text-strong);
+  color: var(--panel);
+}
+
+.stepper-step:active:not(:disabled),
+.stepper-step.is-pressed:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.stepper-readout {
+  min-width: 5ch;
+  padding: 0 0.2rem;
+  background: transparent;
+  border: 0;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+/* The hold stepper (Sweep controls' Arrow): ▼ and ▲ about a plain word with no
+   click. Disabled, it dims in place, as a slider does. */
+.stepper-word {
+  padding: 0 0.2rem;
+  color: var(--text);
+}
+
+.hold-stepper .stepper-step {
+  touch-action: none;
+}
+
+/* The arrow stepper's count (Extend set's hops), in a fixed cell so the width
+   never jumps. */
+.stepper-count {
+  min-width: 4.5em;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.hold-stepper.is-disabled .stepper-word,
+.stepper-step:disabled {
+  color: var(--ink-disabled);
+}
+
+.stepper-step:disabled {
+  cursor: default;
+}
+
+/* Slider: the recessed track, its name and readout inside. */
+.slider-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 0.9rem;
+  color: var(--text);
+}
+
+/* The input: a thin pill rail filled to the value (`--p`, set inline), and a
+   raised knob ringed in the edge colour, as Choice's thumb is raised. */
+.slider {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 3.12rem;
+  height: 1rem; /* 12px */
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-runnable-track {
+  height: 0.3333rem; /* 4px */
+  border-radius: var(--radius-pill);
+  background: linear-gradient(to right, var(--muted) var(--p, 0%), var(--panel-3) var(--p, 0%));
+}
+
+.slider::-moz-range-track {
+  height: 0.3333rem; /* 4px */
+  border-radius: var(--radius-pill);
+  background: linear-gradient(to right, var(--muted) var(--p, 0%), var(--panel-3) var(--p, 0%));
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  width: 1rem; /* 12px */
+  height: 1rem; /* 12px */
+  margin-top: -0.3333rem; /* -4px */
+  background: var(--thumb);
+  border: 1px solid var(--edge);
+  border-radius: 50%;
+  box-shadow: var(--knob-shadow);
+}
+
+.slider::-moz-range-thumb {
+  box-sizing: border-box;
+  width: 1rem; /* 12px */
+  height: 1rem; /* 12px */
+  background: var(--thumb);
+  border: 1px solid var(--edge);
+  border-radius: 50%;
+  box-shadow: var(--knob-shadow);
+}
+
+.slider:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+
+.slider-readout {
+  min-width: 5ch;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* Disabled, a slider dims in place, as a disabled Action does. */
+.slider-field.is-disabled,
+.slider-field.is-disabled .slider-readout {
+  color: var(--ink-disabled);
+}
+
+.slider:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* The veil: one even 30% opacity over the idle part of a partly idle tray
+   (NodeLink's layouts while Interactive is on), the rest at full strength. A wholly idle tray fades whole instead (.control.is-idle). Under
+   either, each control stays disabled but is drawn as when live, so the fade
+   is the only dimming. */
+.veil {
+  display: flex;
+  gap: var(--gap-control);
+  align-items: center;
+}
+
+.veil.is-idle {
+  opacity: 0.3;
+}
+
+:is(.control.is-idle, .veil.is-idle) .choice-option:disabled {
+  color: var(--text);
+}
+
+:is(.control.is-idle, .veil.is-idle) .choice-option[aria-checked="true"] {
+  color: var(--pick-text);
+}
+
+:is(.control.is-idle, .veil.is-idle) .choice.is-disabled .choice-thumb {
+  box-shadow: var(--pick-shadow);
+  opacity: 1;
+}
+
+:is(.control.is-idle, .veil.is-idle) .slider-field.is-disabled {
+  color: var(--text);
+}
+
+:is(.control.is-idle, .veil.is-idle) .slider-field.is-disabled .slider-readout {
+  color: var(--text);
+}
+
+:is(.control.is-idle, .veil.is-idle) .slider:disabled {
+  opacity: 1;
+}
+
+:is(.control.is-idle, .veil.is-idle) .switch:disabled {
+  color: var(--text);
+}
+
+:is(.control.is-idle, .veil.is-idle) .switch:disabled .switch-track {
+  opacity: 1;
+}
+
+:is(.control.is-idle, .veil.is-idle) .hold-stepper.is-disabled .stepper-word,
+:is(.control.is-idle, .veil.is-idle) .hold-stepper .stepper-step:disabled,
+:is(.control.is-idle, .veil.is-idle) .stepper.is-disabled .stepper-step:disabled:not(.is-dim) {
+  color: var(--text);
+}
+
+:is(.control.is-idle, .veil.is-idle) .action:disabled {
+  border-color: var(--edge-hair);
+  color: var(--text);
+}
+
+/* An uploaded dataset's files. The edge list is the key file, an Action filled
+   white, so it reads first on its tray. An extra file still missing is faint:
+   a hairline and muted text. Added, a file's name and Remove (or Replace)
+   share one cell, so hovering it never changes its width. The hover word's
+   target is the whole pill, as the Selection count's Clear is. */
+.action.is-key {
+  background: var(--run-bg);
+}
+
+.action.is-missing {
+  border-color: var(--edge-hair);
+  color: var(--text);
+}
+
+.file-pill:not(button) {
+  position: relative;
+  display: inline-grid;
+  cursor: default;
+}
+
+.file-pill.is-sized {
+  display: inline-grid;
+}
+
+.file-word,
+.file-sizer {
+  grid-area: 1 / 1;
+  text-align: center;
+}
+
+.file-sizer {
+  visibility: hidden;
+}
+
+.file-remove {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-pill);
+  color: inherit;
+  font-family: inherit;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.file-remove:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+
+.file-remove:hover:not(:disabled),
+.file-remove:focus-visible {
+  opacity: 1;
+}
+
+.file-pill:has(.file-remove:hover:not(:disabled), .file-remove:focus-visible) .file-word {
+  visibility: hidden;
+}
+
+/* Refused: the refusal hue's border and text over a faint wash of it, and
+   its dot before the name. Over the key file's white too. */
+.action.file-pill.is-refused {
+  border: 1px solid var(--refused);
+  background: color-mix(in srgb, var(--refused) 9%, var(--panel));
+  color: var(--refused);
+}
+
+/* The refusal hue's mark, beside words that say what stopped. */
+.alert-dot {
+  display: inline-block;
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-inline-end: 0.35rem;
+  border-radius: 50%;
+  background: var(--refused);
+  vertical-align: 0.05em;
+}
+
+/* Name: edited in place, no field, only the caret. The track glows while it
+   is open, in neutral ink, since the glow is UI state. */
+.name-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 0.9rem;
+  color: var(--text);
+  cursor: text;
+}
+
+/* The field's own word, muted, so the typed name reads first. */
+.name-label {
+  color: var(--muted);
+}
+
+.name-input {
+  width: 9rem;
+  min-width: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  color: var(--text-strong);
+  font-family: inherit;
+  caret-color: var(--text-strong);
+  text-overflow: ellipsis;
+  user-select: text;
+}
+
+/* + New's name: room to type one in full. */
+.name-field.is-wide .name-input {
+  width: 16rem;
+}
+
+.name-field:focus-within {
+  box-shadow:
+    inset 0 0 0 1px var(--edge-hair),
+    0 0 0 1px color-mix(in srgb, var(--text) 35%, transparent),
+    0 0 0.9rem 0.15rem color-mix(in srgb, var(--text) 28%, transparent);
+}
+
+/* A build's phase names share one cell, so the track keeps its width. */
+.progress-label {
+  display: inline-grid;
+}
+
+.progress-label > span {
+  grid-area: 1 / 1;
+}
+
+.progress-label > .is-hidden {
+  visibility: hidden;
+}
+
+/* Progress: a slider's track with no knob, filled by the share received.
+   With no size known, a segment glides along it: the one motion that is not
+   lasting state, since a process is running. */
+.dataset-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-control);
+}
+
+.progress-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 0.9rem;
+  color: var(--text);
+}
+
+.progress {
+  position: relative;
+  width: 6.5rem;
+  height: 0.3333rem; /* 4px */
+  overflow: hidden;
+  background: var(--panel-3);
+  border-radius: var(--radius-pill);
+  box-shadow: inset 0 0 0 1px var(--edge-hair);
+}
+
+.progress-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--p, 0%);
+  background: var(--muted);
+  border-radius: inherit;
+  transition: width 120ms linear;
+}
+
+.progress.is-indeterminate .progress-fill {
+  width: 30%;
+  animation: progress-glide 1.2s ease-in-out infinite;
+}
+
+@keyframes progress-glide {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(333%); }
+}
+
+/* Selection count: a set's size out of the graph's, on the white live tray,
+   over a thin share bar filled from the left in the set's colour. The pill
+   does nothing itself, so it never fills on hover. The size is in the set's
+   colour once the set holds anything; the rest of the chrome stays neutral. */
+.set-count {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 18rem;
+  height: 2.6667rem; /* 32px */
+  padding: 0 0.6667rem 0.3333rem; /* 0 8px 4px */
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+/* One even 16 px of air between the caps label and the first readout,
+   between the two pills, and after the last before the tray's rounded end,
+   counting each pill's own 8 px padding (and the bars' matching inset). */
+.control-label + .set-count {
+  margin-left: 0.1667rem; /* 6px gap + 2px + 8px padding */
+}
+
+.set-count + .set-count {
+  margin-left: -0.5rem; /* 8px padding + 0 + 8px padding */
+}
+
+.set-count:last-child {
+  margin-right: 0.3333rem; /* 8px padding + 4px + 4px tray padding */
+}
+
+.set-bar {
+  position: absolute;
+  left: 0.6667rem;
+  right: 0.6667rem;
+  bottom: 0.1667rem; /* 2px */
+  height: 0.25rem; /* 3px */
+  overflow: hidden;
+  background: var(--gauge-track);
+  border-radius: var(--radius-pill);
+}
+
+.set-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+}
+
+.set-node .set-fill {
+  background: var(--node-sel);
+}
+
+.set-edge .set-fill {
+  background: var(--edge-sel);
+}
+
+.set-readout,
+.set-percent {
+  position: relative;
+}
+
+.set-readout {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.33em;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.set-noun {
+  margin-left: 0.4em;
+  color: var(--text);
+}
+
+.set-num {
+  color: var(--text);
+  font-size: 1.4167rem; /* 17px */
+  font-weight: 700;
+}
+
+.set-node .set-num.is-filled {
+  color: var(--node-sel);
+}
+
+.set-edge .set-num.is-filled {
+  color: var(--edge-sel);
+}
+
+.set-percent {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Clear's target is the whole pill. The word sits where the percent does.
+   No fill of its own. */
+.set-clear {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 0.6667rem 0.3333rem 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  color: var(--text);
+  font-family: inherit;
+  cursor: pointer;
+  opacity: 0;
+}
+
+/* Inside the pill, which clips anything past its edge. */
+.set-clear:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: -0.25rem; /* -3px */
+}
+
+.set-clear:hover,
+.set-clear:focus-visible {
+  opacity: 1;
+}
+
+.set-count:has(.set-clear:hover, .set-clear:focus-visible) .set-percent {
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .choice-thumb,
+  .switch-track,
+  .switch-knob,
+  .action,
+  .stepper-step {
+    transition: none;
+  }
+
+  .action:active:not(:disabled),
+  .stepper-step:active:not(:disabled),
+  .stepper-step.is-pressed:not(:disabled) {
+    transform: none;
+  }
+
+  .progress-fill {
+    transition: none;
+  }
+
+  /* With no size known, the segment rests at the start. */
+  .progress.is-indeterminate .progress-fill {
+    animation: none;
+  }
+}
+
+/* ---------- Pane row (after E3 .panes / .pane) ---------- */
+
+.panes-shell {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.panes {
+  flex: 1;
+  container-type: size;
+
+  /* Every pane is the row's height minus the insets, floored so a short window
+     scrolls rather than shrinking panes past use. */
+  --stage-h: max(var(--stage-h-min), calc(100cqh - 2 * var(--pane-inset)));
+
+  display: flex;
+  align-items: safe center;
+  gap: var(--pane-gap);
+  padding: var(--pane-inset) 0;
+
+  overflow-x: auto;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+}
+
+.pane {
+  position: relative;
+  flex: none;
+  --pane-w: calc(var(--stage-h) * var(--ar, 0.618));
+  width: var(--pane-w);
+  height: var(--stage-h);
+  scroll-snap-align: center;
+
+  /* The banner: header band, content in an inner frame, footer band. */
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--pane-frame-w);
+  background: var(--pane-frame);
+  border-radius: var(--radius-card);
+  touch-action: none;
+  user-select: none;
+}
+
+.pane.is-focused {
+  background: var(--pane-focused);
+}
+
+/* The title sits a little below the band's centre, near the content. */
+.pane-header {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-width: 0;
+  height: var(--pane-header-h);
+  padding: 0.3rem calc(var(--pane-frame-w) + 0.35rem) 0;
+  cursor: pointer;
+}
+
+.pane-footer {
+  flex: none;
+  display: flex;
+  align-items: center;
+  height: var(--pane-footer-h);
+  /* Clear of the content's rounded corners, and a little above the band's
+     middle, nearer the content. */
+  padding: 0 calc(var(--radius-card) - var(--pane-frame-w)) 0.25rem;
+}
+
+/* The sweep strip: on the sweeping pane alone, the band on a faint rail, in
+   the title's colour. It steps with the band, so only its fade moves. */
+.pane-sweep-strip {
+  position: relative;
+  flex: 1;
+  height: 0.1667rem; /* 2px */
+  overflow: hidden;
+  color: var(--pane-title);
+  background: color-mix(in srgb, currentColor 22%, transparent);
+  border-radius: var(--radius-pill);
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.pane-sweep-strip.is-active {
+  opacity: 1;
+}
+
+.pane.is-focused .pane-sweep-strip {
+  color: #fff;
+}
+
+.pane-sweep-band {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: currentColor;
+  border-radius: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pane-sweep-strip {
+    transition: none;
+  }
+}
+
+/* A curated row's download, in place of its counts: a rail as the sweep
+   strip's, filled to its share (--p), or a segment gliding while the share
+   is unknown. */
+.list-rail {
+  position: relative;
+  display: inline-block;
+  width: 3rem;
+  height: 0.1667rem; /* 2px */
+  overflow: hidden;
+  vertical-align: middle;
+  background: color-mix(in srgb, currentColor 22%, transparent);
+  border-radius: var(--radius-pill);
+}
+
+.list-rail-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--p, 0%);
+  background: currentColor;
+  border-radius: inherit;
+}
+
+.list-rail.is-indeterminate .list-rail-fill {
+  width: 30%;
+  animation: progress-glide 1.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .list-rail.is-indeterminate .list-rail-fill {
+    animation: none;
+  }
+}
+
+/* The dataset list couldn't be read: why, then Retry, in the curated rows'
+   place. */
+.list-row.list-failed {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.pane-body {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  background: var(--panel);
+  border-radius: calc(var(--radius-card) - var(--pane-frame-w));
+  /* A shadow ring, not a border, so the hairline never changes the content's
+     size: the canvas, hit-testing and zoom transforms stay put. */
+  box-shadow: var(--body-ring);
+  overflow: hidden;
+  /* So the header menu can tighten in a narrow pane. */
+  container: pane-body / inline-size;
+}
+
+/* Both end panes can scroll to dead centre. */
+.pane:first-of-type {
+  margin-inline-start: max(var(--pane-edge), calc(50cqw - var(--pane-w) / 2));
+}
+
+.pane:last-of-type {
+  margin-inline-end: max(var(--pane-edge), calc(50cqw - var(--pane-w) / 2));
+}
+
+/* The run snap points: zero-size markers that PaneRow places at the centre of
+   every run of 2, 3 and 4 neighbouring panes and of the whole row, i.e. midway
+   between the run's first left edge and last right edge (see snapPoints.ts).
+   The row opens on the NodeLink to Hops run (see PaneRow), not here. The
+   negative margin cancels the flex gap the anchor would otherwise add after the
+   last pane. */
+.span-snap-anchor {
+  position: relative;
+  width: 0;
+  height: 0;
+  margin-inline-start: calc(-1 * var(--pane-gap));
+}
+
+.span-snap-anchor > div {
+  position: absolute;
+  top: 0;
+  width: 0;
+  height: 1px;
+  pointer-events: none;
+  scroll-snap-align: center;
+}
+
+/* ---------- Fit row ----------
+   The panes share the window's width, each by its --share of what the gaps
+   leave (floored at --pane-min, past which the row scrolls after all), and
+   fill its height but for one gap above and below. The 1px spares a rounding
+   overflow its scrollbar. No snapping: there is nothing to scroll. */
+.panes.is-fit {
+  --stage-h: max(var(--stage-h-min), calc(100cqh - 2 * var(--fit-gap)));
+  gap: 0;
+  padding: var(--fit-gap) 0;
+  scroll-snap-type: none;
+}
+
+/* A pane with a widest (`--max-ar`, Data) stops there, and the room it
+   leaves goes to the others in proportion to their shares. The grow factors
+   are scaled up so they sum past 1 and hand on all of it. */
+.panes.is-fit .pane {
+  --pane-w: max(
+    var(--pane-min),
+    calc((100cqw - (var(--n) + 1) * var(--fit-gap) - 1px) * var(--share))
+  );
+  flex-grow: calc(var(--share) * 100);
+  max-width: calc(var(--stage-h) * var(--max-ar));
+  scroll-snap-align: none;
+}
+
+.panes.is-fit .pane:first-of-type {
+  margin-inline-start: var(--fit-gap);
+}
+
+.panes.is-fit .pane:last-of-type {
+  margin-inline-end: var(--fit-gap);
+}
+
+.panes.is-fit .span-snap-anchor {
+  display: none;
+}
+
+/* The gap between two panes, as a handle. Three dots at its middle mark it
+   on hover and while it is dragged, in the focused banner's slate. */
+.pane-handle {
+  position: relative;
+  flex: none;
+  width: var(--fit-gap);
+  height: var(--stage-h);
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.pane-handle::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.25rem; /* 3px */
+  height: 0.25rem;
+  border-radius: 50%;
+  background: var(--pane-focused);
+  /* The dots above and below, 6px apart. */
+  box-shadow: 0 -0.5rem 0 var(--pane-focused), 0 0.5rem 0 var(--pane-focused);
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.12s;
+}
+
+.pane-handle:hover::after,
+.pane-handle.is-dragging::after {
+  opacity: 1;
+}
+
+/* The title and its subtitle, one line tall. A subtitle that doesn't fit wraps
+   onto a second line, which is clipped, so it hides whole before the title
+   loses a letter. It takes the room up to the percent. The padding, cancelled
+   by the margin, leaves the title's focus ring inside the clip. */
+.pane-heading {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  row-gap: 1rem;
+  height: calc(var(--fs-pane-title) + 0.5rem + 2 * 0.1333rem);
+  margin: -0.1333rem;
+  padding: 0.1333rem;
+  overflow: hidden;
+}
+
+/* The title sits in the header band, outside the content. A click on the
+   band toggles the menu. A title too long for a narrow pane ends in an ellipsis; the percent never does. */
+.pane-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0.25rem 0.5rem;
+  background: transparent;
+  border: 0;
+  color: var(--pane-title);
+  font: inherit;
+  font-size: var(--fs-pane-title);
+  font-weight: 600;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  cursor: inherit;
+}
+
+.pane-header:hover .pane-title {
+  color: var(--text-strong);
+}
+
+.pane.is-focused .pane-title {
+  color: #fff;
+}
+
+.pane-title:focus-visible {
+  outline: var(--focus-ring);
+}
+
+/* What the pane's strip has chosen: a readout, a step softer and smaller than
+   the title, in sentence case. It follows the title's colour, hover included,
+   and a click on it toggles the menu as the rest of the band does. It sits
+   centred on the title, nudged up so its lowercase reads level with the caps. */
+.pane-subtitle {
+  flex: none;
+  margin-left: 0.1rem;
+  color: var(--pane-title);
+  font-size: calc(var(--fs-pane-title) * 0.85);
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0.75;
+  transform: translateY(-0.08em);
+}
+
+.pane-header:hover .pane-subtitle {
+  color: var(--text-strong);
+}
+
+.pane.is-focused .pane-subtitle {
+  color: #fff;
+}
+
+/* This pane's sweep runs: a play glyph before the title, in the
+   title's neutral colour. An indicator, not a control. It pushes the title
+   right, and the heading's growth keeps the percent at the far end. */
+.pane-sweep {
+  flex: none;
+  display: flex;
+  align-items: center;
+  /* The header's 0.5rem gap and the title's 0.5rem padding, less this,
+     leave 0.6rem to the title's text. */
+  margin-right: -0.4rem;
+  padding-left: 0.5rem;
+  /* Centred on the capitals rather than the line, it reads level with them. */
+  position: relative;
+  top: -0.0833rem; /* 1px */
+  color: var(--pane-title);
+  font-size: var(--fs-pane-title);
+  line-height: 1;
+}
+
+.pane-sweep .glyph {
+  width: 0.78em;
+  height: 0.86em;
+}
+
+/* While the sweep runs, the glyph pulses: a process is running. Paused, it
+   holds still. */
+.pane-sweep.is-running .glyph {
+  transform-origin: center;
+  animation: sweep-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes sweep-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.88);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pane-sweep.is-running .glyph {
+    animation: none;
+  }
+}
+
+/* It follows the title's colour, hover included. */
+.pane-header:hover .pane-sweep {
+  color: var(--text-strong);
+}
+
+.pane.is-focused .pane-sweep {
+  color: #fff;
+}
+
+/* The zoom percent at the header's right end, at the title's size but regular
+   weight, so it reads as a readout rather than a second title. A click fits all. */
+.pane-zoom {
+  flex: none;
+  padding: 0.25rem 0.5rem;
+  background: transparent;
+  border: 0;
+  color: var(--pane-title);
+  font: inherit;
+  font-size: var(--fs-pane-title);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.pane-zoom:hover {
+  color: var(--text-strong);
+}
+
+.pane.is-focused .pane-zoom {
+  color: #fff;
+}
+
+.pane-zoom:focus-visible {
+  outline: var(--focus-ring);
+}
+
+/* The Data header's ?, where a canvas pane shows its zoom percent: the
+   glyph in the title's colour on a faint disc, filled while Help shows,
+   the glyph then knocked out in the frame's colour. A click toggles the
+   sheet, never the menu. */
+.pane-help {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  margin-right: 0.3333rem; /* 4px */
+  padding: 0;
+  /* Off, a faint disc in the title's colour; on, the full fill below. */
+  background: color-mix(in srgb, currentColor 15%, transparent);
+  border: 0;
+  border-radius: 50%;
+  color: var(--pane-title);
+  font: inherit;
+  font-size: 1.025rem; /* a little larger than the title, so the ? fills its circle */
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.pane-help:hover {
+  color: var(--text-strong);
+}
+
+.pane.is-focused .pane-help {
+  color: #fff;
+}
+
+.pane-help[aria-pressed="true"] {
+  background: currentColor;
+}
+
+/* Bolder than the font's heaviest weight: a thin stroke in its own colour. */
+.pane-help-glyph {
+  -webkit-text-stroke: 0.05rem currentColor; /* 0.6px */
+}
+
+/* The glyph takes the frame's colour; the fill keeps the title's. */
+.pane-help[aria-pressed="true"] .pane-help-glyph {
+  color: var(--pane-frame);
+}
+
+.pane.is-focused .pane-help[aria-pressed="true"] .pane-help-glyph {
+  color: var(--pane-focused);
+}
+
+.pane-help:focus-visible {
+  outline: var(--focus-ring);
+}
+
+/* The header menu: an opaque card floating over the top of the content, with
+   the pane types, then the ratios. */
+.pane-menu {
+  position: absolute;
+  inset: 0.8333rem 0.8333rem auto 0.8333rem; /* 10px 10px auto 10px */
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3333rem; /* 4px */
+  padding: 1rem; /* 12px */
+  background: var(--panel);
+  border: var(--edge-w) solid var(--edge-hair);
+  border-radius: 1.1667rem; /* 14px */
+  box-shadow: var(--menu-shadow);
+  cursor: default;
+}
+
+/* The type rows, spaced as the menu spaces its children. */
+.menu-types {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3333rem; /* 4px */
+}
+
+.list-row.is-menu {
+  flex: none;
+  grid-template-columns: minmax(0, 1fr);
+  height: 2.1667rem; /* 26px */
+  cursor: pointer;
+}
+
+.list-row.is-menu:hover::before,
+.menu-ratio:hover::before {
+  border-color: var(--edge);
+}
+
+.list-row.is-menu:focus-visible,
+.menu-ratio:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: -0.1667rem; /* -2px */
+}
+
+/* The shape row: a tile per shape (four in Scroll, three in Fit), each holding
+   its glyph, scaled to keep air around it in a narrow tile. */
+.menu-ratios {
+  display: grid;
+  gap: 0.6667rem; /* 8px */
+  margin-top: 0.5rem; /* 6px */
+}
+
+/* Data's menu holds the shapes alone. */
+.menu-ratios:first-child {
+  margin-top: 0;
+}
+
+.menu-ratio {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 3.3333rem; /* 40px */
+  padding: 0;
+  background: var(--panel-2);
+  border: 0;
+  border-radius: 0.6667rem; /* 8px */
+  color: var(--muted);
+  cursor: pointer;
+  container-type: inline-size;
+}
+
+.menu-ratio::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: var(--edge-w) solid transparent;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+
+/* One long side for every tile in the row, so the shapes compare. */
+.ratio-glyph {
+  --long: min(1.8333rem, 100cqi - 1rem); /* min(22px, 100cqi - 12px) */
+  display: block;
+  width: calc(var(--long) * var(--gw));
+  height: calc(var(--long) * var(--gh));
+  border: 0.2083rem solid currentColor; /* 2.5px */
+  border-radius: 0.1667rem; /* 2px */
+}
+
+/* A narrow pane: a closer card and tiles, so the glyphs have room. */
+@container pane-body (width < 13.3333rem) { /* 160px */
+  .pane-menu {
+    inset: 0.5rem 0.5rem auto 0.5rem; /* 6px 6px auto 6px */
+    padding: 0.6667rem; /* 8px */
+  }
+
+  .menu-ratios {
+    gap: 0.3333rem; /* 4px */
+  }
+}
+
+/* A pane's stacked canvases: base marks, highlights, gesture outline. */
+.pane-stack {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+}
+
+.pane-stack > canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* What the dataset lacks, in place of the pattern: centred, muted, and
+   never in the way of the pane's gestures. */
+.pane-message {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.6667rem; /* 20px */
+  pointer-events: none;
+  text-align: center;
+  color: var(--muted);
+}
+
+.pane-message p {
+  margin: 0;
+  max-width: 18rem;
+  font-size: var(--fs-control);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* A pane's pattern, the first time it lands for a dataset (fadeIn.ts). */
+.is-landing {
+  animation: landing 300ms ease-out;
+}
+
+@keyframes landing {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-landing {
+    animation: none;
+  }
+}
+
+/* A message's way to fill the gap, under it: a control, so it takes clicks. */
+.pane-message:has(.pane-message-act) {
+  flex-direction: column;
+  gap: 0.8333rem; /* 10px */
+}
+
+.pane-message-act {
+  display: flex;
+  pointer-events: auto;
+}
+
+/* Space held: a drag navigates. */
+.pane.is-grab .pane-body,
+.pane.is-grab .pane-stack {
+  cursor: grab;
+}
+
+.pane-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
+
+/* ---------- Lists (Data, Labels) ---------- */
+
+/* The list scrollbar's thumb: half the way from the panel to the edge ink. */
+:root {
+  --scrollbar: color-mix(in srgb, var(--edge) 50%, var(--panel));
+}
+
+/* Vertical scrolling stops at the list's ends. Sideways swipes still chain to
+   the pane row, so the row can be swiped from anywhere. */
+.vlist {
+  height: 100%;
+  border-radius: inherit;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  /* The gutter stays when nothing overflows, so rows end in one place. */
+  scrollbar-gutter: stable;
+}
+
+/* A slim neutral scrollbar that shows only while the list scrolls (or the
+   thumb is hovered or held): the default bar is too heavy beside pill rows.
+   The transparent border sets the thumb in from the pane's edge. It is even
+   all round, since the thumb's rounding is the radius less the border: an
+   uneven one squares off the thicker side. */
+.vlist::-webkit-scrollbar {
+  width: 15px;
+}
+
+.vlist::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.vlist::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  background-clip: padding-box;
+  border: 5px solid transparent;
+  border-radius: 999px;
+}
+
+.vlist.is-scrolling::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar);
+}
+
+.vlist::-webkit-scrollbar-thumb:hover,
+.vlist::-webkit-scrollbar-thumb:active {
+  background-color: var(--edge);
+}
+
+/* Firefox has no ::-webkit-scrollbar. Kept out of Blink, where these two
+   properties switch the pseudo-elements above off. */
+@supports not selector(::-webkit-scrollbar) {
+  .vlist {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  .vlist.is-scrolling {
+    scrollbar-color: var(--scrollbar) transparent;
+  }
+}
+
+.vlist-sizer {
+  position: relative;
+}
+
+/* --row-h, --list-pad and --list-pad-end come from VirtualList's geometry,
+   the same numbers the panes hit-test with. */
+.vlist-row {
+  position: absolute;
+  left: var(--list-pad);
+  right: var(--list-pad-end);
+  height: var(--row-h);
+}
+
+/* Pill rows: a pill per row with the item's number in a left column as wide
+   as its digits: every row pads to the same count in tabular figures, so the
+   labels still line up, one even space after the number whatever n is. The
+   ring is a ::before layer, so no state ever changes the row's box. */
+.list-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) 0.55rem;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+  height: 100%;
+  padding: 0 0.8rem;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-pill);
+  color: var(--text);
+  font: inherit;
+  font-size: var(--fs-title);
+  text-align: left;
+  cursor: default;
+}
+
+.list-row::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: var(--edge-w) solid transparent;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.list-num {
+  margin-inline-end: 0.6rem;
+  color: var(--muted);
+  font-size: var(--fs-body);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.list-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.list-meta {
+  color: var(--muted);
+  font-size: var(--fs-caps);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.list-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+}
+
+/* Labels. The node set tints the pill (E3's is-selected wash, in blue); the
+   hovered node gets a red ring over any tint; the dot carries edges, orange
+   for the edge set and red for the hovered edge. The hovered dot also grows,
+   so red vs orange never rests on hue alone (red-green colour blindness). */
+.list-row.is-selected {
+  background: var(--node-sel-soft);
+}
+
+.list-row.is-selected .list-num {
+  color: var(--text);
+}
+
+/* Contrast fades an unselected row's text toward the panel; the hovered row
+   and the dots stay full. */
+.labels-list .list-row:not(.is-selected):not(.is-hover) {
+  color: color-mix(in srgb, var(--text) calc(var(--contrast) * 100%), var(--panel));
+}
+
+.labels-list .list-row:not(.is-selected):not(.is-hover) .list-num {
+  color: color-mix(in srgb, var(--muted) calc(var(--contrast) * 100%), var(--panel));
+}
+
+.list-row.is-hover::before {
+  border: var(--ring-w) solid var(--hover);
+}
+
+.list-row.is-endpoint .list-dot {
+  background: var(--edge-sel);
+}
+
+.list-row.is-edge-hover .list-dot {
+  background: var(--hover);
+  transform: scale(1.6);
+}
+
+/* Labels are italic; the number and value columns stay upright. */
+.labels-list .list-text {
+  font-style: italic;
+}
+
+/* The sort's value, between the number and the label (none under Labels
+   (A–Z)). Data, so full text colour; it fades with Contrast as the label does.
+   Integers pad with figure spaces, so every row's column is one width. */
+.labels-list.has-value .list-row {
+  grid-template-columns: max-content max-content minmax(0, 1fr) 0.55rem;
+}
+
+.list-value {
+  margin-inline-end: 0.6rem;
+  font-size: var(--fs-body);
+  font-variant-numeric: tabular-nums;
+  white-space: pre;
+}
+
+/* Narrow, the number goes first: the value, then the label, keep the room.
+   Why a width, not truncation: every row drops it together, so no column
+   jumps between rows. 200px at scale 1. */
+.labels-list {
+  container-type: inline-size;
+}
+
+@container (width < 16.6667rem) {
+  .labels-list .list-num {
+    display: none;
+  }
+
+  .labels-list .list-row {
+    grid-template-columns: minmax(0, 1fr) 0.55rem;
+  }
+
+  .labels-list.has-value .list-row {
+    grid-template-columns: max-content minmax(0, 1fr) 0.55rem;
+  }
+}
+
+/* The selection band. Like a lasso, it takes the colours of the set(s) it
+   will write: blue for nodes, orange for edges, and in Both one's dashes with
+   the other's fill, alternating shape by shape. */
+.list-band {
+  --band-line: var(--node-sel);
+  --band-fill: var(--node-sel);
+  display: none;
+  position: absolute;
+  left: calc(var(--list-pad) / 2);
+  right: calc(var(--list-pad-end) / 2);
+  background: color-mix(in srgb, var(--band-fill) 14%, transparent);
+  border: 0.125rem dashed var(--band-line); /* 1.5px */
+  border-radius: calc(var(--row-h) / 2);
+  pointer-events: none;
+}
+
+.list-band[data-mode="edge"] {
+  --band-line: var(--edge-sel);
+  --band-fill: var(--edge-sel);
+}
+
+.list-band[data-mode="both"] {
+  --band-fill: var(--edge-sel);
+}
+
+.list-band[data-mode="both"][data-swap="1"] {
+  --band-line: var(--edge-sel);
+  --band-fill: var(--node-sel);
+}
+
+/* Data: the same pill, kept neutral. Picking a dataset isn't a data
+   selection, so no data colours. The loaded dataset is ringed in the focused
+   pane's gray, as wide as Labels' hover ring. A click on a row loads it, so rows keep the pointer
+   and the hover ring. */
+.list-row.is-dataset {
+  grid-template-columns: minmax(0, 1fr) auto;
+  cursor: pointer;
+}
+
+.list-row.is-dataset:hover::before,
+.list-row.is-dataset.is-hover::before {
+  border-color: var(--edge);
+}
+
+.list-row.is-current {
+  color: var(--text-strong);
+}
+
+/* Hover keeps the ring as it is: the row already answers. */
+.list-row.is-current::before,
+.list-row.is-current:hover::before {
+  border: var(--ring-w) solid var(--pane-focused);
+}
+
+/* Thumbnails: the row as a card, its picture inset at the top and sides
+   (DatasetPane's TILE_INSET) and the row's caption, laid out as the row is,
+   under it (TILE_CAPTION high), with room to clear the rounded corners. The
+   corners round as the pill's ends do, so tiles and rows read as one family. */
+.list-row.is-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 0.8333rem 0.8333rem 0; /* 10px 10px 0 */
+  border-radius: calc(var(--row-h) / 2);
+}
+
+.tile-picture {
+  display: block;
+  flex: none;
+}
+
+/* + New's tile: a dashed blob where a thumbnail will go, in its ink. */
+.tile-blob path {
+  fill: none;
+  stroke: var(--thumb-edge);
+  stroke-width: 1;
+  stroke-dasharray: 4 3;
+  vector-effect: non-scaling-stroke;
+}
+
+.tile-caption {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.4rem;
+  align-self: stretch;
+  flex: none;
+  height: calc(var(--row-h) + 0.6667rem); /* 8px */
+  /* A little in from the picture's edges, and lifted off the card's bottom. */
+  padding: 0.1667rem 0.3333rem 0.5rem; /* 2px 4px 6px */
+}
+
+/* A group's header: large caps in the strongest ink, set on the row's
+   baseline, so each group stands out on a scroll. Its row is taller than a pill's (DatasetPane's GROUP_AIR), so air
+   above it, not a line, divides it from the group before, and the label sits
+   nearer its own rows, a small gap above them (GROUP_GAP). It reads as a heading and never as a row to pick. */
+.list-group {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+  padding: 0 0.8rem calc(0.2rem + 0.5rem); /* 0.2rem + 6px */
+  color: var(--text-strong);
+  font-size: 1.1667rem; /* 14px, as Help's section headings */
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Uploaded's sentence, in Help's body text (.help-body), inset as the
+   header's label is, with a row's air under it. */
+.list-intro {
+  margin: 0;
+  padding: 0 0.8rem 0.6rem;
+  color: var(--text);
+  font-size: var(--fs-control);
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+.list-row.is-dataset:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: -0.1667rem; /* -2px */
+}
+
+/* Data at its narrowest: the rows drop their counts, so the titles have
+   the room. */
+@container pane-body (width < 13.3333rem) { /* 160px */
+  .list-row.is-dataset,
+  .tile-caption {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .list-row.is-dataset .list-meta {
+    display: none;
+  }
+}
+
+/* Navigating: the hand, over rows too. */
+.pane.is-grab .list-row:not(.is-menu, .is-dataset) {
+  cursor: inherit;
+}
+
+/* ---------- Help ----------
+   The Data slot's other face: text that explains the tool, set in the
+   list's insets and type. No hover, no selection, and Contrast never fades it:
+   it is outside the drawn pattern. */
+.help-sheet {
+  position: relative;
+}
+
+.help-body {
+  padding: var(--list-top) var(--list-pad-end) var(--list-pad) var(--list-pad);
+  color: var(--text);
+  font-size: var(--fs-control);
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+.help-body p,
+.help-body ul,
+.help-body dl {
+  margin: 0 0 0.6rem;
+}
+
+/* A section heading in the Data list's group-header look (.list-group):
+   large caps in the strongest ink, so each task stands out on a scroll. Set
+   off by air, never a line. */
+.help-sec + .help-sec {
+  margin-top: 3.3333rem; /* 40px */
+}
+
+.help-head {
+  margin: 0 0 1.25rem; /* 15px */
+  padding: 0 0.8rem;
+  color: var(--text-strong);
+  font-size: 1.1667rem; /* 14px */
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.help-body > .help-sec > p,
+.help-replica-row {
+  padding: 0 0.8rem;
+}
+
+/* The colour legend: a figure, centred and spaced as the control copies are,
+   one set a line, each beside a small two-node mark drawn in the panes' inks.
+   Scoped to the body, so it outranks the body's own list margins. */
+.help-body .help-legend {
+  display: grid;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 2.3rem 0 2.9rem; /* a figure's air, as .help-replica-row */
+  padding: 0 0.8rem;
+  list-style: none;
+}
+
+.help-body .help-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.help-mark {
+  flex: none;
+  width: 3.6667rem; /* 44px */
+  height: 1.3333rem; /* 16px */
+}
+
+/* Quick start's steps: each number in a round slate badge (the focused
+   pane's colour, so it stays neutral chrome), and the step's text and control
+   copy to its right. */
+.help-steps {
+  counter-reset: step;
+  display: grid;
+  /* One column no wider than the sheet: by default a grid track grows to its
+     widest copy, and the text would wrap against that rather than the pane. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.2rem;
+  margin: 1.2rem 0 1.6rem;
+  padding: 0 0.8rem;
+  list-style: none;
+}
+
+.help-steps li {
+  position: relative;
+  min-width: 0;
+  counter-increment: step;
+  min-height: 1.8333rem;
+  padding-left: 2.8333rem; /* the badge, and air after it */
+}
+
+.help-steps li::before {
+  content: counter(step);
+  position: absolute;
+  top: -0.1rem;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 1.8333rem; /* 22px */
+  height: 1.8333rem;
+  background: var(--pane-focused);
+  border-radius: 50%;
+  color: #fff; /* as a focused pane's title, on the same slate */
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+/* A step's copy spans the list's full width, out past the badge, so it
+   centres on the pane as every other figure does. */
+.help-steps .help-replica-row {
+  padding: 0;
+  margin: 1.2rem 0 0.4rem -2.8333rem; /* the step's indent */
+}
+
+.help-steps .help-replica-row + .help-replica-row {
+  margin-top: 0.4rem;
+}
+
+/* Each pane's part of Panes, laid out as a section: its heading, a step
+   smaller than a section's, then its text and copies, set off by the same air. */
+.help-pane + .help-pane {
+  margin-top: 3.3333rem; /* 40px */
+}
+
+/* Panes' introduction, then the first pane's part, set off as a pane's. */
+.help-sec > p + .help-pane {
+  margin-top: 2.5rem; /* 30px */
+}
+
+.help-subhead {
+  font-size: 1.0417rem; /* 12.5px */
+}
+
+/* A diagram (helpFigures.tsx): centred, as wide as the sheet allows up to
+   its natural size, with a figure's air, as .help-replica-row. Its text is
+   the panes' axis text: small, in the plain text ink. */
+.help-figure {
+  display: flex;
+  justify-content: center;
+  margin: 2.3rem 0 2.9rem;
+  padding: 0 0.8rem;
+}
+
+.help-figure svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.help-fig-text {
+  fill: var(--text);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.help-fig-count {
+  fill: var(--muted);
+  font-size: 8px;
+  font-weight: 500;
+}
+
+.help-pane > p {
+  padding: 0 0.8rem;
+}
+
+/* An inert copy of a control, at 80% (HelpPane's Replica sets the zoom),
+   centred in its row (by flex, so the copy's own text keeps its alignment),
+   which is the room it may take, with air above and below
+   so it reads as a figure set apart from the text. A run of copies stacks
+   closer. */
+.help-replica-row {
+  display: flex;
+  justify-content: center;
+  margin: 2.3rem 0 2.9rem;
+}
+
+.help-replica-row + .help-replica-row {
+  margin-top: -1.7rem;
+}
+
+.help-replica {
+  /* Its natural width, so Replica can measure it and zoom it to fit. */
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+/* The count pills on their live tray, with no caps label before them. */
+.help-replica.control {
+  padding: 0.3333rem;
+}
+
+.help-replica .set-count {
+  margin: 0;
+}
+

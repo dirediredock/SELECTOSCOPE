@@ -1,0 +1,24 @@
+<!doctype html>
+<!-- data-theme lives here, not only in the store, so the first paint is already
+     correct before React mounts. The inline script restores a saved choice. -->
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      try {
+        var t = localStorage.getItem("selectoscope-theme");
+        if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><style>@media (prefers-color-scheme:dark){.g{stroke:%23c9c7d6}.d{fill:%23c9c7d6}.n{fill:%234f94ff}.e{stroke:%23ff9a2e}}</style><g class='g' stroke='%234a443b' stroke-width='3' stroke-linecap='round'><line x1='25' y1='17.5' x2='7.5' y2='7.5'/><line x1='25' y1='17.5' x2='7.5' y2='27.5'/></g><line class='e' x1='7.5' y1='7.5' x2='7.5' y2='27.5' stroke='%23e07000' stroke-width='3' stroke-linecap='round'/><circle class='n' cx='25' cy='17.5' r='4' fill='%231f63c6'/><g class='d' fill='%234a443b'><circle cx='7.5' cy='7.5' r='4'/><circle cx='7.5' cy='27.5' r='4'/></g></svg>"
+    />
+    <title>Selectoscope</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
