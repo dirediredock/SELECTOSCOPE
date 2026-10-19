@@ -2,7 +2,7 @@
 // One seeded permutation for the nodes, then a separate one for the edges,
 // drawn from one generator, before any computation.
 
-export const SEED = 0;
+export const SEED = 1736;
 
 // splitmix32: small, fast and identical in every JavaScript engine, so a
 // build in a browser and a bake in Node agree to the bit.
