@@ -1,0 +1,678 @@
+node_id,label
+0,Accounting
+1,Aerospace engineering
+2,Agricultural engineering
+3,Agricultural science
+4,Agronomy
+5,Algaculture
+6,Animal husbandry
+7,Applied linguistics
+8,Applied mathematics
+9,Applied physics
+10,Applied science
+11,Aquaculture
+12,Aquatic plant
+13,Arboriculture
+14,Architectural engineering
+15,Artificial intelligence
+16,Astronautics
+17,Astronomy
+18,Biological engineering
+19,Biomedical engineering
+20,Building science
+21,Business operations
+22,Cardiology
+23,Ceramic engineering
+24,Civil engineering
+25,Computing
+26,Conservation medicine
+27,Control engineering
+28,Cuniculture
+29,Data science
+30,Dermatology
+31,Electrical engineering
+32,Electronics
+33,Endocrinology
+34,Energy storage
+35,Engineering
+36,Engineering physics
+37,Engineering technologist
+38,Environmental engineering science
+39,Environmental science
+40,Environmental technology
+41,Floriculture
+43,Forensic science
+44,Geographic information system
+45,Geomatics
+46,Gynaecology
+47,Heliciculture
+48,Hydroponics
+49,Industrial engineering
+50,Internal medicine
+51,Management
+52,Manufacturing engineering
+53,Mariculture
+54,Marine engineering
+55,Materials science
+56,Mechanical engineering
+57,Military engineering
+58,Military history
+59,Military organization
+60,Military strategy
+61,Mining engineering
+62,Nanotechnology
+63,Neurology
+64,Nuclear engineering
+65,Nuclear technology
+66,Nursing
+68,Olericulture
+69,Ophthalmology
+70,Optics
+71,Optometry
+72,Organizational behavior
+73,Pathology
+74,Pediatrics
+75,Permaculture
+76,Pharmacology
+77,Pharmacy
+78,Photogrammetry
+79,Physical therapy
+80,Physiology
+81,Polymer science
+82,Psychiatry
+83,Radiology
+84,Recruit training
+85,Remote sensing
+86,Security engineering
+87,Silviculture
+88,Software engineering
+89,Space exploration
+90,Strategic management
+91,Systems engineering
+92,Toxicology
+93,Urology
+94,Affine geometry
+95,Algebraic geometry
+96,Algebraic number theory
+97,Algebraic topology
+98,Algorithm
+99,Analysis of variance
+100,Analytic number theory
+101,Applied mathematics
+102,Approximation theory
+103,Artificial neural network
+104,Associative algebra
+105,Automata theory
+106,Automated reasoning
+107,Biocybernetics
+108,Biostatistics
+109,Block design
+110,Bootstrapping (statistics)
+111,Business informatics
+112,Category theory
+113,Chaos theory
+114,Coding theory
+115,Combinatorics
+116,Compiler
+117,Complex analysis
+118,Complex system
+119,Computability theory
+120,Computational biology
+121,Computational chemistry
+122,Computational complexity theory
+123,Computational economics
+124,Computational finance
+125,Computational fluid dynamics
+126,Computational geometry
+127,Computational linguistics
+128,Computational mathematics
+129,Computational neuroscience
+130,Computational number theory
+131,Computational sociology
+132,Computational statistics
+133,Computer algebra
+134,Computer architecture
+135,Computer graphics
+136,Computer network
+137,Computer science
+138,Computer security
+139,Computer vision
+140,Concurrency (computer science)
+141,Concurrent computing
+142,Control engineering
+143,Control system
+144,Control theory
+145,Cybernetics
+146,Data mining
+147,Data structure
+148,Database
+149,Decision theory
+150,Demography
+151,Design of experiments
+152,Developmental systems theory
+153,Differential algebra
+154,Differential geometry
+155,Differential topology
+156,Digital humanities
+157,Digital image processing
+158,Discrete geometry
+159,Distributed algorithm
+160,Distributed computing
+161,Distributed database
+162,Dynamical system
+163,Dynamical systems theory
+164,Econometrics
+165,Engineering cybernetics
+166,Engineering statistics
+167,Epidemiology
+168,Ergodic theory
+169,Expert system
+170,Fault tolerance
+171,Field (mathematics)
+172,Finite element method
+173,Formal language
+174,Formal methods
+175,Formal verification
+176,Foundations of mathematics
+177,Fractal
+178,Functional analysis
+179,Functional programming
+180,Game theory
+181,General topology
+182,Geometric topology
+183,Geometry of numbers
+184,Graph theory
+185,Grid computing
+186,Group representation
+187,Group theory
+188,Harmonic analysis
+189,Health informatics
+190,High availability
+191,Homological algebra
+192,Human–computer interaction
+193,Information retrieval
+194,Information science
+195,Information system
+196,Information theory
+197,Internet
+198,Intuitionistic logic
+199,Lattice (order)
+200,Lie algebra
+201,Linear algebra
+202,Linear programming
+203,Linear time-invariant system
+204,Logic
+205,Machine learning
+206,Management cybernetics
+207,Management information system
+208,Mathematical analysis
+209,Mathematical logic
+210,Mathematical optimization
+211,Mathematical physics
+212,Mathematical statistics
+213,Measure (mathematics)
+214,Medical cybernetics
+215,Mobile computing
+216,Modal logic
+217,Model theory
+218,Multilinear algebra
+219,Multimedia
+220,Multivariate analysis
+221,Natural language processing
+222,Non-associative algebra
+223,Non-Euclidean geometry
+224,Non-standard analysis
+225,Number theory
+226,Numerical analysis
+227,Object database
+228,Object-oriented programming
+229,Operating system
+230,Operations research
+231,Operator theory
+232,Order theory
+233,Ordinary differential equation
+234,p-adic analysis
+235,Parallel algorithm
+236,Parallel computing
+237,Partial differential equation
+238,Probability theory
+239,Programming language
+240,Programming paradigm
+241,Projective geometry
+242,Proof theory
+243,Quality control
+244,Quantum computing
+245,Quantum field theory
+246,Randomized algorithm
+247,Real analysis
+248,Regression analysis
+249,Relational database
+250,Reliability engineering
+251,Response surface methodology
+252,Ring theory
+253,Scientific visualization
+254,Second-order cybernetics
+255,Semantics (computer science)
+256,Set theory
+257,Simulation
+258,Social statistics
+259,Spatial analysis
+260,Statistical mechanics
+261,Statistical model
+262,Statistical theory
+263,Statistics
+264,Stochastic process
+265,Structural equation modeling
+266,Supercomputer
+267,Survey methodology
+268,Survey sampling
+269,System dynamics
+270,Systems analysis
+271,Systems biology
+272,Systems ecology
+273,Systems engineering
+274,Systems neuroscience
+275,Systems psychology
+276,Systems science
+277,Systems theory
+278,Theory of computation
+279,Time series
+280,Topology
+281,Type theory
+282,Universal algebra
+283,Vector space
+284,Very Large Scale Integration
+285,Wireless network
+286,World Wide Web
+287,Acarology
+288,Acoustics
+289,Aerobiology
+290,Agroecosystem
+291,Agrophysics
+292,Analytical chemistry
+293,Aqueous geochemistry
+294,Astrobiology
+295,Astrochemistry
+296,Astrometry
+297,Astronomy
+298,Astrophysics
+299,Atmospheric chemistry
+300,Atmospheric physics
+301,Atmospheric science
+302,"Atomic, molecular, and optical physics"
+303,Bacteriology
+304,Behavioral neuroscience
+305,Biochemistry
+306,Biogeography
+307,Bioinformatics
+308,Bioinorganic chemistry
+309,Biological anthropology
+310,Biological engineering
+311,Biomechanics
+312,Bioorganic chemistry
+313,Biophysical chemistry
+314,Biophysics
+315,Biotechnology
+316,Carcinogenesis
+317,Chemical biology
+318,Chemical engineering
+319,Chemical kinetics
+320,Chemical oceanography
+321,Chemical physics
+322,Chemical thermodynamics
+323,Cheminformatics
+324,Cladistics
+325,Classical mechanics
+326,Climatology
+328,Coleopterology
+329,Computational chemistry
+330,Computational physics
+331,Condensed matter physics
+332,Conservation biology
+333,Continuum mechanics
+334,Cosmochemistry
+335,Cosmology
+336,Cryogenics
+337,Developmental biology
+338,Dynamics (mechanics)
+339,Econophysics
+340,Electrochemistry
+341,Electromagnetism
+342,Embryology
+343,Entomology
+344,Environmental chemistry
+345,Environmental geology
+346,Environmental science
+347,Environmental soil science
+348,Epidemiology
+349,Ethology
+350,Evolution
+351,Evolutionary biology
+352,Evolutionary developmental biology
+353,Extragalactic astronomy
+354,Femtochemistry
+355,Flavorist
+356,Fluid mechanics
+357,Freshwater biology
+358,Galactic astronomy
+359,Genomics
+360,Geochemistry
+361,Geodesy
+362,Geomorphology
+363,Geophysics
+364,Geostatistics
+365,Gerontology
+366,Helminthology
+367,Herpetology
+368,Hydrogeology
+369,Hydrology
+370,Immune system
+371,Inorganic chemistry
+372,Isotope geochemistry
+373,Lepidopterology
+374,Limnology
+375,Malacology
+376,Mammalogy
+378,Materials physics
+379,Materials science
+380,Mathematical and theoretical biology
+381,Mathematical chemistry
+382,Mathematical physics
+383,Mechanics
+384,Mechanochemistry
+385,Medical physics
+386,Medical research
+387,Medicinal chemistry
+388,Mineralogy
+389,Molecular biology
+390,Molecular mechanics
+391,Mutation
+392,Myrmecology
+393,Nanotechnology
+394,Natural product
+395,Neurochemistry
+396,Neurophysics
+397,Neuroscience
+398,Nuclear chemistry
+399,Nuclear physics
+400,Ocean chemistry
+402,Optics
+403,Orbital mechanics
+404,Organic geochemistry
+405,Organometallic chemistry
+406,Orthotics
+407,Paleoclimatology
+408,Paleontology
+409,Particle physics
+410,Pathology
+411,Petrochemistry
+412,Petrology
+413,Pharmacology
+414,Photochemistry
+415,Phylogenetic tree
+416,Physical chemistry
+417,Physical cosmology
+418,Physical organic chemistry
+419,Physiology
+420,Phytochemistry
+421,Planetary science
+422,Plant pathology
+423,Plasma (physics)
+424,Polymer chemistry
+425,Polymer physics
+426,Population biology
+427,Population ecology
+428,Population genetics
+429,Prosthesis
+430,Proteomics
+431,Psychology
+432,Psychophysics
+433,Quantum chemistry
+434,Quantum mechanics
+435,Radiochemistry
+436,Regional geochemistry
+437,Seismology
+438,Sociobiology
+439,Soil physics
+440,Soil science
+441,Solid-state chemistry
+442,Solid-state physics
+443,Sonochemistry
+444,Spectroscopy
+445,Statics
+446,Stereochemistry
+447,Structural biology
+448,Supramolecular chemistry
+449,Surface science
+450,Synthetic biology
+451,Systematics
+452,Taxonomy (biology)
+453,Theory of relativity
+454,Thermochemistry
+455,Thermodynamics
+456,Toxicology
+457,Zoology
+458,Accounting
+459,Aesthetics
+460,Anthropological linguistics
+461,Anthropology
+462,Anthropology of religion
+463,Anthrozoology
+464,Applied anthropology
+465,Applied linguistics
+466,Applied psychology
+467,Archaeology
+468,Architecture
+469,Art
+470,Behavioral economics
+471,Behavioral geography
+472,Behavioral neuroscience
+473,Behaviorism
+474,Biogeography
+475,Biolinguistics
+476,Biological anthropology
+477,Business studies
+478,Ceramic art
+479,Children's geographies
+480,Civics
+481,Climatology
+482,Clinical linguistics
+483,Clinical psychology
+485,Cognitive linguistics
+486,Cognitive psychology
+487,Cognitive science
+488,Communication
+489,Communication studies
+490,Community psychology
+491,Comparative economic systems
+492,Comparative linguistics
+493,Computational economics
+494,Computational linguistics
+495,Consumer behaviour
+496,Counseling psychology
+497,Craft
+498,Creativity
+499,Criminology
+501,Culinary arts
+502,Cultural anthropology
+503,Cultural geography
+504,Cultural psychology
+505,Cultural studies
+506,Culture
+507,Demography
+508,Design
+509,Development economics
+510,Development geography
+511,Development studies
+512,Developmental linguistics
+513,Developmental psychology
+514,Dialectology
+515,Discourse analysis
+516,Drawing
+517,Ecological economics
+518,Econometrics
+519,Economic geography
+520,Economic history
+521,Economic methodology
+522,Economic sociology
+523,Economic statistics
+524,Economics
+525,Ecosystem services
+526,Educational psychology
+527,Energy economics
+528,Entrepreneurial economics
+529,Environmental economics
+530,Environmental planning
+531,Ethnobiology
+532,Ethnobotany
+533,Ethnography
+534,Ethnology
+535,Ethnopoetics
+536,Etymology
+537,Evolutionary anthropology
+538,Evolutionary economics
+539,Evolutionary linguistics
+540,Evolutionary psychology
+541,Experimental economics
+542,Experimental psychology
+543,Feminist economics
+544,Feminist geography
+545,Finance
+546,Financial economics
+547,Folklore studies
+548,Food
+549,Forensic linguistics
+550,Forensic psychology
+551,Game theory
+552,Gender studies
+553,Geodesy
+554,Geolinguistics
+555,Geomorphology
+556,Geopolitics
+557,Gerontology
+558,Grammar
+559,Green economy
+560,Health geography
+561,Health psychology
+562,Heterodox economics
+563,Historical archaeology
+564,Historical geography
+565,Historical linguistics
+566,Human geography
+567,Human resource management
+568,Humanistic psychology
+570,Industrial and organizational psychology
+571,Industrial organization
+572,Industrial relations
+573,Information science
+574,Institutional economics
+575,Integrated geography
+576,International economics
+577,International relations
+578,International relations theory
+579,International studies
+580,Islamic economics
+581,Labour economics
+582,Landscape ecology
+583,Language
+584,Language acquisition
+585,Law and economics
+586,Legal psychology
+587,Lexis (linguistics)
+588,Limnology
+589,Linguistic anthropology
+590,Linguistic typology
+591,Literature
+592,Macroeconomics
+593,Management
+594,Managerial economics
+595,Marketing
+596,Marxist geography
+597,Mathematical economics
+599,Media psychology
+600,Media studies
+601,Medical anthropology
+602,Metaphysics
+603,Microeconomics
+604,Military geography
+605,Military psychology
+606,Monetary economics
+607,Morphology (linguistics)
+608,Music therapy
+609,Natural resource economics
+610,Neoclassical economics
+611,Neuroeconomics
+612,Neurolinguistics
+613,Neuropsychology
+614,Occupational health psychology
+616,Organizational studies
+617,Orthography
+618,Painting
+619,Palaeogeography
+620,Paleoclimatology
+621,Pedology
+622,Performing arts
+623,Personality psychology
+624,Philosophy of education
+625,Philosophy of information
+626,Philosophy of language
+627,Philosophy of mathematics
+628,Philosophy of mind
+629,Philosophy of science
+630,Phonetics
+631,Phonology
+632,Photography
+633,Physical geography
+634,Political economy
+635,Political geography
+636,Political philosophy
+637,Political psychology
+638,Population geography
+639,Pragmatics
+640,Printmaking
+641,Psephology
+642,Psycholinguistics
+643,Psychological anthropology
+644,Psychological testing
+645,Psychology of religion
+646,Psychometrics
+647,Psychophysics
+648,Public administration
+649,Public economics
+650,Public finance
+651,Public health
+652,Public policy
+653,Real estate economics
+654,Regional planning
+655,Religion
+656,Religious behaviour
+657,Religious studies
+658,Rural sociology
+659,School psychology
+660,Science and technology studies
+661,Sculpture
+662,Semantics
+663,Sensation (psychology)
+664,Social work
+665,Socialist economics
+666,Society
+667,Socioeconomics
+668,Sociolinguistics
+669,Sport psychology
+670,Strategic geography
+671,Stylistics
+672,Sustainability studies
+673,Sustainable agriculture
+674,Sustainable development
+675,Syntax
+676,Systems psychology
+677,The arts
+678,Thermoeconomics
+679,Time series
+680,Traffic psychology
+681,Transport economics
+682,Urban geography
+683,Urban planning
+684,Urban sociology
+685,Visual arts
+686,Welfare economics

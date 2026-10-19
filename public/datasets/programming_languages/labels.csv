@@ -1,0 +1,795 @@
+node_id,label
+0,*Lisp (1986)
+1,.QL (2007)
+2,86-DOS (1980)
+3,A+ (1988)
+4,ABAP (1983)
+5,ABC (1987)
+6,ACL2 (1990)
+7,AIMACO (1959)
+8,ALF
+9,ALGO (1961)
+10,ALGOL (1958)
+11,ALGOL 58 (1958)
+12,ALGOL 60 (1960)
+13,ALGOL 68 (1968)
+14,ALGOL N (1969)
+15,ALGOL W (1966)
+16,ALGOL Y
+17,ALTRAN (1965)
+18,AMBIT (1964)
+19,AMOS (1990)
+20,AMPL (1985)
+21,ANDOS (1992)
+22,ANSI C
+23,APL (1966)
+24,ARITH-MATIC
+25,ARPANET
+26,ATS (2006)
+27,AWK (1977)
+28,A Manufacturing Language (1978)
+29,Abbreviated Language for Authorization (2012)
+30,Abbreviated Test Language for All Systems (1983)
+31,Absys (1967)
+32,Action! (1983)
+33,ActionScript (1998)
+34,Active Oberon (1998)
+35,Active Server Pages
+36,Actor-Based Concurrent Language
+37,Actor model
+38,Actor model middle history
+39,Ada (1980)
+40,AdvPL
+41,Agda (1999)
+42,AgentCubes (2006)
+43,AgentSheets (1991)
+44,Agora
+45,Ajax (1999)
+46,Akka (2009)
+47,Aldor (1990)
+48,Alef (1992)
+49,Algebraic Logic Functional programming language
+50,Alice (2000)
+51,Allegro Common Lisp (1986)
+52,Alma-0 (1997)
+53,Alphard
+54,AmbientTalk (2006)
+55,Amiga E (1993)
+56,AngelScript (2003)
+57,Apache Groovy (2003)
+58,AppleScript (1993)
+59,Apple Dylan (1992)
+60,Applesoft BASIC (1977)
+61,Arc (2008)
+62,Argus
+63,ArkTS (2021)
+64,Asm.js (2013)
+65,AssemblyScript (2017)
+66,Assembly
+67,Assembly language (1947)
+68,Astronomical Data Query Language
+69,AtScript
+70,Atari BASIC (1979)
+71,Ateji PX
+72,Atlas Autocode (1963)
+73,Atom (2007)
+74,AutoIt (1999)
+75,AutoLISP (1986)
+76,Automath
+77,A♯ (1971)
+78,BASIC (1964)
+79,BASIC-8 (1969)
+80,BASIC-PLUS (1970)
+81,BASIC A+ (1983)
+82,BBN LISP
+83,BCPL (1967)
+84,BETA
+85,BLISS (1970)
+86,B (1969)
+87,Ballerina (2019)
+88,Bally Astrocade
+89,Bash (1989)
+90,Basic/Four
+91,Basic4GL (2002)
+92,BeanShell (1999)
+93,Befunge (1993)
+94,Benton Harbor BASIC (1978)
+95,Bigloo (1995)
+96,Bitcoin
+97,Blockly (2012)
+98,Bluespec
+99,Boo (2003)
+100,Boomerang (2008)
+101,Bootstrap (2011)
+102,Bosque (2019)
+103,Bourne shell (1979)
+104,Brainfuck (1993)
+105,Bs (1980)
+106,Burroughs Large Systems (1962)
+107,C* (1987)
+108,C++ (1985)
+109,C++/CLI (2005)
+110,C++11
+111,C++14
+112,C++17
+113,C++20
+114,C++Builder (1997)
+115,C-- (1998)
+116,C/AL
+117,C99
+118,CAL
+119,CGOL (1973)
+120,CHILL (1980)
+121,CLIPS (1985)
+122,CLU (1975)
+123,CMS-2 (1968)
+124,CMS EXEC
+125,CMU Common Lisp (1980)
+126,COBOL (1960)
+127,COIN-OR
+128,COMAL (1975)
+129,COMIT (1957)
+130,COMTRAN (1957)
+131,CORAL (1964)
+132,COWSEL (1964)
+133,CP/M (1974)
+134,CPL (1963)
+135,CSS (1996)
+136,CUDA (2007)
+137,C (1972)
+138,C Sharp (2000)
+139,C shell (1978)
+140,Caché ObjectScript (1997)
+141,Cadence SKILL (1990)
+142,Caja project
+143,Caml (1985)
+144,Carbon
+145,Catrobat (2010)
+146,Ceylon (2011)
+147,Cg
+148,Chapel (2009)
+149,Charm (1996)
+150,Chez Scheme (1985)
+151,Chicken (2000)
+152,Chisel (2012)
+153,Ciao (1984)
+154,Cilk (1994)
+155,Citrine (2014)
+156,Claire (1994)
+157,Clarion (1986)
+158,Clascal (1983)
+159,Clean (1987)
+160,Clipper (1985)
+161,Clojure (2007)
+162,Coarray Fortran
+163,CobolScript
+164,Cobra (2006)
+165,CoffeeScript (2009)
+166,ColorForth
+167,Common Lisp (1984)
+168,Common Lisp Object System
+169,Communicating sequential processes
+170,Component Pascal (1997)
+171,Concepts
+172,Concise Command Language
+173,Concurrent Euclid (1980)
+174,Concurrent ML (1991)
+175,Concurrent Pascal (1974)
+176,Constraint Handling Rules (1991)
+177,Contextual Query Language
+178,Control Language (1978)
+179,Coq (1989)
+180,CorVision (1986)
+181,Cornell University Programming Language
+182,Couchbase Server (2010)
+183,Cray MTA
+184,Cray XMT
+185,Crystal (2014)
+186,Cuneiform (2013)
+187,Curl (1998)
+188,Curry (1995)
+189,Cyc (1984)
+190,Cyclone (2002)
+191,Cypher
+192,Cython (2007)
+193,Cω
+194,DADiSP (1987)
+195,DARSIMCO (1956)
+196,DBase (1979)
+197,DEC MICA
+198,DG/L (1977)
+199,DIBOL (1970)
+200,DIGITAL Command Language
+201,D (2001)
+202,Dafny (2009)
+203,Dart (2011)
+204,Dartmouth ALGOL 30 (1964)
+205,Dartmouth BASIC (1964)
+206,Dartmouth Oversimplified Programming Experiment (1962)
+207,Data General Business Basic
+208,Dataflow
+209,Datalog (1977)
+210,Dataparallel C
+211,Delphi (1995)
+212,Dependent ML
+213,DirectShow (1996)
+214,DirectX (1995)
+215,Document Style Semantics and Specification Language
+216,Dolittle
+217,Dolphin Smalltalk (1997)
+218,Donald Knuth
+219,Draco (1990)
+220,Dylan (1992)
+221,ECL (2000)
+222,ECMAScript
+223,JavaScript 2
+224,EGL
+225,ELAN (1974)
+226,ELI (2011)
+227,EXEC 2
+228,E (1997)
+229,Ease (1991)
+230,EasyLanguage
+231,Ed (1973)
+232,Edinburgh IMP (1966)
+233,Eff
+234,Eiffel (1986)
+235,Elixir (2012)
+236,Elliott ALGOL (1962)
+237,Elm (2012)
+238,Emacs Lisp (1985)
+239,Embeddable Common Lisp (1995)
+240,Emerald
+241,Epigram (2004)
+242,Erlang (1986)
+243,Escher
+244,Chef
+245,Etoys (1996)
+246,EuLisp (1990)
+247,Euclid
+248,Euler (1965)
+249,Euphoria (1993)
+250,Executive Systems Problem Oriented Language (1962)
+251,Extempore (2011)
+252,Extended ML (1985)
+253,Extensible Application Markup Language (2006)
+254,Extensible Embeddable Language
+255,Ezhil (2007)
+256,F* (2011)
+257,FACT (1959)
+258,FLOW-MATIC (1955)
+259,FLOW (1970)
+260,FL (1989)
+261,FOCAL (1968)
+262,FP (1977)
+263,F
+264,F Sharp (2005)
+265,Facebook Query Language (2007)
+266,Factor (2003)
+267,Fantom (2005)
+268,Flix
+269,Forth (1970)
+270,Fortran (1957)
+271,Fortress (2006)
+272,Franz Lisp (1980)
+273,FreeBASIC (2004)
+274,FreeDOS (1994)
+275,Frenetic
+276,Frink (2001)
+277,Functional programming
+278,Futhark (2014)
+279,GNU E (1991)
+280,GNU Guile (1993)
+281,GOLOG (1994)
+282,GRASS
+283,GT.M (1986)
+284,GW-BASIC (1983)
+285,Gambas (1999)
+286,Gambit (1988)
+287,GameMonkey Script
+288,Game Oriented Assembly Lisp (2001)
+289,GemStone/S (1986)
+290,General algebraic modeling system
+291,Generics in Java
+292,Gleam (2016)
+293,Go! (2003)
+294,Go (2009)
+295,Godot (2014)
+296,Gofer
+297,Google Native Client (2011)
+298,GScript (2010)
+299,Graph Query Language (2024)
+300,Gremlin (2009)
+301,HOL Light
+302,HP Time-Shared BASIC (1968)
+303,HTML (1993)
+304,Hack (2014)
+305,Haml
+306,Handel-C (1996)
+307,Harbour (1999)
+308,Haskell (1990)
+309,Haxe (2005)
+310,Hibernate (2001)
+311,High Performance Fortran
+312,History of type theory
+313,Hop (2006)
+314,Hope (1980)
+315,HotSpot (1999)
+316,Hot Soup Processor (1996)
+317,Hume (2000)
+318,Hy
+319,HyperCard (1987)
+320,HyperTalk (1987)
+321,IBM BASIC (1981)
+322,IBM PC DOS (1981)
+323,IBM PL/S
+324,IDL (1977)
+325,IMP (1965)
+326,INTERCAL
+327,ISLISP
+328,ISWIM (1966)
+329,Icon (1977)
+330,Id
+331,Idris (2007)
+332,Ikarus (2007)
+333,Impromptu (2005)
+334,Incr Tcl (1993)
+335,Inform
+336,Information Processing Language (1956)
+337,Integer BASIC (1976)
+338,Intel Array Building Blocks (2010)
+339,Intel Parallel Building Blocks (2010)
+340,Interactive Application System (1975)
+341,Interactive C (1997)
+342,Interactive fiction
+343,Interlisp (1968)
+344,Interpress
+345,Io (2002)
+346,Isabelle (1986)
+347,JOOQ Object Oriented Querying
+348,JOSS (1963)
+349,JOVIAL (1960)
+350,JR-BASIC (1981)
+351,JS++ (2011)
+352,JSON
+353,JSONPath (2007)
+354,JSONiq
+355,JScript (1996)
+356,JScript .NET
+357,J (1990)
+358,Jakarta Persistence Query Language
+359,Jakarta Server Pages (1999)
+360,Janus (1990)
+361,JavaScript (1995)
+362,JavaScript OSA (2001)
+363,Java (1995)
+364,Java virtual machine
+365,Jet Propulsion Laboratory Display Information System
+366,Job Control Language
+367,Joe-E (2004)
+368,Joule (1996)
+369,Joy (2001)
+370,Joyce (1987)
+371,Jq (2012)
+372,JuMP (2013)
+373,Julia (2012)
+374,KL0
+375,KL1
+376,KUKA Robot Language
+377,K (1993)
+378,Karel (1981)
+379,Kawa (1996)
+380,Kent Recursive Calculator (1981)
+381,Kojo (2010)
+382,KornShell (1983)
+383,Kotlin (2011)
+384,LFE (2008)
+385,LISP 2 (1960)
+386,LIS
+387,LLVM (2003)
+388,LPC
+389,Language H (1962)
+390,Language Integrated Query
+391,Laning and Zierler system
+392,Lasso (1995)
+393,Le Lisp (1981)
+394,Lean (2013)
+395,Cayenne
+396,Less
+397,Level I BASIC (1977)
+398,Li-Chen Wang
+399,Liberty BASIC (1992)
+400,Limbo (1995)
+401,Linda (1986)
+402,Lingo
+403,LispWorks (1989)
+404,Lisp (1960)
+405,Lisp Machine Lisp (1976)
+406,Lispkit Lisp (1980)
+407,Little b (2004)
+408,LiveCode (2001)
+409,LiveScript (2011)
+410,LogicBlox
+411,Logic programming
+412,Logo (1967)
+413,Logtalk (1998)
+414,Lola (1995)
+415,Lua (1993)
+416,Lucid (1976)
+417,Lustre
+418,MAD (1959)
+419,MASSCOMP
+420,MATH-MATIC (1957)
+421,MATLAB (1984)
+422,MBASIC
+423,MDL (1971)
+424,META II (1963)
+425,MIT/GNU Scheme (1979)
+426,MIVA Script (1996)
+427,MLIR (2019)
+428,ML (1973)
+429,MLisp
+430,MLton (1997)
+431,MS-DOS (1981)
+432,MSX BASIC (1983)
+433,MUMPS (1966)
+434,Mach (1985)
+435,Machine code
+436,Macintosh Common Lisp
+437,Maclisp (1966)
+438,Macsyma
+439,Makeblock
+440,Maker culture
+441,Malbolge (1998)
+442,Managed Extensions for C++
+443,Mary (1971)
+444,Mathematical notation
+445,Max
+446,Mercury
+447,Mercury (1995)
+448,Mesa (1976)
+449,Message Passing Interface
+450,Microsoft
+451,Microsoft BASIC (1975)
+452,Microsoft Excel (1985)
+453,Microsoft Power Fx (2021)
+454,Microsoft Small Basic (2008)
+455,Mirah
+456,Miranda (1985)
+457,Mizar system (1973)
+458,Modula (1975)
+459,Modula-2 (1978)
+460,Modula-2+ (1984)
+461,Modula-3 (1988)
+462,Mojo (2023)
+463,Moose
+464,MultiLisp (1980)
+465,NELIAC (1958)
+466,NESL (1993)
+467,NEWP (1962)
+468,NIL (1979)
+469,NPL
+470,Napier88 (1988)
+471,Natural-language programming
+472,NekoVM (2005)
+473,Nemerle (2003)
+474,NetLogo (1999)
+475,NetRexx (1996)
+476,NewLISP (1991)
+477,Newspeak (2006)
+478,Newsqueak
+479,NewtonScript (1993)
+480,Nial (1981)
+481,Nim (2008)
+482,Nqthm
+483,Nu (2007)
+484,NumPy (1995)
+485,Nyquist
+486,OCaml (1996)
+487,OMDoc
+488,OMeta (2007)
+489,OPS5
+490,OS/2 (1987)
+491,OS/8 (1971)
+492,OTcl
+493,Oaklisp (1986)
+494,Oberon-2 (1991)
+495,Oberon
+496,ObjVlisp
+497,Object Oberon (1989)
+498,Object Pascal (1986)
+499,Object REXX (1988)
+500,Objective-C (1984)
+501,Obliq (1993)
+502,Occam-π
+503,Occam (1983)
+504,Opa (2011)
+505,OpenCL (2009)
+506,OpenGL Shading Language (2002)
+507,OpenLisp (1988)
+508,OpenMP
+509,OpenMx (2010)
+510,OpenVMS (1977)
+511,Open Roberta (2013)
+512,OptimJ (2006)
+513,Optimized Systems Software
+514,Orc (2004)
+515,Orwell (1984)
+516,Oxygene (2005)
+517,Oz (1991)
+518,PACT
+519,PAL (1967)
+520,PC-LISP
+521,PC-MOS/386 (1987)
+522,PCASTL (2008)
+523,PDF (1993)
+524,PDP-15
+525,PHP (1995)
+526,PL-6
+527,PL/C (1970)
+528,PL/I (1964)
+529,PL/M (1973)
+530,PL/SQL
+531,PL/pgSQL (1998)
+532,PL360 (1966)
+533,PL8
+534,PLEX
+535,POP-11 (1975)
+536,POP-2 (1970)
+537,PS-algol (1983)
+538,PTS-DOS (1993)
+539,Pandas (2008)
+540,ParaSail (2009)
+541,PascalABC.NET (2007)
+542,Pascal (1970)
+543,Pascal Script (2000)
+544,Perl (1987)
+545,Perl Data Language (1996)
+546,Pharo (2008)
+547,Php4delphi (2002)
+548,Pico
+549,Pict
+550,Pizza
+551,Plankalkül (1948)
+552,Planner (1969)
+553,Plus (1976)
+554,Pnuts (1997)
+555,Polymorphic Programming Language
+556,Pony (2015)
+557,Portable Standard Lisp (1980)
+558,PostScript (1982)
+559,PowerShell (2006)
+560,Processing (2001)
+561,Profile Scripting Language (1998)
+562,Programming Language for Business (1972)
+563,Programming with Big Data in R (2012)
+564,Prograph (1983)
+565,Progress Chef (2009)
+566,Project Jupyter
+567,Project Verona (2019)
+568,Prolog (1972)
+569,Proteus (1998)
+570,Puppet (2005)
+571,PureScript (2013)
+572,Pure (2008)
+573,Pure Data
+574,Pyomo (2008)
+575,Python (1991)
+576,P′′ (1964)
+577,QB64 (2007)
+578,QBasic (1991)
+579,QML (2009)
+580,Q (2003)
+581,Qalb (2012)
+582,Qore
+583,Qt (1995)
+584,QuakeC (1996)
+585,QuickBASIC (1985)
+586,RAPID (1994)
+587,RELAX NG
+588,RETRIEVE (1971)
+589,RPL (1984)
+590,RSX-11 (1972)
+591,RT-11 (1973)
+592,RTL/2 (1972)
+593,R (1993)
+594,Racket (1995)
+595,Raku (2015)
+596,Rapira (1982)
+597,Ratfor (1976)
+598,Es (1989)
+599,React (2013)
+600,Reason (2016)
+601,Rebol (1997)
+602,Red (2011)
+603,Reduce (1968)
+604,Redux (2015)
+605,Regular expression
+606,RenderMan Shading Language
+607,Reverse Polish notation
+608,Rexx (1979)
+609,Ring
+610,Roblox (2006)
+611,Ruby (1995)
+612,Rust (2012)
+613,S-algol (1979)
+614,S3 (1975)
+615,SAC programming language (1994)
+616,SAIL (1969)
+617,SAKO (1960)
+618,SAMPL (2001)
+619,SASL (1972)
+620,SAS language (1976)
+621,SCELBAL
+622,SCM (1990)
+623,SDS BASIC (1967)
+624,SETL (1969)
+625,SHACL
+626,SIMSCRIPT
+627,SIOD (1988)
+628,SISAL (1983)
+629,SK8
+630,SMALL (1980)
+631,SMP
+632,SNOBOL (1962)
+633,SP/k (1974)
+634,SPARK (2009)
+635,SPARQL (2008)
+636,SQL (1973)
+637,SQL/PSM (1996)
+638,STOIC (1975)
+639,STOS BASIC (1988)
+640,STRINGCOMP
+641,SUPER BASIC (1968)
+642,SYMPL
+643,S (1976)
+644,Sass (2006)
+645,Sather (1990)
+646,Scala (2004)
+647,Scheme (1975)
+648,Schoonschip (1967)
+649,ScratchJr (2014)
+650,Scratch (2003)
+651,Script.NET
+652,Security Assertion Markup Language
+653,Sed (1974)
+654,Seed7 (2005)
+655,Self (1987)
+656,Semi-Automatic Ground Environment
+657,SenseTalk (1992)
+658,Sense (2008)
+659,ShEx
+660,Sharp PC-1211
+661,Simula (1962)
+662,Singularity (2008)
+663,Sketchpad (1963)
+664,SmallBASIC
+665,Smalltalk (1972)
+666,Snap! (2011)
+667,Solidity (2014)
+668,Soufflé
+669,Source (2017)
+670,SpartaDOS X (1988)
+671,Speakeasy
+672,Speedcoding (1953)
+673,Spice Lisp (1980)
+674,Split-C
+675,Squeak
+676,Squirrel (2003)
+677,StaDyn (2007)
+678,Stackless Python (1998)
+679,Stalin
+680,Standard ML (1983)
+681,Standard ML of New Jersey (1988)
+682,StarLogo (2001)
+683,Ardent Computer
+684,Steelman language requirements (1980)
+685,Strand
+686,Strongtalk (2002)
+687,Structured text
+688,Stylus (2010)
+689,SuperCollider (1996)
+690,SuperPascal (1993)
+691,SuperTalk
+692,Superplan (1951)
+693,Swift (2007)
+694,Swift (2014)
+695,SystemVerilog (2002)
+696,Systems Programming Language (1972)
+697,TELCOMP (1965)
+698,TENEX (1969)
+699,THINK C
+700,TMG (1963)
+701,TOPS-10 (1970)
+702,TREE-META (1968)
+703,T (1982)
+704,Taligent
+705,Tcl
+706,Tea (1997)
+707,TempleOS (2005)
+708,Threading Building Blocks
+709,TigerGraph
+710,Tiny BASIC (1975)
+711,Tk (1991)
+712,ToonTalk (1995)
+713,Transaction Application Language
+714,Tritium
+715,True BASIC (1983)
+716,Turbo-BASIC XL (1985)
+717,Turing (1982)
+718,Turtle
+719,Turtlestitch (2015)
+720,Tweak programming environment
+721,TypeScript (2012)
+722,UCBLogo (1992)
+723,UCSD Pascal (1977)
+724,Ultrix (1984)
+725,Umple (2008)
+726,Unicon
+727,Unified Modeling Language
+728,Unified Parallel C
+729,Unix shell
+730,Unreal Engine
+731,Ur (2014)
+732,Urbiscript (2003)
+733,VAX
+734,VAXELN (1982)
+735,VBScript (1996)
+736,VHDL
+737,VP-Info (1986)
+738,V (2019)
+739,Vala (2006)
+740,Verilog (1984)
+741,Vilnius BASIC (1986)
+742,VisSim (1989)
+743,VisualWorks
+744,Visual Basic (2001)
+745,Visual Basic (1991)
+746,Visual Basic for Applications (1993)
+747,Visual J++ (1996)
+748,Visual J Sharp (2002)
+749,Visual Prolog
+750,Vue.js (2014)
+751,Vvvv (1998)
+752,WQL
+753,Wang BASIC (1973)
+754,WebAssembly (2017)
+755,Whiley (2010)
+756,Windows 3.1
+757,Windows 9x (1995)
+758,Windows NT (1993)
+759,Wolfram Language (1988)
+760,WordBASIC (1989)
+761,Workplace OS
+762,X10 (2004)
+763,XACML (2001)
+764,XBLite (2001)
+765,XBase
+766,XBasic
+767,XForms
+768,XLISP
+769,XLNT (1997)
+770,XML
+771,XML Schema
+772,XOTcl (2000)
+773,XPL (1964)
+774,XPath (1998)
+775,XPointer
+776,XQuery (2007)
+777,XSB
+778,XSLT (1998)
+779,XUL
+780,Real Software
+781,Xtend (2011)
+782,YAML (2001)
+783,Yacc
+784,Z-level programming language (1993)
+785,Z-machine
+786,ZPE Programming Environment
+787,Z notation
+788,Zebra Programming Language
+789,ZeroMQ
+790,Zig (2016)
+791,Zonnon (2013)
+792,ΛProlog (1987)
+793,Ωmega (2005)

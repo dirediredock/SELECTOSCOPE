@@ -1,0 +1,942 @@
+node_id,label
+indo1319,Indo-European
+anat1257,Anatolian
+hitt1242,Hittite
+luvo1234,Luvo-Lydian
+luvo1235,Luvo-Palaic
+luvi1234,Luvic
+luvi1235,Luvian
+cune1239,Cuneiform Luwian
+hier1240,Hieroglyphic Luwian
+lyco1238,Lyco-Carian
+lyco1239,Lyco-Sidetic
+lyci1241,Lycian A
+side1240,Sidetic
+mily1239,Milyan-Carian
+cari1274,Carian
+mily1238,Milyan
+uncl1514,Unclassified Luvic
+pisi1234,Pisidian
+pala1331,Palaic
+lydi1241,Lydian
+clas1257,Classical Indo-European
+alba1267,Albanian
+alba1268,Albanian-Tosk
+tosk1239,Northern Tosk Albanian
+sout3378,Southern Tosk
+arbe1236,Arbëreshë Albanian
+arva1236,Arvanitika Albanian
+gheg1238,Gheg Albanian
+arme1241,Armenic
+clas1249,Classical-Middle Armenian
+east2768,Eastern-Western Armenian
+nucl1235,Eastern Armenian
+homs1234,Western Armenian
+balt1263,Balto-Slavic
+east2280,Eastern Baltic
+latv1249,Latvian
+lith1251,Lithuanian
+prus1238,Old Prussian
+slav1255,Slavic
+east1426,East Slavic
+bela1254,Belarusian
+oldr1238,Old Russian
+russ1263,Russian
+ukra1257,Ukrainian-Rusyn
+rusy1239,Rusyn
+ukra1253,Ukrainian
+sout3147,South Slavic
+east2269,Eastern South Slavic
+chur1257,Church Slavic
+mace1252,Macedo-Bulgarian
+bulg1262,Bulgarian
+mace1250,Macedonian
+west2804,Western South Slavic
+kajk1237,Kajkavian
+sout1528,Serbian-Croatian-Bosnian
+slav1254,Slavomolisano
+slov1268,Slovenian
+west2792,West Slavic
+czec1260,Czech-Slovak
+czec1258,Czech
+slov1269,Slovak
+lech1241,Lechitic
+kash1274,Kashubian
+pola1255,Polabian
+poli1262,Polish-Silesian
+poli1260,Polish
+sile1253,Silesian
+sorb1249,Sorbian
+lowe1385,Lower Sorbian
+uppe1395,Upper Sorbian
+celt1248,Celtic
+celt1247,Celtiberian
+nucl1715,Nuclear Celtic
+cisa1238,Cisalpine Celtic
+cisa1237,Cisalpine Gaulish
+lepo1240,Lepontic
+tgbc1234,Core Celtic
+cont1249,Continental Transalpine Celtic
+tran1282,Transalpine Gaulish
+uncl1538,Unclassified Continental Transalpine Celtic
+gala1252,Galatian
+nori1240,Noric
+insu1254,Insular Celtic
+bryt1239,Brythonic
+oldm1247,Old-Modern Welsh
+oldw1239,Old-Middle Welsh
+wels1247,Welsh
+sout3176,Southwestern Brythonic
+midd1379,Middle-Modern Southwestern Brythonic
+bret1245,Bretonic
+bret1244,Breton
+vann1244,Vannetais
+corn1251,Cornish
+oldc1252,Old South-West British
+goid1240,Goidelic
+oldi1245,Early Irish
+mode1265,Modern Goidelic
+east2734,Eastern Goidelic
+manx1243,Manx
+scot1245,Scottish Gaelic
+iris1253,Irish
+germ1287,Germanic
+east2805,East Germanic
+crim1255,Crimean Gothic
+goth1244,Gothic
+nort3152,Northwest Germanic
+nort3160,North Germanic
+nort3266,North Scandinavian
+gutn1238,Archaic Gutnish
+east2780,East-Central Swedic
+dale1238,Dalecarlian
+east2781,East Swedic
+east2303,Archaic Finnish Swedish
+esto1259,Estonian Swedish
+swed1254,Swedish
+narr1283,Narrow North Scandinavian
+arch1246,Archaic Norrlandic
+jamt1238,Jamtska
+sout3248,South Scandinavian
+dani1285,Danish
+scan1238,East Danish
+juti1236,Jutish
+west2805,West Scandinavian
+icel1246,Icelandic-Faroese
+faro1244,Faroese
+icel1247,Icelandic
+norw1258,Norwegian
+oldn1244,Old Norse
+olde1239,Older Runic
+west2793,West Germanic
+high1289,High German
+fran1268,Middle German
+east2832,East Middle German
+uppe1400,Central East Middle German
+schl1237,Schlesisch-Wilmesau
+east2295,Eastern Yiddish
+lowe1388,Lower Silesian
+wymy1235,Wymysorys
+high1287,West Middle German
+midd1319,Middle Franconian
+luxe1241,Moselle Franconian
+ripu1236,Ripuarian
+kols1241,Kölsch
+limb1263,Limburgan
+rhin1244,Rhenish Franconian
+riog1239,Hunsrik
+pala1355,Palatinate
+penn1240,Pennsylvania German
+pala1330,Pfaelzisch-Lothringisch
+high1286,Upper German
+midd1349,Middle-Modern High German
+midd1343,Middle High German
+mode1258,Modern High German
+alem1243,Alemannic
+nort3310,North Alemannic
+colo1254,Colonia Tovar German
+swab1242,Swabian
+sout3294,South Alemannic
+swis1247,Central Alemannic
+wals1238,Walser
+baye1239,Bairisch
+bava1246,Bavarian
+glob1242,Global South Bavarian
+cimb1238,Cimbrian
+hutt1235,Hutterite German
+moch1255,Mòcheno
+uppe1464,Upper Franconian
+glob1243,Global German
+stan1295,German
+unse1236,Unserdeutsch
+grea1301,Greater East Franconian
+main1267,Ostfränkisch
+west2361,Western Yiddish
+oldh1241,Old High German {ca. 750-1050}
+macr1270,Macro-Dutch
+midd1347,Middle-Modern Dutch
+midd1321,Middle Dutch
+mode1257,Modern Dutch
+glob1241,Global Dutch
+afri1273,Afrikaansic
+afri1274,Afrikaans
+oorl1238,Oorlams
+dutc1256,Dutch
+javi1237,Javindo
+petj1238,Petjo
+sout3292,Southwestern Dutch
+vlaa1240,Western Flemish
+zeeu1239,Zeeuwic
+berb1259,Berbice Creole Dutch
+skep1238,Skepi Creole Dutch
+nege1244,Virgin Islands Dutch Creole
+zeeu1238,Zeeuws
+oldd1237,Old Dutch-Old Frankish
+nort3175,North Sea Germanic
+alts1234,Altsächsisch
+midd1345,Middle-Modern Low German
+lowg1239,Low German
+east2291,Greater East Low German
+nort2627,Eastern Low German
+plau1238,Plautdietsch
+west2357,West Low German
+east2290,Eastphalian
+ostf1234,North Low Saxon
+nort2628,German Northern Low Saxon
+gron1242,Gronings
+west2356,Westphalic
+midd1318,Middle Low German
+olds1250,Old Saxon
+angl1264,Anglo-Frisian
+angl1265,Anglic
+late1254,Later Anglic
+merc1242,Middle-Modern English
+east2834,Irish Anglo-Norman
+macr1271,Macro-English
+stan1293,English
+guin1259,Guinea Coast Creole English
+cari1284,Caribbean English Creole
+east2759,Eastern Caribbean Creole
+barb1266,Barbados-Eustatius
+barb1267,Barbados-Trinidad
+baja1265,Bajan
+creo1235,Guyanese Creole English
+trin1276,Trinidadian Creole English
+virg1240,Virgin Islands Creole English
+gull1242,Gullah-Nevis-Antigua
+anti1245,Antigua and Barbuda Creole English
+gull1243,Gullah
+afro1254,Afro-Seminole Creole
+baha1261,Bahamian Gullah
+baha1260,Bahamas Creole English
+turk1310,Turks And Caicos Creole English
+gull1241,Sea Island Creole English
+vinc1244,Vincent-Grenadian Creole
+gren1248,Grenada-Tobago Creole
+gren1247,Grenadian Creole English
+toba1282,Tobagonian Creole English
+vinc1243,Vincentian Creole English
+west2854,Western Caribbean Creole
+jama1264,Jamaicanic
+jama1262,Jamaican Creole English
+limo1249,Limonese Creole
+misk1243,Miskitoic Creole English
+beli1261,Belize-Miskito Creole English
+beli1260,Belize Kriol English
+nica1252,Nicaragua Creole English
+sana1297,San Andres Creole English
+suri1275,Surinamese Creole English
+sran1241,Eastern Maroons
+suri1272,Ndyuka
+ndyu1242,Aukan
+kwin1243,Kwinti
+sran1240,Sranan Tongo
+sara1340,Saramaccan
+west2851,West African Creole English
+coas1331,Coastal Nigerian Krio
+came1254,Cameroon Pidgin
+nige1262,Nigerian-Ghanaian Krio
+ghan1244,Ghanaian Pidgin English
+nige1257,Nigerian Pidgin
+krio1253,Krio
+fern1234,Pichi
+paci1280,Pacific Creole English
+earl1243,Early Melanesian Pidgin
+bisl1239,Bislama
+piji1239,Pijin
+tokp1240,Tok Pisin
+torr1261,Torres Strait-Lockhart River Creole
+hawa1247,Hawai'i Creole English
+krio1252,Kriol
+pitc1234,Pitcairn-Norfolk
+midd1317,Middle English
+scot1243,Scots
+olde1238,Old English {ca. 450-1100}
+fris1239,Frisian
+sate1242,Ems-Weser Frisian
+mode1264,Modern West Frisian
+hind1273,Hindeloopen-Molkwerum Frisian
+schi1234,Schiermonnikoog Frisian
+west2902,Westlauwers-Terschelling Frisian
+ters1236,Terschelling Frisian
+west2354,Western Frisian
+nort2626,Northern Frisian
+oldf1241,Old Frisian
+grae1234,Graeco-Phrygian
+gree1276,Greek
+nort3405,North Greek
+anci1249,Ancient North Greek
+tsak1248,Tsakonian
+east2798,South Greek
+myce1241,Achaean Greek
+cent2404,Central Greek
+anci1242,Ionic-Attic Ancient Greek
+koin1234,Koineic Greek
+medi1251,Medieval Greek
+mode1266,Modern Koineic Greek
+apul1236,Apulian-Calabrian Greek
+cypr1249,Cypriot Greek
+nucl1783,Nuclear Modern Greek
+mode1248,Modern Greek
+roma1240,Romano-Greek
+yeva1238,Yevanic
+pont1257,Pontic-Cappadocian Greek
+capp1239,Cappadocian Greek
+pont1253,Pontic
+phry1239,Phrygian
+indo1320,Indo-Iranian
+indo1321,Indo-Aryan
+kala1372,Chitral Kalasha
+gawa1246,Gawarbatic
+gawa1247,Gawar-Bati
+shum1244,Shumashtic
+gran1245,Grangali-Ningalami
+shum1235,Shumashti
+khow1242,Khowar
+midd1375,Middle-Modern Indo-Aryan
+cont1248,Continental Indo-Aryan
+indo1323,Indo-Aryan Eastern zone
+halb1246,Halbic
+bhat1265,Bhatri
+bhun1242,Bhunjia
+halb1244,Halbi
+kama1350,Kamar
+naha1262,Nahari
+oriy1254,Oriya-Gauda-Kamrupa
+gaud1237,Gauda-Kamrupa
+gaud1238,Gauda-Banga
+beng1280,Bengali
+bish1244,Bishnupriya Manipuri
+east2744,Eastern Bengali
+hajo1238,Hajong
+sylh1242,Sylheti
+khar1283,Kharia Thar
+lodh1246,Lodhi
+malp1246,Mar Paharia of Dumka
+rohi1238,Rohingya
+sout3182,Southeastern Bengali
+chak1266,Chakma
+chit1275,Chittagonian
+noak1234,Noakhali
+tang1330,Tangchangya
+uncl1515,Unclassified Gauda-Banga
+kurm1243,Kurmukar
+kamt1240,Kamrupa
+assa1262,Eastern Kamrupa
+assa1263,Assamese
+naga1394,Naga Pidgin
+kamt1242,Kamta
+rang1265,Central-Eastern Kamta
+west2382,Western Kamta
+rajb1243,Rajbanshi
+surj1235,Surjapuri
+macr1269,Macro-Oriya
+bodo1266,Bodo Parja
+adiv1239,Kotia-Adivasi Oriya-Desiya
+kupi1238,Kupia
+oriy1255,Odia
+reli1238,Reli
+samb1325,Sambalpuri
+indo1324,Indo-Aryan Northwestern zone
+pais1238,Paisaci Prakrit
+sind1278,Sindhi-Lahnda
+lahn1241,Greater Panjabic
+east2727,Eastern Panjabic
+panj1256,Eastern Panjabi
+sans1271,Sansi
+hind1274,Hindko-Siraiki
+hind1271,Hindko
+nort2662,Northern Hindko
+sout2668,Southern Hindko
+sira1271,Siraikic
+jaka1245,Inku
+sera1259,Saraiki
+paha1255,Paharic
+paha1251,Pahari Potwari
+sira1263,Sirajic
+west2386,Western Panjabi
+sind1279,Sindhic
+khet1238,Khetrani
+lasi1244,Lasi-Jadgali
+jadg1238,Jadgali
+lasi1242,Lasi
+sind1282,Sindhi-Kachchi
+kach1277,Kachchi
+sind1272,Sindhi
+uncl1504,Unclassified Sindhic
+khol1241,Kholosi
+luwa1238,Luwati
+memo1238,Memoni
+sind1270,Sindhi Bhil
+indo1325,Indo-Aryan Southern zone
+maha1305,Maharastri Prakrit
+mara1416,Marathic
+katk1238,Katkari
+mara1422,Marathi-Konkani
+goan1235,Goan Konkani
+oldm1248,Old-Modern Marathi
+mode1268,Modern Marathi
+varl1238,Dungar Varli
+mara1378,Marathi
+samv1238,Samvedi
+varh1239,Varhadi-Nagpuri
+west2963,Western Marathi
+konk1267,Konkan Marathi
+phud1238,Phudagi
+oldm1244,Old Marathi
+midl1245,Midlands Indo-Aryan
+apab1234,Apabhramsic
+guja1255,Gujarati-Rajasthani
+guja1256,Gujaratic
+dubl1239,Dubli
+guja1252,Gujarati
+saur1248,Saurashtra
+west2830,Western Gujaratic
+aerr1238,Aer
+kach1272,Kachi Koli
+vagh1246,Vaghri
+wadi1248,Wadiyara Koli
+raja1256,Rajasthani
+bagr1245,Bagri-Jandavra
+bagr1243,Bagri
+jand1246,Jandavra
+east2890,Eastern Rajasthani
+dhun1238,Dhundari
+hado1235,Hadothi
+merw1238,Merwari
+mewa1253,Mewaric
+gade1236,Gade Lohar
+kanj1259,Kanjari
+mewa1249,Mewari
+mewa1254,Mewati-Gojri
+godw1241,Godwari
+guja1253,Gujari
+marw1260,Marwari {India}
+mewa1250,Mewati
+pary1242,Parya
+shek1243,Shekhawati
+uncl1534,Unclassified Rajasthani
+kabu1254,Kabutra
+west2831,Western Rajasthani
+bhay1238,Bhaya
+goar1239,Goaria
+indu1243,Indus Rajasthani
+dhat1238,Dhatki
+marw1256,Marwari {Pakistan}
+oddd1238,Od
+park1237,Parkari Koli
+lamb1269,Lambadi
+midd1350,Late Middle Indo-Aryan
+bhil1254,Bhil
+baur1251,Bauria
+bhil1251,Bhili
+chod1238,Chodri
+dhod1238,Dhodia-Kukna
+dung1251,Dungra Bhil
+gami1242,Gamit
+gara1268,Garasia Bhil
+adiw1235,Adiwasi Garasia
+rajp1235,Rajput Garasia
+malv1243,Malvi
+mawc1242,Mawchi
+nima1243,Nimadi
+pard1243,Pardhi
+paur1240,Pauri-Nahali
+bhil1253,Bhilali
+naha1261,Nahali-Baglani
+paur1238,Pauri Bareli
+rath1242,Rathwi Bareli
+rath1244,Rathawi-Palya
+paly1238,Palya Bareli
+rath1243,Rathawi
+vaag1238,Vaagri Booli
+vasa1240,Vasave-Noiri
+noir1238,Noiri
+vasa1239,Vasavi
+wagd1238,Wagdi
+indo1310,Indo-Aryan Northern zone
+cent1977,Central Pahari
+garh1243,Garhwali
+kuma1273,Kumaoni
+east1436,Eastern Pahari
+doty1234,Dotyali
+juml1238,Jumli
+nepa1254,Nepali
+khan1271,Khandesic
+dhan1264,Dhanki
+khan1272,Khandesi
+shau1239,Shaurasenic
+biha1245,Bihari
+mait1254,Magadhan
+angi1238,Angika
+bhoj1246,Bhojpuric
+bhoj1244,Bhojpuri
+cari1275,Caribbean Hindustani
+maga1260,Magahi
+mait1250,Maithili
+sada1243,Sadanic
+kudm1238,Kudmali
+sadr1250,Sadri-Panchpargania
+sada1242,India-Nepal-Bangladesh Sadri
+orao1237,Oraon Sadri
+sadr1248,Sadri
+panc1246,Panchpargania
+pali1273,Pali
+thar1284,Tharuic
+east2316,Eastern Tharu
+chit1274,Chitwania Tharu
+dang1277,Dangaura-Khuna-Sonaha
+dang1260,Dangaura Tharu
+sonh1238,Sonha
+kath1250,Kathoriya Tharu
+koch1247,Kochila Tharu
+rana1246,Rana Tharu
+unun9886,Unclassified Tharu
+buks1238,Buksa
+majh1253,Majhi
+musa1263,Musasa
+unun9885,Unclassified Bihari
+kumh1238,Kumhali
+kusw1234,Kuswaric
+bote1238,Bote
+dara1250,Darai
+dhan1265,Dewas-Done Danuwar
+koch1253,Kochariya-East Danuwar
+east2726,Eastern Hindi
+awad1245,Awadhic
+awad1243,Awadhi
+bagh1251,Bagheli
+chha1249,Chhattisgarhi
+powa1246,Powari
+indo1322,Indo-Aryan Central zone
+doma1260,Domaaki
+doma1258,Domari
+roma1329,Romani
+roma1330,Anglo-Northwestern Romani
+brit1245,British Romani
+angl1239,Archaic Angloromani
+wels1246,Welsh Romani
+nort3197,Northwestern Romani
+kalo1256,Kalo Finnish Romani
+sint1235,Sinte-Manus Romani
+balk1252,Balkan Romani
+balt1257,Baltic Romani
+calo1236,Caló
+carp1235,Central Romani
+vlax1238,Vlax Romani
+west2812,Western Hindi
+bund1252,Bundeli-Bharia
+bhar1241,Bhariati
+bund1253,Bundeli
+hary1239,Haryanvic
+braj1242,Braj
+hary1238,Haryanvi
+kana1281,Kanauji
+hind1270,Hindustani
+anda1280,Andaman Creole Hindi
+fiji1242,Fiji Hindi
+hind1269,Hindi
+urdu1245,Urdu
+unun9883,Unclassified Western Hindi
+gher1240,Ghera-Gurgula
+gher1238,Ghera
+gurg1240,Gurgula
+saur1252,Sauraseni Prakrit
+sinh1245,Dhivehi-Sinhala
+dhiv1236,Dhivehi
+sinh1247,Sinhalaic
+sinh1246,Sinhala
+vedd1240,Veddah
+dard1244,Eastern Dardic
+hima1250,Himachali
+jaun1243,Jaunsari
+kang1292,Kangric-Chamealic-Bhattiyali
+cham1331,Chamealic
+bhad1243,Bhadrawahi-Bhalesi-Curahi
+bhad1244,Bhadarwahic
+bhad1241,Bhadrawahi
+chin1493,Chinali-Lahul Lohar
+chin1475,Chinali
+lahu1250,Lahul Lohar
+chur1258,Churahi
+bhat1263,Bhattiyali
+bila1253,Bilaspuri
+cham1307,Chambeali
+gadd1242,Gaddi
+pang1282,Pangwali
+indo1311,Kangri-Dogri
+dogr1250,Dogri
+kang1280,Kangri
+mand1409,Mandeali
+nucl1728,Nuclear Himachali
+hind1267,Hinduri
+hari1246,Indo-Aryan Kinnauri
+kull1236,Kullu Pahari
+maha1287,Mahasu Pahari
+sirm1239,Sirmauri
+kash1285,Kashmiric
+kash1277,Kashmiri
+khah1234,Khah
+nucl1819,Nuclear Eastern Dardic
+gand1259,Gandhari
+kohi1251,Kohistani
+dirs1236,Dir-Swat Kohistani
+kala1373,Gawri
+torw1241,Torwali
+indu1240,Indus Kohistanic
+indu1241,Indus Kohistani
+oute1238,Outer Indus Kohistani
+bate1269,Bateri-Mankiyali
+bate1261,Bateri
+mank1256,Mankiyali
+chil1275,Chilisso
+gowr1239,Gowro
+uncl1535,Unclassified Kohistani
+tira1253,Tirahi
+wota1240,Wotapuri-Katarqalai
+shin1270,Shinaic
+brok1247,Brokskat
+kohi1247,Kohistanic Shina
+kohi1248,Kohistani Shina
+usho1238,Ushojo
+kund1257,Kundal Shahi
+shin1264,Shina
+west2860,Western Shinaic
+palu1255,Dangari
+kalk1245,Kalkoti
+phal1254,Palula
+savi1242,Sauji
+pash1270,Pashayi
+east2322,Eastern Pashayi
+nort2666,Northeast Pashayi
+sout2672,Southeast Pashayi
+west2387,Western Pashayi
+nort2665,Northwest Pashayi
+sout2671,Southwest Pashayi
+sans1269,Sanskrit
+iran1271,Iranian-Nuristani
+iran1269,Iranian
+aves1237,Avestan
+cent2399,Central Eastern Iranian
+shug1237,Shughni-Yazgulami
+shug1253,Shughnic
+oldw1238,Old Wanji
+sari1246,Sarikoli
+shug1248,Shughni
+yazg1240,Yazgulyam
+yidg1239,Yidgha-Munji
+munj1244,Munji
+yidg1240,Yidgha
+cent2317,Central Iranian PBS
+cent2318,Central Iranian PB
+bact1239,Bactrian
+nort3177,Northwestern Iranian
+tati1243,Adharic
+adha1238,Adhari
+gora1267,Gorani
+gura1251,Gurani
+shab1250,Shabak-Bajalani
+baje1238,Bajelani
+shab1251,Shabaki
+tati1244,Tatic
+goza1238,Alamuti
+cent2265,Central Tatic
+khal1276,Khalkhalic
+kaja1247,Kajali
+kore1279,Karanic
+shah1254,Shahrudi-Southern Talysh
+khoi1250,Kho'ini
+mara1373,Maraghei
+taly1247,North-Central Talysh
+taro1267,Taromic
+kaba1276,Kabatei
+uppe1235,Upper Taromi
+nort2642,Northern Tatic
+harz1239,Harzani-Kilit
+kari1303,Karingani-Kalasuri-Khoynarudi
+sout3177,Southern Tatic
+alvi1241,Alviri-Vidari
+rama1272,Ramand-Karaj
+esht1238,Eshtehardi
+raza1238,Razajerdi
+take1255,Takestani
+vafs1241,Vafsic
+asht1244,Ashtiani
+vafs1240,Vafsi
+zaza1246,Zaza
+diml1238,Dimli
+kirm1248,Kirmanjki
+balo1260,Balochic
+east2304,Eastern Balochi
+sout3242,Southern-Western Balochi
+sout3414,Southern Balochi-Koroshi
+koro1296,Koroshi
+sout2642,Southern Balochi
+west2368,Western Balochi
+casp1236,Caspian
+gila1242,Gilaki-Rudbari
+gila1241,Gilaki
+rudb1238,Rudbari
+gurg1241,Gurgani
+maza1305,Mazanderani-Shahmirzadi
+maza1291,Mazanderani
+shah1253,Shahmirzadi
+cent2264,Central Iran Kermanic
+kavi1234,Kavir
+nucl1790,Nuclear Central Iran Kermanic
+gazi1243,Gazic
+jude1268,Judeo-Hamadani-Borujerdi
+kash1282,Kashanic
+nata1252,Natanzic
+soii1239,Soic
+khun1255,Khunsaric
+yazd1241,Yazdi-Kermani-Nayini
+nayi1242,Nayinic
+zoro1242,Zoroastrian Yazdi
+siva1239,Sivandi
+komi1276,Komisenian
+lasg1238,Lasgerdi
+sang1315,Sangisari
+sork1239,Sorkhei-Aftari
+laki1246,Laki-Kurdish
+kurd1259,Kurdish
+cent1972,Central Kurdish
+nort2641,Northern Kurdish
+sout2640,Southern Kurdish
+laki1244,Laki
+part1239,Parthian
+semn1249,Semnani-Biyabuneki
+sogd1247,Sogdic-Ossetic
+osse1245,Ossetic
+osse1243,Modern Ossetic
+digo1242,Digor Ossetian
+iron1242,Iron Ossetian
+oldo1234,Old Ossetic
+sogd1248,Sogdic
+khwa1238,Khwarezmian
+sogd1246,Sogdian-Yagnobi
+sogd1245,Sogdian
+yagn1238,Yagnobi
+ormu1249,Ormuri-Parachi
+ormu1247,Ormuri
+para1299,Parachi
+pash1269,Pashto
+nucl1276,Nuclear Pashto
+cent1973,Central Pashto
+nort2646,Northern Pashto
+sout2649,Southern Pashto
+wane1241,Waneci
+saka1303,Saka-Wakhi
+saka1298,Saka
+khot1251,Khotanese
+tums1237,Tumshuqese
+wakh1245,Wakhi
+sang1343,Sanglechi-Ishkashimi
+ishk1246,Ishkashimi
+sang1344,Sanglechi
+sout3157,Southwestern Iranian
+midd1352,Middle-Modern Persian
+mode1259,Modern Southwestern Iranian
+bash1263,Bashkardi
+sout2645,Fars Dialects
+fars1254,Farsic-Caucasian Tat
+cauc1242,Caucasian Tat
+jude1256,Judeo-Tat
+musl1236,Muslim Tat
+fars1255,Farsic
+east2745,Eastern Farsic
+aima1241,Aimaq
+dari1249,Dari
+dehw1238,Dehwari
+haza1239,Hazaragi
+pahl1240,Pahlavani
+taji1250,Tajikic
+bukh1238,Bukharic
+taji1245,Tajik
+jude1257,Judeo-Persian
+west2369,Western Farsi
+kumz1235,Kumzari
+lari1253,Larestani
+luri1257,Luric-Dezfulic
+dezf1238,Dezfuli-Shushtari
+luri1252,Luric
+bakh1252,Bakhtiari-Southern Lori
+bakh1245,Bakhtiari
+sout2647,Southern Luri
+nort2645,Northern Luri
+pahl1241,Pahlavi
+oldp1254,Old Persian {ca. 600-400 B.C.}
+nuri1243,Nuristani
+ashk1248,Ashkun-Kate-Waigali
+ashk1249,Ashkun-Kate
+ashk1246,Ashkun
+kati1270,Katë
+waig1246,Nuristani Kalasha-Tregami
+waig1243,Nuristani Kalasha
+treg1243,Tregami
+dame1241,Dameli
+pras1239,Prasun
+ital1284,Italic
+lati1262,Latino-Faliscan
+fali1291,Faliscan
+lati1263,Latinic
+impe1234,Imperial Latin
+lati1261,Latin
+roma1334,Romance
+east2714,Eastern Romance
+arom1237,Aromanian
+nort3361,Northern Romanian
+east2865,Eastern Romanian
+megl1237,Megleno-Romanian
+roma1327,Romanian
+istr1245,Istro-Romanian
+ital1285,Italo-Western Romance
+ital1286,Italo-Dalmatian
+dalm1244,Dalmatian Romance
+dalm1243,Dalmatian
+istr1244,Istriot
+vene1258,Venetian
+ital1287,Italian Romance
+cent2427,Central Italian Romance
+cors1242,Corsic
+cors1241,Corsican
+gall1276,Gallurese Sardinian
+sass1235,Sassarese Sardinian
+ital1282,Italian
+friu1240,Friulian
+ladi1250,Ladin
+sout3428,Southern Italian Romance
+neap1235,Continental Southern Italian
+sici1248,Sicilian
+west2813,Western Romance
+shif1234,Shifted Western Romance
+nort3208,Northwestern Shifted Romance
+gall1279,Gallo-Italian
+emil1243,Emiliano-Romagnolo
+emil1241,Emiliano
+roma1328,Romagnol
+jude1255,Judeo-Italian
+ligu1248,Ligurian
+piem1239,Piemontese-Lombard
+lomb1257,Lombard
+piem1238,Piemontese
+gall1280,Gallo-Rhaetian
+oila1234,Oil
+cent2283,Central Oil
+caju1236,Louisiana French
+macr1273,Macro-French
+circ1240,Circum-Caribbean French
+gulf1242,Gulf Coast French
+guya1252,Guyanic Creole French
+guia1246,Guianese Creole French
+kari1301,Uaçá Creole French
+hait1244,Haitian
+less1242,Lesser Antillean French Creole
+guad1242,Guadeloupe-Martinique Creole French
+sain1246,Saint Lucian Creole French
+loui1240,Louisiana Creole French
+glob1239,Global French
+stan1290,French
+nouc1234,Nouchi
+isle1246,Isle-de-France Creole
+mori1278,Morisyen
+sese1246,Seselwa Creole French
+reun1238,Réunion Creole French
+tayo1238,Tayo
+pica1241,Picard
+fran1269,Francoprovencalic
+fran1260,Arpitan
+faet1240,Faeto and Celle San Vito Francoprovencal
+oldf1239,Old French {842-ca. 1400}
+wall1255,Walloon
+roma1326,Romansh
+sout3183,Southwestern Shifted Romance
+stan1289,Catalan
+occi1240,Occitanic
+gard1245,Gardiol
+occi1239,Occitan
+oldp1253,Old Provençal
+west2838,West Ibero-Romance
+astu1244,Asturo-Leonese
+astu1245,Asturian-Leonese-Cantabrian
+mira1251,Mirandese
+cast1243,Castilic
+extr1243,Extremaduran
+olds1249,Old Spanish
+sout3200,South Castilic
+ladi1251,Ladino
+pale1260,Palenquero
+lore1243,Peruvian Amazonian Spanish
+tern1253,Ternate-Zamboanga-Cavite
+chav1241,Chavacano
+tern1248,Ternateño
+stan1288,Spanish
+gali1263,Galician Romance
+fala1241,Fala
+gali1258,Galician
+macr1272,Macro-Portuguese
+braz1247,Brazil-Portugal Portuguese
+cafu1238,Cafundo
+port1283,Portuguese
+lowe1440,Gulf Guinea Creole Portuguese
+bant1299,Bantu Layer Gulf Guinea Creole Portuguese
+fada1250,Annobonese
+saot1242,Saotomic
+ango1258,Angolar
+saot1239,Sãotomense
+prin1242,Principense
+indo1327,Indo-Portuguesic
+mala1544,Malabar-Sri Lanka Portuguese
+nort3243,Northern Indo-Portuguesic
+dama1278,Daman-Diu Portuguese
+korl1238,Korlai Portuguese
+luso1234,Luso-Asian Creole
+maca1262,Macanese
+mala1533,Malacca-Batavia Portuguese Creole
+timo1258,Timor Pidgin
+uppe1458,Upper Guinea Portuguese
+kabu1256,Kabuverdianu
+papi1253,Papiamento
+uppe1455,Upper Guinea Crioulo
+mind1263,Minderico
+unsh1234,Unshifted Western Romance
+arag1245,Aragonese
+moza1249,Mozarabic
+sard1257,Southern Romance
+camp1261,Campidanese Sardinian
+logu1236,Logudorese Sardinian
+oldl1238,Old Latin
+sabe1249,Sabellic
+sabe1248,Old Sabellic
+osca1245,Oscan
+umbr1253,Umbrian
+uncl1536,Unclassified Italic
+lusi1235,Lusitanian
+vene1257,Venetic
+tokh1241,Tokharian
+tokh1242,Tokharian A
+tokh1243,Tokharian B
+uncl1527,Unclassified Indo-European
+daci1234,Dacian
+mess1244,Messapic
+thra1250,Thracian

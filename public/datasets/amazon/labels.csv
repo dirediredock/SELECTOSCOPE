@@ -1,0 +1,288 @@
+node_id,label
+0,"Abuna (Bolivia, Brazil)"
+1,Acará
+2,Acomayo (Peru)
+3,Acre
+4,Acurauá (Brazil)
+5,"Aguarico (Ecuador, Peru)"
+6,Aguaytía (Peru)
+7,Aiari (Brazil)
+8,Ajajú (Colombia)
+9,Ajarani (Brazil)
+10,Alalaú (Brazil)
+11,Alfamayo (Peru)
+12,Amazon Delta
+13,"Amazon (Brazil, Colombia, Peru)"
+14,Anapu (Brazil)
+15,Anauá (Brazil)
+16,Andamayo (Peru)
+17,"Andirá (Brazil, Acre)"
+18,"Andirá (Brazil, Juruá)"
+19,"Apaporis (Brazil, Colombia)"
+20,Apere (Bolivia)
+21,Apiacá (Brazil)
+22,Apuaú (Brazil)
+23,Araguaia (Brazil)
+24,Arapiuns (Brazil)
+25,Arari (Brazil)
+26,"Arauá (Brazil, Aripuanã)"
+27,"Arauá (Brazil, Coari)"
+28,Araçá (Brazil)
+29,Arinos (Brazil)
+30,Aripuanã (Brazil)
+31,Arraial Velho (Brazil)
+32,Arrojo (Brazil)
+33,Azul (Brazil)
+34,Bacajá (Brazil)
+35,Baependi (Brazil)
+36,Bararati (Brazil)
+37,Baures (Bolivia)
+38,"Beni (Bolivia, Brazil)"
+39,Biá (Brazil)
+40,Branco
+41,"Branco (Brazil, Aripuanã)"
+42,"Branco (Brazil, Roosevelt)"
+43,Cachorro (Brazil)
+44,Caguán (Colombia)
+45,Cahuinari (Colombia)
+46,Camanaú (Brazil)
+47,Camararé (Brazil)
+48,Cana Brava (Brazil)
+49,Candeias (Brazil)
+50,Canumã (Brazil)
+51,Capim (Brazil)
+52,"Capivara (Brazil, Santa Tereza)"
+53,"Capivara (Brazil, Tocantins)"
+54,Carajarí (Brazil)
+55,Casiquiare canal (Venezuela)
+56,Catete (Brazil)
+57,Catrimani (Brazil)
+58,Cauaburi (Brazil)
+59,"Chandless (Brazil, Peru)"
+60,Chapare (Bolivia)
+61,Chiché (Brazil)
+62,Chillcamayu (Peru)
+63,Chiriaco (Peru)
+64,Citaré (Brazil)
+65,Coari (Brazil)
+66,Coco (Brazil)
+67,Comandante Fontoura (Brazil)
+68,Comemoração (Brazil)
+69,Copatana (Brazil)
+70,"Corrientes (Ecuador, Peru)"
+71,Crepori (Brazil)
+72,Crixás Açu (Brazil)
+73,"Cuieiras (Brazil, Demini)"
+74,"Cuieiras (Brazil, Negro)"
+75,Culuene (Brazil)
+76,"Curaray (Ecuador, Peru)"
+77,Curisevo (Brazil)
+78,Cururu (Brazil)
+79,Cururuaçu (Brazil)
+80,Curuá (Brazil)
+81,Curuá Una (Brazil)
+82,Curuçá (Brazil)
+83,Cusichaca (Peru)
+84,Das Almas (Brazil)
+85,Das Garças (Brazil)
+86,Das Palmas (Brazil)
+87,Das Salinas (Brazil)
+88,Das Tropas (Brazil)
+89,Demini (Brazil)
+90,Do Sal (Brazil)
+91,Do Sangue (Brazil)
+92,Do Sono (Brazil)
+93,Dos Bois (Brazil)
+94,Dos Marmelos (Brazil)
+95,Dos Patos (Brazil)
+96,Fresco (Brazil)
+97,Galera (Brazil)
+98,Gregório (Brazil)
+99,Guamá (Brazil)
+100,"Guaporé (Bolivia, Brazil)"
+101,Guariba (Brazil)
+102,Huallaga (Peru)
+103,"Iaco (Brazil, Peru)"
+104,Ichilo (Bolivia)
+105,Igara Paraná (Colombia)
+106,Inambari (Peru)
+107,Inauini (Brazil)
+108,Ipiranga (Brazil)
+109,"Ipixuna (Brazil, Juruá)"
+110,"Ipixuna (Brazil, Madeira)"
+111,Iratapina (Brazil)
+112,Iriri Novo (Brazil)
+113,Iriri (Brazil)
+114,Isiboro (Bolivia)
+115,Itacaiúnas (Brazil)
+116,Itaparaná (Brazil)
+117,Itapará (Brazil)
+118,Itaxueiras (Brazil)
+119,Ituxi (Brazil)
+120,Ituí (Brazil)
+121,"Içana (Brazil, Colombia)"
+122,Jacaré (Brazil)
+123,Jacundá (Brazil)
+124,Jamanxim (Brazil)
+125,Alto Jamari (Brazil)
+126,Jandiatuba (Brazil)
+127,"Japurá (Brazil, Colombia)"
+128,Jaraucu (Brazil)
+129,Jari (Brazil)
+130,Jatapu (Brazil)
+131,Jatuarana (Brazil)
+132,Jauaperi (Brazil)
+133,"Javary (Brazil, Peru)"
+134,Ji-Paraná (Brazil)
+135,Jufari (Brazil)
+136,Julpe (Bolivia)
+137,Juma (Brazil)
+138,Juruena (Brazil)
+139,"Juruá (Brazil, Peru)"
+140,Jutaizinho (Brazil)
+141,Jutaí (Brazil)
+142,Juína-Mirim (Brazil)
+143,Juína (Brazil)
+144,Kachimayu (Peru)
+145,Lajeado (Brazil)
+146,Las Piedras (Peru)
+147,Lawriqucha (Peru)
+148,"Liberdade (Brazil, Juruá)"
+149,"Liberdade (Brazil, Xingu)"
+150,Los Amigos
+151,Lucumayo (Peru)
+152,Macucuaú (Brazil)
+153,"Madeira (Bolivia, Brazil)"
+154,Madidi (Bolivia)
+155,"Madre de Dios (Bolivia, Peru)"
+156,"Mamoré (Bolivia, Brazil)"
+157,Manicorezinho (Brazil)
+158,Manicoré (Brazil)
+159,Manissauá-Miçu (Brazil)
+160,Manuel Alves Grande (Brazil)
+161,"Manuripi (Bolivia, Peru)"
+162,Mapiá Grande (Brazil)
+163,Mapuera (Brazil)
+164,Maranhão (Brazil)
+165,Marauiá (Brazil)
+166,Marañón (Peru)
+167,Mariepauá (Brazil)
+168,Marié (Brazil)
+169,Mataurá (Brazil)
+170,Mizque (Bolivia)
+171,"Morona (Ecuador, Peru)"
+172,Mucajaí (Brazil)
+173,Mucuim (Brazil)
+174,Mutum (Brazil)
+175,Môa (Brazil)
+176,Nanay (Peru)
+177,"Napo (Ecuador, Peru)"
+178,Nhamundá (Brazil)
+179,Nieva (Peru)
+180,"Novo (Brazil, Anauá)"
+181,"Novo (Brazil, Iriri)"
+182,"Novo (Brazil, Sono)"
+183,"Novo (Brazil, Xeriuini)"
+184,Orteguaza (Colombia)
+185,Orthon (Bolivia)
+186,Pacajá (Brazil)
+187,Pacaya (Peru)
+188,Pachitea (Peru)
+189,Pacu (Brazil)
+190,Padauari (Brazil)
+191,Pakaymayu (Peru)
+192,Palcazu (Peru)
+193,Palmeiras (Brazil)
+194,Papagaio (Brazil)
+195,"Papurí (Brazil, Colombia)"
+196,Paraguá (Bolivia)
+197,Paranã (Brazil)
+198,"Pardo (Brazil, Amazonas)"
+199,"Pardo (Brazil, Xingu)"
+200,Paru (Brazil)
+201,Paru de Oeste (Brazil)
+202,Pará (Brazil)
+203,"Pastaza (Ecuador, Peru)"
+204,Pati (Brazil)
+205,Pauini (Brazil)
+206,Peixe (Brazil)
+207,Peixoto de Azevedo (Brazil)
+208,Perené (Peru)
+209,Pira Paraná (Colombia)
+210,"Piranhas (Brazil, lower Araguaia)"
+211,"Piranhas (Brazil, upper Araguaia)"
+212,Preto (Brazil)
+213,Preto do Crespo
+214,"Purus (Brazil, Peru)"
+215,"Putumayo (Brazil, Colombia, Ecuador, Peru)"
+216,"Negro (Brazil, Colombia, Venezuela)"
+217,"Verde (Brazil, Das Almas)"
+218,"Verde (Brazil, Jamari)"
+219,"Verde (Brazil, Maranhão)"
+220,"Verde (Brazil, Teles Pires)"
+221,Ronuro (Brazil)
+222,Roosevelt (Brazil)
+223,Blanco (Bolivia)
+224,Grande (Bolivia)
+225,San Martín (Bolivia)
+226,San Matéo (Bolivia)
+227,"San Miguel (Colombia, Ecuador)"
+228,San Pedro (Bolivia)
+229,Santa Tereza (Brazil)
+230,Sepatini (Brazil)
+231,Sereno (Brazil)
+232,Sete de Setembro (Brazil)
+233,Shanay-timpishka (Peru)
+234,Siapa (Venezuela)
+235,Soninho (Brazil)
+236,Suia-Miçu (Brazil)
+237,São Benedito (Brazil)
+238,São João
+239,São João da Barra (Brazil)
+240,São Tomé (Brazil)
+241,"Tahuamanu (Bolivia, Peru)"
+242,Takutu
+243,Tambo (Peru)
+244,"Tambopata (Bolivia, Peru)"
+245,Tamitatoala (Brazil)
+246,Tapajós (Brazil)
+247,Tapauá (Brazil)
+248,Tapiche (Peru)
+249,Tarauacá (Brazil)
+250,"Taraíra (Brazil, Colombia)"
+251,Tarumã Açu (Brazil)
+252,Tarumã Mirim (Brazil)
+253,Tefé (Brazil)
+254,Teles Pires (Brazil)
+255,"Tigre (Ecuador, Peru)"
+256,Tocantins (Brazil)
+257,Tomina (Bolivia)
+258,Toototobi
+259,Trairão (Brazil)
+260,Trombetas (Brazil)
+261,Tuichi (Bolivia)
+262,Tunía (Colombia)
+263,Uatumã (Brazil)
+264,Ucayali (Peru)
+265,Uraricoera
+266,Urqumayu (Peru)
+267,Uru (Brazil)
+268,Urubamba (Peru)
+269,Utcubamba (Peru)
+270,"Vaupés (Brazil, Colombia)"
+271,"Vermelho (Brazil, Manuel Alves Grande)"
+272,"Vermelho (Brazil, Mato Grosso)"
+273,"Vermelho (Brazil, Pará)"
+274,Xeruini (Brazil)
+275,Xeruã (Brazil)
+276,Xingu (Brazil)
+277,Xinxim (Brazil)
+278,Yacuma
+279,Yanamayo (Peru)
+280,Yata (Bolivia)
+281,Yatuá (Venezuela)
+282,Yavero (Peru)
+283,Yawarmayu (Peru)
+284,Zinho (Brazil)
+285,Água Boa do Univini (Brazil)
+286,Água Fria (Brazil)

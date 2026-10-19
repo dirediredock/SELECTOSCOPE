@@ -1,0 +1,53 @@
+name,title,group,view
+example_onion,Example Graph (Onion),Examples,2d
+barbell_multidensity,Barbell (Multi-Density),Examples,
+les_miserables_multidensity,Les Misérables (Multi-Density),Examples,
+game_thrones_multidensity,Game of Thrones (Multi-Density),Examples,
+tree_binomial,Tree (Binomial),Examples,
+fullerene_structures_C1500,Fullerene (C1500),Sphere,3d
+fullerene_structures_C3840,Fullerene (C3840),Sphere,3d
+icosphere_2562,Icosphere (2562),Sphere,3d
+icosphere_6252,Icosphere (6252),Sphere,3d
+lattice_squares_4096,Lattice (Square),Flat,2d
+lattice_monotiles_5992,Disc (Monotile),Flat,2d
+lattice_penrose_5981,Disc (Penrose),Flat,2d
+fibonacci_sunflower,Disc (Fibonacci),Flat,2d
+spot,Toy Cow (Spot),Geometric,3d
+stanford_bunny,Stanford Bunny,Geometric,3d
+torus_2560,Torus (2560),Geometric,3d
+bob,Toy Duck (Bob),Geometric,3d
+cylinder_2560,Cylinder (2560),Geometric,3d
+oloid,Oloid,Geometric,3d
+sierpinski_triangle_3282,Sierpinski (Triangle),Fractal,2d
+sierpinski_square_5280,Sierpinski (Square),Fractal,2d
+sierpinski_tetrahedron_2050,Sierpinski (Tetrahedron),Fractal,3d
+sierpinski_cube_5328,Sierpinski (Cube),Fractal,3d
+dragon_curve_4961,Dragon Curve,Fractal,2d
+les_miserables,Les Misérables,Literary,
+game_thrones,Game of Thrones,Literary,
+star_wars,Star Wars (Episodes I–VII),Literary,
+indo_european,Language Tree (Indo-European),Language,
+word_ladder,Word Ladder (Five Letters),Language,
+wiki_science,Science Pages,Wikipedia,
+thinkers,Thinkers,Wikipedia,
+mathematicians,Mathematicians,Wikipedia,
+programming_languages,Programming Languages,Wikipedia,
+music_genres,Music Genres,Wikipedia,
+jazz_musicians,Jazz Musicians,Wikipedia,
+amazon,Amazon,Wikipedia,
+karate_club,Karate Club,Social,
+netscience,Authors (Network Science),Social,
+dolphins,Dolphins (Doubtful Sound),Social,
+plant_pollinator_kato,Kyoto Pollinators,Ecology,2d
+plant_pollinator_robertson,Illinois Pollinators,Ecology,2d
+green_fluorescent_protein,Fluorescent Protein (Jellyfish),Proteins,3d
+hemoglobin,Hemoglobin (Human),Proteins,3d
+groel_ring,Chaperonin (Bacteria),Proteins,3d
+celegans_male_gap_junction,Nematode Synapses (M),Neurological,
+power,Western Power Grid,Infrastructure,
+european_power_grid,European Power Grid,Infrastructure,2d
+internet_top_pop,Midwest Fiber Internet,Infrastructure,2d
+london_transport,London Underground,Transportation,2d
+urban_streets_ahmedabad,Ahmedabad Streets,Transportation,2d
+urban_streets_savannah,Savannah Streets,Transportation,2d
+eu_airlines,European Airlines,Transportation,2d
