@@ -5,11 +5,15 @@
 
 type Rgba = [number, number, number, number];
 
+// Every hex form, since the built CSS shortens colours (#ffffff to #fff,
+// rgba(255, 255, 255, 0.22) to #ffffff38) where the dev server doesn't.
 function parse(color: string): Rgba | null {
-  const hex = /^#([0-9a-f]{6})$/i.exec(color);
+  const hex = /^#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i.exec(color);
   if (hex) {
-    const n = parseInt(hex[1]!, 16);
-    return [(n >> 16) & 255, (n >> 8) & 255, n & 255, 1];
+    let h = hex[1]!;
+    if (h.length <= 4) h = [...h].map((c) => c + c).join("");
+    const byte = (i: number) => parseInt(h.slice(2 * i, 2 * i + 2), 16);
+    return [byte(0), byte(1), byte(2), h.length === 8 ? byte(3) / 255 : 1];
   }
   const fn = /^rgba?\(([^)]+)\)$/i.exec(color);
   if (!fn) return null;
