@@ -1,6 +1,8 @@
 # SELECTOSCOPE
 Selectoscope is a visual tool that lets you explore network structure through linked interpretable views. Select nodes and/or edges from the visual pattern in one pane to examine the same selection set in other panes.
 
+<a><img src="figures/figure_01.png" width="100%" ></a>
+
 ## Quick start
 The interface has three parts. The top control strip has selection set choice (node sets, edge sets, or both), a report of selection counts, choice of brush modality, and controls that grow or shrink sets. Then the primary view, or the main middle view, is composed of panes that show the same network dataset in various ways, surfacing different yet interpretable visual patterns. Finally, the bottom control strip is dynamic, changing offered controls in response to the focused pane.
 
