@@ -2,6 +2,8 @@
 
 Where each curated dataset in `public/datasets/` comes from: its origin, its citation, and how its CSVs were made from the source. The CSVs are the datasets; the source files and the scripts that converted them are not part of this repo. This is the only file in the repo that names outside sources.
 
+The MIT licence in `LICENSE` covers the code. Each dataset, and the builds made from it in `public/builds/`, stays under its source's terms; where a source states a licence, the table gives it.
+
 | Dataset | Origin | Citation | Notes |
 |---|---|---|---|
 | `game_thrones` | [Netzschleuder](https://networks.skewed.de) network catalogue (Tiago P. Peixoto), `game_thrones` | A. Beveridge and J. Shan, "Network of Thrones", *Math Horizons* 23(4), 18–22 (2016) | Character coappearances in *A Storm of Swords*. Weights dropped. Labels from `name` |

@@ -10,4 +10,4 @@ npm run dev
 npm test
 ```
 
-Curated dataset sources are in [docs/data_sources.md](docs/data_sources.md).
+Curated dataset sources and their licences are in [docs/data_sources.md](docs/data_sources.md). The MIT licence covers the code; each dataset stays under its source's terms.
