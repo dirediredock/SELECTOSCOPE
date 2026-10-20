@@ -13,9 +13,11 @@ export function wheelAction(e: WheelLike): WheelAction {
   return e.shiftKey ? "row" : "navigate";
 }
 
-// A wheel over a list (Data, Labels, Help) that is mostly sideways: swallowed,
-// so it neither scrolls the list nor chains to the pane row, Shift+wheel
-// included. A pinch (ctrlKey) is left to blockPageZoom.
-export function listWheelSideways(e: Pick<WheelEvent, "ctrlKey" | "deltaX" | "deltaY">): boolean {
-  return !e.ctrlKey && Math.abs(e.deltaX) > Math.abs(e.deltaY);
+// A wheel over a list (Data, Labels, Help) that is mostly sideways: in Fit
+// it is swallowed, so it neither scrolls the list nor chains to the pane row,
+// Shift+wheel included. In Scroll it is left to the browser, which hands it
+// on to the row (the list never scrolls sideways). A pinch (ctrlKey) is left
+// to blockPageZoom.
+export function listWheelSideways(e: Pick<WheelEvent, "ctrlKey" | "deltaX" | "deltaY">, rowScrolls = false): boolean {
+  return !rowScrolls && !e.ctrlKey && Math.abs(e.deltaX) > Math.abs(e.deltaY);
 }

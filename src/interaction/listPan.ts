@@ -3,6 +3,7 @@ import { clearHover } from "../state/selection";
 import { setNavigating } from "./activeGesture";
 import { DRAG_START_PX } from "./selectGesture";
 import { listWheelSideways } from "./wheel";
+import { layout } from "../state/layout";
 
 export interface ListPanOptions {
   // Pan on a plain press, not only with Space held: for a list that doesn't
@@ -15,9 +16,9 @@ export interface ListPanOptions {
 // in Data (`plainDrag`) any drag does.
 // The pan starts only once the press has moved DRAG_START_PX, and takes the
 // pointer only then, so a click still reaches the row under it. The click
-// that ends a pan is swallowed, so a drag never acts on a row. A sideways
-// wheel or swipe does nothing: the list never moves sideways, and the pane
-// row doesn't take it either.
+// that ends a pan is swallowed, so a drag never acts on a row. The list never
+// moves sideways: a sideways wheel or swipe scrolls the pane row in Scroll,
+// and does nothing in Fit.
 export function attachListPan(
   el: HTMLElement,
   { plainDrag = false }: ListPanOptions = {},
@@ -66,7 +67,7 @@ export function attachListPan(
   };
 
   const onWheel = (e: WheelEvent) => {
-    if (listWheelSideways(e)) e.preventDefault();
+    if (listWheelSideways(e, layout.get().mode === "scroll")) e.preventDefault();
   };
 
   el.addEventListener("wheel", onWheel, { passive: false });

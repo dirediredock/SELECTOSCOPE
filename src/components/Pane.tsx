@@ -6,6 +6,7 @@ import { fitView, viewIn, views, zoomLabel } from "../state/views";
 import { SWEEP_STEPS, sweep, sweepSettings } from "../state/sweep";
 import { MAX_AR, paneInfo, slotTitle } from "../state/panes";
 import type { PaneType } from "../state/panes";
+import { layout } from "../state/layout";
 import type { SlotId } from "../state/layout";
 import { PaneMenu } from "./PaneMenu";
 import { usePaneSubtitle } from "./paneSubtitle";
@@ -19,7 +20,8 @@ const HEADER_REST_MS = 2000;
 interface PaneProps {
   slot: SlotId;
   type: PaneType;
-  ar: number;
+  // Its Scroll ratio; null is the row's minimum width.
+  ar: number | null;
   // Its share of the row in Fit mode (styles.css `.panes.is-fit`).
   share: number;
   children: ReactNode;
@@ -55,13 +57,16 @@ export function Pane({ slot, type, ar, share, children }: PaneProps) {
       data-pane={type}
       data-slot={slot}
       data-list={list || undefined}
+      data-narrow={ar === null || undefined}
       aria-label={title}
-      style={{ "--ar": ar, "--share": share, "--max-ar": MAX_AR[type] } as CSSProperties}
+      style={{ "--ar": ar ?? undefined, "--share": share, "--max-ar": MAX_AR[type] } as CSSProperties}
       // On every move, not just on entering: a drag released over this pane
       // hands focus on at the next move. While + New is ringed only a press
       // focuses, so the upload strip stays put on the way across the panes.
+      // In Scroll the pane under the row's centre has focus (PaneRow), so
+      // hover leaves it.
       onPointerMove={(e) => {
-        if (e.buttons === 0 && ui.get().upload === null) focus(slot);
+        if (e.buttons === 0 && ui.get().upload === null && layout.get().mode === "fit") focus(slot);
       }}
       // Capture, so a press focuses even where a gesture stops propagation.
       onPointerDownCapture={() => focus(slot)}

@@ -97,7 +97,6 @@ export const TEXT = {
     tall: "Tall 3:1",
     portraitGolden: "Portrait golden",
     square: "Square",
-    landscapeGolden: "Landscape golden",
     minimum: "Minimum",
   },
 

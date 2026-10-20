@@ -22,6 +22,10 @@ export const paneTitle = (type: PaneType) => paneInfo(type).title;
 // shape, and in Fit its width stops there and the other panes take the rest.
 export const MAX_AR: Partial<Record<PaneType, number>> = { dataset: 0.618 };
 
+// Every pane's opening ratio in the Scroll row: tall 3:1, the middle of
+// SCROLL_SHAPES, NodeLink included.
+export const SCROLL_OPENING_AR = 1 / 3;
+
 // What the header menu offers. Data is fixed at the far left: it is never
 // offered, and it can only become Help (DATASET_VIEWS).
 export const SWAPPABLE = PANES.filter((p) => p.id !== "dataset");
@@ -37,19 +41,15 @@ export const DATASET_VIEWS = [
 export const slotTitle = (type: PaneType, help: boolean) =>
   type === "dataset" && help ? DATASET_VIEWS[1].title : paneTitle(type);
 
-// The four ratios in the header menu in Scroll, as width / height.
-export const RATIOS = [
-  { ar: 1 / 3, label: TEXT.shapes.tall },
-  { ar: 0.618, label: TEXT.shapes.portraitGolden },
-  { ar: 1, label: TEXT.shapes.square },
-  { ar: 1.618, label: TEXT.shapes.landscapeGolden },
-] as const;
+// The shapes the header menu offers, as width / height. `ar` null is the
+// narrowest a pane gets: the row's minimum width, whatever the height.
+const MINIMUM = { ar: null, glyph: 1 / 6, label: TEXT.shapes.minimum } as const;
+const PORTRAIT_GOLDEN = { ar: 0.618, glyph: 0.618, label: TEXT.shapes.portraitGolden } as const;
 
-// The three shapes the header menu offers in Fit: the narrowest a pane gets
-// (`ar` null: its width is the row's minimum, whatever the height; its tile
-// shows the 3:1 glyph), portrait golden and square.
-export const FIT_SHAPES = [
-  { ar: null, glyph: 1 / 3, label: TEXT.shapes.minimum },
-  { ar: 0.618, glyph: 0.618, label: TEXT.shapes.portraitGolden },
-  { ar: 1, glyph: 1, label: TEXT.shapes.square },
-] as const;
+// In Fit: minimum, portrait golden and square.
+export const FIT_SHAPES = [MINIMUM, PORTRAIT_GOLDEN, { ar: 1, glyph: 1, label: TEXT.shapes.square }] as const;
+
+// In Scroll: minimum, tall 3:1 (every pane's opening shape there) and
+// portrait golden, the widest: a portrait window has no room for a square at
+// full height.
+export const SCROLL_SHAPES = [MINIMUM, { ar: 1 / 3, glyph: 1 / 3, label: TEXT.shapes.tall }, PORTRAIT_GOLDEN] as const;

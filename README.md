@@ -12,7 +12,7 @@ Consider these steps as a quick start:
 
 1. Change the loaded data from the DATA pane, which can be toggled back from this HELP pane by clicking the ? button.
 2. Drag in any pane to brush a selection area around a visual pattern that catches your eye.
-3. Then look across to other panes, the same nodes light up blue and edges orange, wherever they sit.
+3. Then look across to other panes, the same nodes highlight with blue and edges with orange, wherever they sit in their respective visual patterns.
 4. Click ▲ in EXTEND SET to grow your selection by one hop, and see how far the selection spreads.
 5. Hover the SELECTION COUNT in the top control strip and click CLEAR to start over, or lasso an empty region in any pane.
 6. Run AUTO SWEEP at the bottom control strip to scan an animated selection band area across the vertical span of the pane, then watch the selection across every other pane.
@@ -33,17 +33,17 @@ Each pane draws the same loaded network in its own way.
 
 ## Using your own data
 
-Click the +NEW row in the DATA pane to add your own network data. Choose BUILD FROM CSV to create a dataset from an edgelist, or UPLOAD FROM JSON to open a previously built and exported SELECTOSCOPE dataset. All processing happens in your browser, and your files never leave it. Selectoscope supports up to 10,000 nodes and 100,000 edges.
+Click the +NEW row at the top of the DATA pane to add your own network data.
 
-To build a dataset, the main file format is the EDGELIST, a CSV file with 'source' and 'target' columns, one edge per row. Column names can be in any case ('Source' reads as 'source'). Nodes must match across CSVs under a 'node_id' column, where values are treated as plain trimmed strings. Can be any text, but must match exactly across EDGELIST, LABELS, BESPOKE 2D, and BESPOKE 3D files. For example, "1" and "01" count as different 'node_id' entries.
+Choose BUILD FROM CSV to create a dataset from an edgelist, or UPLOAD FROM JSON to open a previously built and exported SELECTOSCOPE dataset. All processing happens in your browser, and your files never leave it. Selectoscope supports up to 10,000 nodes and 100,000 edges.
+
+To build a dataset, the main file format is the EDGELIST, a CSV file with 'source' and 'target' columns, with one edge per row. Column names can be in any case. For example, 'Source' reads as 'source'. Nodes must match across CSVs under a 'node_id' column, where values are treated as plain trimmed strings. For example, "1" and "01" count as different 'node_id' entries. The 'node_id' strings can be any text, but must match exactly across EDGELIST, LABELS, BESPOKE 2D, and BESPOKE 3D files to build correctly.
 
 Selectoscope automatically cleans the EDGELIST information: edge direction is ignored, self-loops are removed, duplicate edges are merged, and only the largest connected component is kept. Click ADD to build.
 
-Per dataset built through CSV, optional files must use the 'node_id' column and match the EDGELIST. There are three optional CSV files to upload. The BESPOKE 2D layout requires 'node_id', 'x', and 'y' columns, and BESPOKE 3D requires 'node_id', 'x', 'y', and 'z' columns, both of which must account for every node in EDGELIST. The LABELS requires 'node_id' and 'label' columns, and in contrast to the bespoke layouts, labels can be partial.
+Per dataset built through CSV, optional files must use the 'node_id' column and match the EDGELIST. There are three optional CSV files to upload. The BESPOKE 2D layout requires 'node_id', 'x', and 'y' columns, and BESPOKE 3D requires 'node_id', 'x', 'y', and 'z' columns, both of which must account for every node in EDGELIST. The LABELS requires 'node_id' and 'label' columns. In contrast to the bespoke layouts, labels can be partial.
 
-Once built, the options in CHANGE can add, replace, or remove files; and click EXPORT CSV to save the built CSV files.
-
-Click EXPORT JSON to save a built dataset as a single file. Reopen the dataset through +NEW and UPLOAD FROM JSON, without rebuilding.
+Once built, the options in CHANGE can add, replace, or remove files. Click EXPORT CSVS to save the built CSV files, or click EXPORT JSON to save a built dataset as a single file. Reopen the dataset through +NEW and UPLOAD FROM JSON, without rebuilding.
 
 The curated datasets are already built and ready to use.
 
