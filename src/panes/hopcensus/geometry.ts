@@ -50,8 +50,8 @@ export function censusStructure(hc: HopCensus, present?: Uint8Array): CensusStru
 
 // Each line's measures, every one a percent, read from its census as a
 // distribution over hops (divided by its total, so a line's size never
-// counts): degree, its first entry, as a share of the graph's stubs (2m, every
-// node's degree summed), so it reads as the line's first height; reach, its mean
+// counts): degree, its first entry over the other nodes (n − 1), its degree
+// centrality, so it reads as the line's first height; reach, its mean
 // hop as a share of its eccentricity; spread, its standard deviation in
 // hops, as a share of its eccentricity; and skew, which side of the mean hop
 // the shape's width lies on: how much further its last tenth lies past the mean
@@ -68,10 +68,8 @@ export function censusValues({ ecc, offset, stubs }: HopCensus, present?: Uint8A
   const reach = new Float64Array(n);
   const spread = new Float64Array(n);
   const skew = new Float64Array(n);
-  // While the census lands, shares are of the lines landed so far.
   const has = (v: number) => !present || present[v] === 1;
-  let stubTotal = 0;
-  for (let v = 0; v < n; v++) if (has(v)) stubTotal += stubs[offset[v]!]!;
+  const others = Math.max(1, n - 1);
   for (let v = 0; v < n; v++) {
     if (!has(v)) continue;
     const first = offset[v]!, end = offset[v + 1]!;
@@ -87,7 +85,7 @@ export function censusValues({ ecc, offset, stubs }: HopCensus, present?: Uint8A
       m2 += stubs[i]! * d * d;
     }
     const span = Math.max(1, ecc[v]!);
-    degree[v] = stubs[first]! / stubTotal;
+    degree[v] = stubs[first]! / others;
     reach[v] = mean / span;
     spread[v] = Math.sqrt(m2 / total) / span;
     const line = stubs.subarray(first, end);

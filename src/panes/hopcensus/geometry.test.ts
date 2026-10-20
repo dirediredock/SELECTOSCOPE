@@ -100,8 +100,8 @@ describe("censusValues", () => {
     expect(fixed(values.reach)).toEqual([0.5, 0.5, 0.1667, 0]);
   });
 
-  it("reads degree as the first entry, a share of the graph's stubs", () => {
-    expect([...censusStructure(path5).values.degree]).toEqual([0.125, 0.25, 0.25, 0.25, 0.125]);
+  it("reads degree as the first entry over the other nodes, degree centrality", () => {
+    expect([...censusStructure(path5).values.degree]).toEqual([0.25, 0.5, 0.5, 0.5, 0.25]);
   });
 
   it("reads skew as the tail past the mean hop less the lead before it, a share of the eccentricity", () => {
