@@ -10,7 +10,7 @@ BRUSH: Chooses a RECTANGLE or a LASSO as the modality for the drawn selection.
 
 EXTEND SET: Grow or shrink your selection one hop at a time.
 
-BRUSH AND EXTEND SET, SWEEPING: While a sweep is active, BRUSH and EXTEND SET are inactive.
+BRUSH AND EXTEND SET, SWEEPING: While a sweep is active, BRUSH and EXTEND SET are on hold and inactive.
 
 THEME: CONTRAST fades everything but the selection set, and DARK can make selections stand out more.
 
@@ -30,15 +30,15 @@ EVERY PANE'S BOTTOM CONTROL STRIP
 
 ZOOM: Click + and - to zoom in and out, click % to fit.
 
-AUTO SWEEP, IDLE: Click RUN to animate a band across the pane, lighting what it covers in every pane.
+AUTO SWEEP, IDLE: Click RUN to automatically sweep a selection area across the pane, highlighting what it covers in every pane.
 
-AUTO SWEEP, RUNNING: STOP ends the sweep.
+AUTO SWEEP, RUNNING: Click STOP to end the AUTO SWEEP and resume manual selection.
 
 AUTO SWEEP, PAUSED: RESUME carries on a paused sweep.
 
-SWEEP CONTROLS: Shape the band with VERTICAL to change scan direction, AREA and SPEED to change band width and speed. ARROW for manual steps, by click or with arrowkeys.
+SWEEP CONTROLS: Turn off VERTICAL to sweep left to right. AREA sets how much of the pane the band covers, and SPEED how fast it travels. ARROW steps the band, by click or with the arrow keys.
 
-SWEEP CONTROLS, LABELS PANE: Shape the band: AREA changes how much of the pane it covers, SPEED how fast it travels, and ARROW steps it, as the arrow keys do.
+SWEEP CONTROLS, LABELS PANE: AREA sets how much of the pane the band covers, SPEED how fast it travels, and ARROW steps it, by click or with the arrow keys.
 
 SWEEP CONTROLS, IDLE: These controls are available when a sweep is active.
 

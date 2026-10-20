@@ -131,7 +131,8 @@ export function HelpPane() {
               </Replica>
             </li>
             <li>
-              Then look across to other panes, the same nodes light up blue and edges orange, wherever they sit.
+              Then look across to other panes, the same nodes highlight with blue and edges with orange, wherever they
+              sit in their respective visual patterns.
               <SetCounts />
             </li>
             <li>
@@ -156,7 +157,7 @@ export function HelpPane() {
         </Sec>
 
         <Sec id="select" title="Selection controls">
-          <p>Each color shows in every pane. Hover an item to light it red everywhere.</p>
+          <p>Each color shows in every pane. Hover an item to highlight it red everywhere.</p>
           {figures ? (
             <ul className="help-legend">
               <li>
@@ -413,8 +414,8 @@ export function HelpPane() {
               Singletons are bare node points with no enclosure, placed vertically according to their onion value. The
               GROUP SINGLETONS toggle collects singletons within a k-core shell, holding one enclosure per onion value
               that aggregates and counts all of its singletons. A group's enclosure acts as all its singletons:
-              hovering lights them all, a click selects them all, and once some are selected it reads selected over
-              total.
+              hovering highlights them all, a click selects them all, and once some are selected it reads selected
+              over total.
             </p>
             <Replica>
               <Switch label="Group singletons" on={false} onToggle={none} />
@@ -494,19 +495,29 @@ export function HelpPane() {
 
         <Sec id="sweep" title="Auto Sweep">
           <p>
-            Click RUN in a pane's bottom control strip to animate a band across the pane, lighting what it covers in
-            every pane. The band lights what a drawn area would take in the current SELECTION SET mode, so a sweep
-            previews a selection.
+            Click RUN in the bottom control strip to automatically sweep a selection area across the extent of the
+            focused pane. By default the scan runs from the top of the pane to the bottom. Turn off VERTICAL to sweep
+            left to right. The AREA setting sets how much of the pane the band covers, while SPEED sets how fast the
+            band travels. The band highlights what a drawn area would take with the current SELECTION SET mode.
           </p>
           <Replica>
             <Transport cells={RUN_CELLS} state="idle" running={false} onClick={none} />
             <Transport cells={RUN_CELLS} state="running" running onClick={none} />
           </Replica>
           <SweepBand />
+          <Replica>
+            <Switch label="Vertical" on onToggle={none} />
+          </Replica>
+          <Replica>
+            <Slider label="Area" range={SWEEP_AREA} value={SWEEP_AREA.opening} onChange={none} />
+          </Replica>
+          <Replica>
+            <Slider label="Speed" range={SWEEP_SPEED} value={SWEEP_SPEED.opening} onChange={none} />
+          </Replica>
           <p>
-            While a sweep is active, BRUSH and EXTEND SET are inactive, and the SELECTION COUNT follows the band. Press
-            ↓ or → to step forward and ↑ or ← to step back. Hold to keep it moving. A step pauses the sweep; click
-            RESUME to carry on.
+            While a sweep is active, BRUSH and EXTEND SET are on hold and inactive, so the SELECTION COUNT follows the
+            band. At any time press ↓ or → to step forward, or ↑ or ← to step back; and hold to keep it moving. A step
+            pauses the sweep; click RESUME to carry on.
           </p>
           <Replica>
             <Transport cells={RUN_CELLS} state="paused" running={false} onClick={none} />
@@ -521,40 +532,27 @@ export function HelpPane() {
           </Replica>
           <p>
             Click STOP, or change the selection by drawing an area, clicking an item, or loading a dataset, to end the
-            sweep. In contrast, general navigation like zooming, panning and rotating within panes does not stop an
-            active sweep.
+            AUTO SWEEP and resume manual selection. General navigation like zooming, panning and rotating within panes
+            does not stop an active sweep.
           </p>
-          <p>
-            Turn off VERTICAL to sweep left to right. The AREA setting sets how much of the pane the band covers, while
-            SPEED sets how fast the band travels.
-          </p>
-          <Replica>
-            <Switch label="Vertical" on onToggle={none} />
-          </Replica>
-          <Replica>
-            <Slider label="Area" range={SWEEP_AREA} value={SWEEP_AREA.opening} onChange={none} />
-          </Replica>
-          <Replica>
-            <Slider label="Speed" range={SWEEP_SPEED} value={SWEEP_SPEED.opening} onChange={none} />
-          </Replica>
         </Sec>
 
         <Sec id="data" title="Using your own data">
+          <p>Click the +NEW row at the top of the DATA pane to add your own network data.</p>
           <p>
-            Click the +NEW row in the DATA pane to add your own network data. Choose BUILD FROM CSV to create a dataset
-            from an edgelist, or UPLOAD FROM JSON to open a previously built and exported SELECTOSCOPE dataset. All
-            processing happens in your browser, and your files never leave it. Selectoscope supports up to 10,000 nodes
-            and 100,000 edges.
+            Choose BUILD FROM CSV to create a dataset from an edgelist, or UPLOAD FROM JSON to open a previously built
+            and exported SELECTOSCOPE dataset. All processing happens in your browser, and your files never leave it.
+            Selectoscope supports up to 10,000 nodes and 100,000 edges.
           </p>
           <Replica>
             <Choice label="Upload your data" options={UPLOADS} value="csv" onPick={none} />
           </Replica>
           <p>
-            To build a dataset, the main file format is the EDGELIST, a CSV file with 'source' and 'target' columns, one
-            edge per row. Column names can be in any case ('Source' reads as 'source'). Nodes must match across CSVs
-            under a 'node_id' column, where values are treated as plain trimmed strings. Can be any text, but must match
-            exactly across EDGELIST, LABELS, BESPOKE 2D, and BESPOKE 3D files. For example, "1" and "01" count as
-            different 'node_id' entries.
+            To build a dataset, the main file format is the EDGELIST, a CSV file with 'source' and 'target' columns,
+            with one edge per row. Column names can be in any case. For example, 'Source' reads as 'source'. Nodes must
+            match across CSVs under a 'node_id' column, where values are treated as plain trimmed strings. For example,
+            "1" and "01" count as different 'node_id' entries. The 'node_id' strings can be any text, but must match
+            exactly across EDGELIST, LABELS, BESPOKE 2D, and BESPOKE 3D files to build correctly.
           </p>
           <p>
             Selectoscope automatically cleans the EDGELIST information: edge direction is ignored, self-loops are removed,
@@ -568,8 +566,8 @@ export function HelpPane() {
             Per dataset built through CSV, optional files must use the 'node_id' column and match the EDGELIST. There
             are three optional CSV files to upload. The BESPOKE 2D layout requires 'node_id', 'x', and 'y' columns, and
             BESPOKE 3D requires 'node_id', 'x', 'y', and 'z' columns, both of which must account for every node in
-            EDGELIST. The LABELS requires 'node_id' and 'label' columns, and in contrast to the bespoke layouts,
-            labels can be partial.
+            EDGELIST. The LABELS requires 'node_id' and 'label' columns. In contrast to the bespoke layouts, labels
+            can be partial.
           </p>
           <Replica>
             <FilePill name="Labels" added={false} accent="extra" onPick={none} />
@@ -577,8 +575,9 @@ export function HelpPane() {
             <FilePill name="Bespoke 3D" added={false} accent="extra" onPick={none} />
           </Replica>
           <p>
-            Once built, the options in CHANGE can add, replace, or remove files; and click EXPORT CSV to save the built
-            CSV files.
+            Once built, the options in CHANGE can add, replace, or remove files. Click EXPORT CSVS to save the built CSV
+            files, or click EXPORT JSON to save a built dataset as a single file. Reopen the dataset through +NEW and
+            UPLOAD FROM JSON, without rebuilding.
           </p>
           <Replica>
             <FilePill name="Edgelist" added accent="key" replace onPick={none} />
@@ -587,10 +586,6 @@ export function HelpPane() {
           <Replica>
             <Action onClick={none}>Export CSVs</Action>
           </Replica>
-          <p>
-            Click EXPORT JSON to save a built dataset as a single file. Reopen the dataset through +NEW and UPLOAD FROM
-            JSON, without rebuilding.
-          </p>
           <Replica>
             <Action onClick={none}>Export JSON</Action>
           </Replica>
