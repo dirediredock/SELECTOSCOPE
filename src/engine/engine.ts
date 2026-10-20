@@ -1,7 +1,7 @@
 // The engine: runs a build across workers and fills the graph on screen as
 // each result arrives (data/graph.ts).
 //
-//   core worker      ingest, then cores, onion and the Cores orderings,
+//   core worker      ingest, then cores, onion and the Shells orderings,
 //                    then centrality
 //   hops workers     the stub census, in chunks of sources, over a pool
 //   spectral worker  the harmonics, then the principal components

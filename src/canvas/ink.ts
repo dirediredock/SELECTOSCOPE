@@ -5,7 +5,7 @@
 import { ui } from "../state/uiStore";
 import { contrastShare, fade } from "./fade";
 
-// Every neutral rule on a canvas (the matrix outline, Cores' enclosures and
+// Every neutral rule on a canvas (the matrix outline, Shells' enclosures and
 // lines, Hops' gridlines) is one `frame`-coloured hairline this wide, px.
 export const HAIRLINE = 1;
 

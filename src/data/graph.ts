@@ -23,7 +23,7 @@ export type OpeningView = "3d" | "2d" | null;
 
 // The Hops pane's lines: node v's stub census is
 // stubs[offset[v] .. offset[v + 1]), ecc[v] + 1 entries, one per hop.
-// The Cores pane's placement, by node_idx: k-core and onion layer, the
+// The Shells pane's placement, by node_idx: k-core and onion layer, the
 // island, and per singleton mode each ordering's row positions and crossings
 // (pipeline/ksnakes.ts).
 export type KSnakes = Cores & Orders;
@@ -76,7 +76,7 @@ export interface Graph {
   harmonics: Float64Array[] | null;
   seriations: Partial<Record<Seriation, Uint32Array>>;
   cores: Cores | null;
-  // The Cores pane's placement: core and onion again, beside the islands
+  // The Shells pane's placement: core and onion again, beside the islands
   // and orderings.
   ksnakes: KSnakes | null;
   centrality: { eigenvector: Float64Array } | null;

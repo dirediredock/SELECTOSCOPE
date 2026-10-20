@@ -103,8 +103,8 @@ function Intro({ text, onHeight }: { text: string; onHeight: (text: string, h: n
 // and cites where they came from (docs/tooltips_data.txt).
 // The strip's + New stands for the + New row: hovering it glides the list to
 // the top with that row hovered, and leaving glides back to the ringed row.
-// When another pane takes focus the list glides the ringed row to its middle,
-// and a resize while unfocused keeps it there; nothing moves while focused.
+// When another pane takes focus the list glides the ringed row to its middle.
+// A resize keeps whatever is at the list's middle there, focused or not.
 export function DatasetPane({ slot }: { slot: SlotId }) {
   const focused = useStore(ui, (s) => s.focused === slot);
   const index = useStore(data, (s) => s.index);
@@ -149,19 +149,12 @@ export function DatasetPane({ slot }: { slot: SlotId }) {
   // A new row of the user's reveals it, as a new look does the ringed one.
   const revealKey = `${thumbnails}:${users.length}`;
   const revealedKey = useRef<string | null>(null);
-  // Read by the resize observer, which outlives renders.
-  const centreOnResize = useRef<number | null>(null);
-  centreOnResize.current = focused || ringedRow < 0 ? null : ringedRow;
 
   useEffect(() => attachListPan(scrollerRef.current!, { plainDrag: true }), []);
 
   useLayoutEffect(() => {
     const el = scrollerRef.current!;
-    const measure = () => {
-      setWidth(el.clientWidth - LIST_ROWS.pad - LIST_ROWS.padEnd);
-      const row = centreOnResize.current;
-      if (row !== null) setReveal({ row });
-    };
+    const measure = () => setWidth(el.clientWidth - LIST_ROWS.pad - LIST_ROWS.padEnd);
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(el);

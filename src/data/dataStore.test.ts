@@ -60,7 +60,22 @@ describe("loadDataset", () => {
     await release("builds/karate_club.json", body("karate_club"));
     await done;
     expect(data.get().graph).toBe(null);
-    expect(stop).not.toHaveBeenCalled();
+    expect(stop).toHaveBeenCalledTimes(1);
+  });
+
+  it("empties the panes while the next build downloads", async () => {
+    const { data, loadDataset } = await load();
+    const first = loadDataset("karate_club", () => {});
+    await release("builds/karate_club.json", body("karate_club"));
+    await first;
+    const stop = vi.fn();
+    const second = loadDataset("dolphins", stop);
+    expect(stop).toHaveBeenCalledTimes(1);
+    expect(data.get().graph).toBe(null);
+    expect(data.get().current).toBe(null);
+    await release("builds/dolphins.json", body("dolphins"));
+    await second;
+    expect(data.get().graph?.name).toBe("dolphins");
   });
 });
 

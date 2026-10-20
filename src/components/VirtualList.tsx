@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, Key, ReactNode, RefObject, UIEvent } from "react";
 import { glideScroll } from "./glideScroll";
+import { anchoredScrollTop } from "./listAnchor";
 import { scaled } from "../uiScale";
 
 // Row geometry in CSS pixels, from design px (uiScale.ts). Rows sit at content
@@ -44,8 +45,8 @@ interface VirtualListProps {
   // Extra content in scrolled (content) coordinates, e.g. a selection band.
   children?: ReactNode;
   // Scrolls this row to the middle, as near as the list's ends allow, each
-  // time a new object is passed (the same row again re-centres): at once, or
-  // `smooth`, gliding there as the panes' marks glide.
+  // time a new object is passed (the same row again re-centres), gliding
+  // there as the panes' marks glide; `smooth: false` goes at once.
   reveal?: { row: number; smooth?: boolean };
   // Rows of their own heights (the Data pane's tiles); by default every
   // row is the geometry's rowHeight.
@@ -93,6 +94,20 @@ export function VirtualList({
     return t;
   }, [rowHeightOf, rowCount, top, rowGap]);
   const rowTop = (i: number) => (tops ? tops[i]! : top + i * pitch);
+
+  // Rows that change height but not number (a resized Data pane's tiles, an
+  // intro rewrapping) keep what is at the view's middle there, as a zoom
+  // about the centre does. New rows aren't anchored: their reveal places them.
+  const prevTops = useRef(tops);
+  useLayoutEffect(() => {
+    const prev = prevTops.current;
+    prevTops.current = tops;
+    if (!prev || !tops || prev.length !== tops.length) return;
+    const el = ref.current!;
+    const max = Math.max(0, el.scrollHeight - el.clientHeight);
+    el.scrollTop = Math.min(max, Math.max(0, anchoredScrollTop(prev, tops, el.scrollTop, el.clientHeight)));
+    setScrollTop(el.scrollTop);
+  }, [tops]);
   const heightOf = (i: number) => (rowHeightOf ? rowHeightOf(i) : rowHeight);
   // The row at content y: the last one starting at or above it.
   const rowAt = (y: number) => {

@@ -29,7 +29,7 @@ import { TEXT } from "../../controlText";
 import { glideScroll } from "../../components/glideScroll";
 import { attachListPan } from "../../interaction/listPan";
 import { HELP_SECTIONS, helpNav, sectionAt, topTarget } from "./helpNav";
-import { CoresAnatomy, ExtendHops, Gestures, HopsAnatomy, InterfaceMap, MatrixForms, SweepBand, WaveOrder } from "./helpFigures";
+import { ExtendHops, Gestures, HopsAnatomy, InterfaceMap, MatrixForms, ShellsAnatomy, SweepBand, ShapeOrder } from "./helpFigures";
 
 // Where the sheet was left, for the session, so closing and reopening it
 // returns to the same place.
@@ -113,9 +113,9 @@ export function HelpPane() {
           <p>
             The interface has three parts. The top control strip has selection set choice (node sets, edge sets, or
             both), a report of selection counts, choice of brush modality, and controls that grow or shrink sets. Then
-            the primary view, or the main middle view, is composed of panes that show the same network dataset in
-            various ways, surfacing different yet interpretable visual patterns. Finally, the bottom control strip is
-            dynamic, changing offered controls in response to the focused pane.
+            the main section is composed of horizontally juxtaposed panes that show the same network dataset in various
+            ways, surfacing different yet interpretable visual patterns. Finally, the bottom control strip is dynamic,
+            changing the controls offered in response to the focused pane.
           </p>
           <InterfaceMap />
           <p>Consider these steps as a quick start:</p>
@@ -141,15 +141,15 @@ export function HelpPane() {
               </Replica>
             </li>
             <li>
+              Hover the SELECTION COUNT in the top control strip and click CLEAR to start over, or lasso an empty
+              region in any pane.
+            </li>
+            <li>
               Run AUTO SWEEP at the bottom control strip to scan an animated selection band area across the vertical
               span of the pane, then watch the selection across every other pane.
               <Replica>
                 <Transport cells={RUN_CELLS} state="idle" running={false} onClick={none} />
               </Replica>
-            </li>
-            <li>
-              Hover the SELECTION COUNT in the top control strip and click CLEAR to start over, or lasso an empty
-              region in any pane.
             </li>
           </ol>
           <p>Click ? to come back to this HELP pane at any time.</p>
@@ -258,8 +258,8 @@ export function HelpPane() {
               dataset: its export, and for your own data its files (see USING YOUR OWN DATA below).
             </p>
             <p>
-              Turn on THUMBNAILS to see a NODELINK preview of the dataset's BESPOKE 2D layout, or else the default
-              force-directed 2D, with edges only.
+              Turn on THUMBNAILS to see a NODELINK edges-only preview of the dataset's BESPOKE 2D view when the layout
+              is available, else falls back to the force-directed 2D layout.
             </p>
             <Replica>
               <Switch label="Thumbnails" on onToggle={none} />
@@ -270,10 +270,6 @@ export function HelpPane() {
             </p>
             <Replica>
               <HelpToggle on onToggle={none} label={TEXT.help.name} />
-            </Replica>
-            <p>In the HELP pane, turn off FIGURES to hide the diagrams and control copies, leaving the text alone.</p>
-            <Replica>
-              <Switch label="Figures" on onToggle={none} />
             </Replica>
           </PaneBlock>
           <PaneBlock title="Labels">
@@ -311,23 +307,22 @@ export function HelpPane() {
           <PaneBlock title="NodeLink">
             <p>
               Nodes are points and edges are lines that link connected node pairs, a familiar and intuitive visual
-              representation of network structure. For selection, a drawn area takes the node points inside it in NODES
+              representation of network structure. For selection, a drawn area takes the node points inside in NODES
               mode, the edges they share in EDGES mode, and both in BOTH mode.
             </p>
             <p>
-              Layout: All datasets can be shown with a standard force-directed 2D, seeded by the first two harmonics of
-              the spectral eigendecomposition (see MATRIX PANE description below). Similarly, a force-directed 3D, seeded
-              by the first three harmonics, is computed last for datasets that don't bring their own 3D layout; for those
-              that do, click COMPUTE 3D LAYOUT in the 3D layout. Datasets can bring their own layouts: BESPOKE 2D
-              shows the dataset's own 2D layout, and BESPOKE 3D shows the dataset's own 3D layout.
+              Layout: All datasets can be shown with a standard force-directed 2D layout, seeded by the first two
+              harmonics of the spectral eigendecomposition (see MATRIX PANE description below). Similarly, a
+              force-directed 3D layout, seeded by the first three harmonics, can be computed on demand. Additionally,
+              datasets can have their own bespoke layouts, shown with BESPOKE 2D and BESPOKE 3D when available.
             </p>
             <Replica>
               <Choice label="Layout" options={LAYOUTS} value="fd" onPick={none} />
             </Replica>
             <p>
-              Toggle INTERACTIVE mode on to start a force-directed simulation from the current layout. In INTERACTIVE
-              mode nodes can be moved by dragging. Because of computing cost, INTERACTIVE mode is unavailable for datasets above
-              6000 nodes or 20000 edges.
+              Toggle INTERACTIVE mode to start a force-directed simulation from the current layout. In INTERACTIVE mode
+              nodes can be moved by dragging. Because of runtime computing cost, INTERACTIVE mode is unavailable for
+              datasets above 6000 nodes or 20000 edges.
             </p>
             <Replica>
               <Switch label="Interactive" on onToggle={none} />
@@ -369,19 +364,19 @@ export function HelpPane() {
               most variance, each orthogonal to the PCs before them.
             </p>
             <p>
-              Every diagonal order starts from its denser pole: from the quarter of nodes at either pole, the higher
-              mean degree faces the top of the pane.
+              Every diagonal order starts from its denser pole, with the higher mean degree facing the top of the pane.
             </p>
             <Replica>
               <Choice label="Diagonal order by" options={SERIATIONS} value="harm1" onPick={none} />
             </Replica>
           </PaneBlock>
-          <PaneBlock title="Cores">
+          <PaneBlock title="Shells">
             <p>
-              This pane is about the graph's density. For selection, a drawn area takes the node points inside it in
-              NODES mode, while edges are drawn only when selected, as orange chords; or hovered, as a red chord. These
-              chords can't be clicked, but a drawn area in EDGES or BOTH mode does select the edges between the nodes it
-              covers.
+              This pane shows how density varies within the graph. Density is a measure of edge saturation, or how
+              connected a group of nodes are to each other, from sparse (least density) to complete (most density). For
+              selection, a drawn area takes the node points inside it in NODES mode, while edges are drawn only when
+              selected, as orange chords; or hovered, as a red chord. These chords can't be clicked, but a drawn area in
+              EDGES or BOTH mode does select the edges between the nodes it covers.
             </p>
             <p>
               Layout: A new visual idiom we call kSnakes, where nodes are points that are vertically placed according to
@@ -391,23 +386,23 @@ export function HelpPane() {
               node's height, which creates snake-like visual patterns. Node points are drawn within an enclosure if they
               are part of the same connected component within that k-core shell.
             </p>
-            <CoresAnatomy />
+            <ShellsAnatomy />
             <p>The horizontal order of connected components can be by:</p>
             <Replica>
               <Choice label="Horizontal order by" options={ORDERINGS} value="topdown" onPick={none} />
             </Replica>
             <p>
-              TOP-DOWN places each component at the mean horizontal position of its neighbors in denser shells,
-              nearer shells counting more, so components that connect across shells line up, a layout that results
-              from reducing edge crossings.
-            </p>
-            <p>
               SIZE packs components within a k-core shell horizontally from sparse to dense: by a component's highest
               onion value, then by its total onion value, then its size in number of nodes, arranged from left to right.
             </p>
             <p>
+              BARYCENTER places each component at the barycenter, or mean horizontal position, of its neighbors in
+              denser shells, nearer shells counting more, so components that connect across shells line up, a layout
+              that results from reducing edge crossings.
+            </p>
+            <p>
               The aspect ratio of the visual pattern can be adjusted with the SPACING slider. The vertical GRIDLINES that
-              bin component locations for horizontal TOP-DOWN or SIZE ordering can be made visible as well.
+              bin component locations for horizontal SIZE or BARYCENTER ordering can be made visible as well.
             </p>
             <Replica>
               <Slider label="Spacing" range={BIN_SPACING} value={BIN_SPACING.opening} onChange={none} />
@@ -427,28 +422,29 @@ export function HelpPane() {
           </PaneBlock>
           <PaneBlock title="Hops">
             <p>
-              This pane is about the graph's eccentricity. It shows a new visual idiom we call HopCensus, where nodes are
-              represented by polylines. For selection, a drawn area takes any overlapping node polylines in NODES mode.
-              Edges are never drawn in this pane, but EDGES and BOTH modes take the edges between the polylines the area
-              covers.
+              This pane shows how eccentricity varies within the graph. Eccentricity is the distance in hops a given
+              node is from its furthest reachable nodes, from central nodes (low eccentricity) to peripheral nodes (high
+              eccentricity). For selection, a drawn area takes any overlapping node polylines in NODES mode. Edges are
+              never drawn in this pane, but EDGES and BOTH modes take the edges between the polylines the area covers.
             </p>
             <p>
-              Layout: A polyline is drawn from a vector of integers in a shared coordinate system: stubs (edge ends) met
-              for the first time at each hop from the node, starting from its degree at hop 0, until the whole graph is
+              Layout: Shown is a new visual idiom we call HopCensus, where each node is visually encoded by a polyline.
+              A polyline is drawn from a vector of integers in a shared coordinate system: stubs (edge ends) met for the
+              first time at each hop from the node, starting from its degree at hop 0, until the whole graph is
               traversed. The shape of the polyline comes from the varying stub counts, while the traversal extent in
               hops maps to the length of polyline, or the node's eccentricity (reported as text on the right side of the
-              pane). Locally, polylines are drawn within a unit square, all share the same vertical scale; the tallest and longest set the relative extremes within the unit square. In the overall vertical span of the pane,
-              the most central nodes are at the top (shortest polyline lengths,
-              the radius nodes), while the nodes on the graph's perimeter are at the bottom (longest polyline lengths,
-              the diameter endpoint nodes).
+              pane). Locally, polylines are drawn within a unit square, all share the same vertical scale; the tallest
+              and longest set the relative extremes within the unit square. In the overall vertical span of the pane,
+              the most central nodes are at the top (shortest polyline lengths, the radius nodes), while the nodes on the
+              graph's perimeter are at the bottom (longest polyline lengths, the diameter endpoint nodes).
             </p>
             <HopsAnatomy />
             <p>
               The SPACING slider sets how far the polylines move horizontally, following a chosen ordering by polyline
-              wave shape:
+              shape similarity:
             </p>
             <Replica>
-              <Choice label="Horizontal wave order by" options={CENSUS_MEASURES} value="reach" onPick={none} />
+              <Choice label="Horizontal order by shape" options={CENSUS_MEASURES} value="reach" onPick={none} />
             </Replica>
             <Replica>
               <Slider
@@ -460,30 +456,35 @@ export function HelpPane() {
               />
             </Replica>
             <p>
-              DEGREE moves to the left polylines that start high (large degree), and those that start low right (low
-              degree). In %, the share of the graph's stubs met at hop 0, which is the polyline's first value.
+              DEGREE is a measure of degree centrality in percent, or the number of neighbor nodes a given node has,
+              divided by the number of other nodes (node count minus one). The first value of a polyline is the node's
+              degree, the stubs met at hop 0. Polylines that start high (large degree) move to the left, while polylines
+              that start low (small degree) move to the right.
             </p>
-            <WaveOrder measure="degree" />
+            <ShapeOrder measure="degree" />
             <p>
-              REACH moves to the left waves whose bulk shape arrives in a few hops, and those whose bulk occurs late
-              right. In %, the wave's mean hop, its centre of mass, as a share of its length.
+              REACH is a measure of where the mean of the polyline shape is, in terms of hops. Polyline shapes with a
+              small mean hop move to the left, while shapes with a large mean hop move to the right. In percent, the mean
+              hop, as a share of length in hops.
             </p>
-            <WaveOrder measure="reach" />
+            <ShapeOrder measure="reach" />
             <p>
-              SPREAD moves to the left polylines whose wave shapes spread over many of their hops, and moves to the
-              right polyline shapes that form a tight wave. In %, the wave's standard deviation in hops as a share of
-              its length.
+              SPREAD is a measure of how much of the polyline shape spreads horizontally over hops. Polyline shapes that
+              spread over many hops move to the left, while polylines that have a narrow peak move to the right. In
+              percent, the standard deviation of the polyline in hops, as a share of length in hops.
             </p>
-            <WaveOrder measure="spread" />
+            <ShapeOrder measure="spread" />
             <p>
-              SKEW moves to the left wave shapes whose bulk arrives early and trails off in a long tail, and moves to the
-              right polylines that climb for long and end abruptly. In %, how much further the wave's last tenth of stubs
-              lies past its mean hop, versus its first tenth lies before the mean hop, as a share of its length.
+              SKEW is a measure of how much of the polyline shape exists before or after the mean hop. Polylines whose
+              bulk shape occurs in early hops and trail off in a long tail move to the left, while a polyline shape that
+              starts shallow and climbs later moves to the right. In percent, how much further the polyline's last tenth
+              of stubs lies past its mean hop, versus its first tenth lies before the mean hop, as a share of length in
+              hops.
             </p>
-            <WaveOrder measure="skew" />
+            <ShapeOrder measure="skew" />
             <p>
-              The RANKING toggle converts each set of equal values into one evenly spaced column (so twins share one).
-              When off, each polyline sits at its numeric value, so gaps and outliers show.
+              The RANKING toggle places polyline shapes following an evenly spaced horizontal ranking, with polylines of
+              equal values superimposed. When off, each polyline sits at its numeric value, so gaps and outliers show.
             </p>
             <Replica>
               <Switch label="Ranking" on={false} onToggle={none} />
@@ -552,11 +553,11 @@ export function HelpPane() {
             To build a dataset, the main file format is the EDGELIST, a CSV file with 'source' and 'target' columns, one
             edge per row. Column names can be in any case ('Source' reads as 'source'). Nodes must match across CSVs
             under a 'node_id' column, where values are treated as plain trimmed strings. Can be any text, but must match
-            exactly across EDGELIST, LABELS, and BESPOKE 2D and BESPOKE 3D files. For example, "1" and "01" count as
+            exactly across EDGELIST, LABELS, BESPOKE 2D, and BESPOKE 3D files. For example, "1" and "01" count as
             different 'node_id' entries.
           </p>
           <p>
-            Selectoscope automatically cleans the edgelist information: edge direction is ignored, self-loops are removed,
+            Selectoscope automatically cleans the EDGELIST information: edge direction is ignored, self-loops are removed,
             duplicate edges are merged, and only the largest connected component is kept. Click ADD to build.
           </p>
           <Replica>
@@ -575,23 +576,24 @@ export function HelpPane() {
             <FilePill name="Bespoke 2D" added={false} accent="extra" onPick={none} />
             <FilePill name="Bespoke 3D" added={false} accent="extra" onPick={none} />
           </Replica>
-          <p>Once built, the options in CHANGE can add, replace, or remove files.</p>
+          <p>
+            Once built, the options in CHANGE can add, replace, or remove files; and click EXPORT CSV to save the built
+            CSV files.
+          </p>
           <Replica>
             <FilePill name="Edgelist" added accent="key" replace onPick={none} />
             <FilePill name="Labels" added accent="extra" onPick={none} onRemove={none} />
           </Replica>
+          <Replica>
+            <Action onClick={none}>Export CSVs</Action>
+          </Replica>
           <p>
-            Click EXPORT JSON to save a built dataset. Reopen the dataset using + NEW and UPLOAD FROM JSON, without
-            rebuilding.
+            Click EXPORT JSON to save a built dataset as a single file. Reopen the dataset through +NEW and UPLOAD FROM
+            JSON, without rebuilding.
           </p>
           <Replica>
             <Action onClick={none}>Export JSON</Action>
           </Replica>
-          <p>
-            The curated datasets are already built and ready to use. A curated dataset, or one opened from JSON, can
-            still take LABELS and BESPOKE layouts, added under the message in the LABELS or NODELINK pane. On a curated
-            dataset this makes a copy of your own under UPLOADED, and the curated one stays as it is.
-          </p>
         </Sec>
       </div>
     </div>

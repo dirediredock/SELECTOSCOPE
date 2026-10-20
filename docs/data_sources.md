@@ -1,9 +1,9 @@
 # Data sources
 
 Where each curated dataset in `public/datasets/` comes from: its origin, its citation, and how its CSVs were made from the source. The CSVs are the datasets; the source files and the scripts that converted them are not part of this repo. This file and `docs/tooltips_data.txt` are the only files in the repo that name outside sources. This file gives each source in full. Each Data pane tooltip gives a short citation of the place the data came from, or of the original paper for Netzschleuder rows:
-`From Surname, Surname, Surname (Year). Title. Journal, Vol(Issue), Pages.` A book is `From Surname (Year). Title. Publisher.`, and a place is `From the Name (url without scheme).` More than three authors are `First et al.`, journal names are written out, and `Licence X.` follows where the licence asks for attribution. Synthetic datasets stay uncited, except the onion example and the monotile.
+`From Surname, Surname, Surname (Year). Title. Journal, Vol(Issue), Pages.` A book is `From Surname (Year). Title. Publisher.`, and a place is `From the Name (url without scheme).` More than three authors are `First et al.`, journal names are written out, and `License X.` follows where the license asks for attribution. Synthetic datasets stay uncited, except the onion example and the monotile.
 
-The MIT licence in `LICENSE` covers the code. Each dataset, and the builds made from it in `public/builds/`, stays under its source's terms; where a source states a licence, the tables give it.
+The MIT license in `LICENSE` covers the code. Each dataset, and the builds made from it in `public/builds/`, stays under its source's terms; where a source states a license, the tables give it.
 
 The datasets are listed as the Data pane lists them: by group, numbered in its order.
 
@@ -32,18 +32,18 @@ The datasets are listed as the Data pane lists them: by group, numbered in its o
 | 10 | `lattice_squares_4096` | Synthetic | — | A periodic square tiling |
 | 11 | `lattice_monotiles_5992` | Synthetic | D. Smith, J. S. Myers, C. S. Kaplan and C. Goodman-Strauss, "An aperiodic monotile", *Combinatorial Theory* 4(1) (2024) | A patch of the hat monotile tiling |
 | 12 | `lattice_penrose_5981` | Synthetic | R. Penrose, "The role of aesthetics in pure and applied mathematical research", *Bull. Inst. Math. Appl.* 10, 266–271 (1974) | A patch of a Penrose tiling |
-| 13 | `fibonacci_sunflower` | Synthetic | — | Fibonacci-spiral points and their neighbour graph |
+| 13 | `fibonacci_sunflower` | Synthetic | — | Fibonacci-spiral points and their neighbor graph |
 
 ## Geometric
 
 | # | Dataset | Origin | Citation | Notes |
 |--:|---|---|---|---|
-| 14 | `spot` | [Keenan Crane's 3D Model Repository](https://www.cs.cmu.edu/~kmcrane/Projects/ModelRepository/), `spot.zip`, `spot_triangulated.obj` | K. Crane, U. Pinkall and P. Schröder, "Robust fairing via conformal curvature flow", *ACM Trans. Graph.* 32(4) (2013) (licence CC0 1.0) | A toy cow mesh; vertex positions as the 3D layout |
+| 14 | `spot` | [Keenan Crane's 3D Model Repository](https://www.cs.cmu.edu/~kmcrane/Projects/ModelRepository/), `spot.zip`, `spot_triangulated.obj` | K. Crane, U. Pinkall and P. Schröder, "Robust fairing via conformal curvature flow", *ACM Trans. Graph.* 32(4) (2013) (license CC0 1.0) | A toy cow mesh; vertex positions as the 3D layout |
 | 15 | `stanford_bunny` | [Stanford 3D Scanning Repository](https://graphics.stanford.edu/data/3Dscanrep/), `bun_zipper_res3` mesh | Stanford Computer Graphics Laboratory | A mesh; vertex positions as the 3D layout |
 | 16 | `torus_2560` | Synthetic | — | A triangulated torus, 80 × 32 |
-| 17 | `bob` | [Keenan Crane's 3D Model Repository](https://www.cs.cmu.edu/~kmcrane/Projects/ModelRepository/), `bob_isotropic.obj` | K. Crane (licence CC0 1.0) | A toy duck mesh; vertex positions as the 3D layout |
+| 17 | `bob` | [Keenan Crane's 3D Model Repository](https://www.cs.cmu.edu/~kmcrane/Projects/ModelRepository/), `bob_isotropic.obj` | K. Crane (license CC0 1.0) | A toy duck mesh; vertex positions as the 3D layout |
 | 18 | `cylinder_2560` | Synthetic | — | A square grid wrapped into an open tube, 80 × 32 |
-| 19 | `oloid` | [Keenan Crane's 3D Model Repository](https://www.cs.cmu.edu/~kmcrane/Projects/ModelRepository/), `oloid.zip`, `oloid1024_tri.obj` | K. Crane (licence CC0 1.0); the shape is Paul Schatz's (1929) | An oloid mesh; vertex positions as the 3D layout |
+| 19 | `oloid` | [Keenan Crane's 3D Model Repository](https://www.cs.cmu.edu/~kmcrane/Projects/ModelRepository/), `oloid.zip`, `oloid1024_tri.obj` | K. Crane (license CC0 1.0); the shape is Paul Schatz's (1929) | An oloid mesh; vertex positions as the 3D layout |
 
 ## Fractal
 
@@ -60,14 +60,14 @@ The datasets are listed as the Data pane lists them: by group, numbered in its o
 | # | Dataset | Origin | Citation | Notes |
 |--:|---|---|---|---|
 | 25 | `les_miserables` | Netzschleuder `lesmis` | D. E. Knuth, *The Stanford GraphBase*, Addison-Wesley (1993) | Scene coappearances; weights dropped |
-| 26 | `game_thrones` | [Netzschleuder](https://networks.skewed.de) network catalogue (Tiago P. Peixoto), `game_thrones` | A. Beveridge and J. Shan, "Network of Thrones", *Math Horizons* 23(4), 18–22 (2016) | Character coappearances in *A Storm of Swords*; weights dropped |
-| 27 | `star_wars` | `starwars-full-interactions-allCharacters.json` from E. Gabasova's [star-wars-network-data](https://github.com/evelinag/star-wars-network-data) | E. Gabasova, "Star Wars social network", Zenodo, doi:10.5281/zenodo.1411479 (licence CC BY 3.0) | Characters who speak in the same scene, Episodes I–VII; weights dropped, largest component |
+| 26 | `game_thrones` | [Netzschleuder](https://networks.skewed.de) network catalog (Tiago P. Peixoto), `game_thrones` | A. Beveridge and J. Shan, "Network of Thrones", *Math Horizons* 23(4), 18–22 (2016) | Character coappearances in *A Storm of Swords*; weights dropped |
+| 27 | `star_wars` | `starwars-full-interactions-allCharacters.json` from E. Gabasova's [star-wars-network-data](https://github.com/evelinag/star-wars-network-data) | E. Gabasova, "Star Wars social network", Zenodo, doi:10.5281/zenodo.1411479 (license CC BY 3.0) | Characters who speak in the same scene, Episodes I–VII; weights dropped, largest component |
 
 ## Language
 
 | # | Dataset | Origin | Citation | Notes |
 |--:|---|---|---|---|
-| 28 | `indo_european` | [Glottolog](https://glottolog.org) 5.3, `indo1319` | H. Hammarström, R. Forkel, M. Haspelmath and S. Bank, *Glottolog 5.3*, Max Planck Institute for Evolutionary Anthropology (licence CC BY 4.0) | Languages and their subgroups, no dialects |
+| 28 | `indo_european` | [Glottolog](https://glottolog.org) 5.3, `indo1319` | H. Hammarström, R. Forkel, M. Haspelmath and S. Bank, *Glottolog 5.3*, Max Planck Institute for Evolutionary Anthropology (license CC BY 4.0) | Languages and their subgroups, no dialects |
 | 29 | `word_ladder` | `sgb-words.txt` from [The Stanford GraphBase](https://cs.stanford.edu/~knuth/sgb.html) | D. E. Knuth, *The Stanford GraphBase*, Addison-Wesley (1993) | Five-letter words one letter apart; largest component |
 
 ## Wikipedia
@@ -75,7 +75,7 @@ The datasets are listed as the Data pane lists them: by group, numbered in its o
 | # | Dataset | Origin | Citation | Notes |
 |--:|---|---|---|---|
 | 30 | `wiki_science` | Netzschleuder `wiki_science` | A. Calderone, "A Wikipedia Based Map of Science", Figshare (2020) | Articles on academic fields, linked by text similarity; weights dropped, largest component |
-| 31 | `thinkers` | [DBpedia](https://www.dbpedia.org) SPARQL endpoint, queried 2026-10-11, influence: `dbo:influenced`, `dbo:influencedBy`, `dbp:influenced`, `dbp:influencedBy`, `dbp:influences` | J. Lehmann, R. Isele, M. Jakob, A. Jentzsch, D. Kontokostas, P. N. Mendes, S. Hellmann, M. Morsey, P. van Kleef, S. Auer and C. Bizer, "DBpedia – A large-scale, multilingual knowledge base extracted from Wikipedia", *Semantic Web* 6(2), 167–195 (2015) (data licence CC BY-SA 3.0) | Influence links, crawled from Carl Jung; direction dropped, largest component |
+| 31 | `thinkers` | [DBpedia](https://www.dbpedia.org) SPARQL endpoint, queried 2026-10-11, influence: `dbo:influenced`, `dbo:influencedBy`, `dbp:influenced`, `dbp:influencedBy`, `dbp:influences` | J. Lehmann, R. Isele, M. Jakob, A. Jentzsch, D. Kontokostas, P. N. Mendes, S. Hellmann, M. Morsey, P. van Kleef, S. Auer and C. Bizer, "DBpedia – A large-scale, multilingual knowledge base extracted from Wikipedia", *Semantic Web* 6(2), 167–195 (2015) (data license CC BY-SA 3.0) | Influence links, crawled from Carl Jung; direction dropped, largest component |
 | 32 | `mathematicians` | DBpedia `dbo:doctoralAdvisor`, `dbo:doctoralStudent`, `dbo:academicAdvisor`, `dbo:notableStudent`, `dbp:doctoralAdvisor`, `dbp:doctoralStudents`, `dbp:academicAdvisors`, `dbp:notableStudents` | as `thinkers` | Advisor–student links with at least one mathematician; direction dropped, largest component |
 | 33 | `programming_languages` | DBpedia as `thinkers` | as `thinkers` | Influence links, crawled from Fortran; direction dropped, largest component |
 | 34 | `music_genres` | DBpedia `dbo:stylisticOrigin`, `dbo:derivative`, `dbo:musicSubgenre`, `dbo:musicFusionGenre`, `dbp:stylisticOrigins`, `dbp:derivatives`, `dbp:subgenres`, `dbp:fusiongenres` | as `thinkers` | Origin, derivative, subgenre and fusion links, crawled from rock; direction dropped, largest component |
@@ -100,26 +100,26 @@ The datasets are listed as the Data pane lists them: by group, numbered in its o
 | 43 | `hemoglobin` | PDB `4HHB` | G. Fermi, M. F. Perutz, B. Shaanan and R. Fourme, "The crystal structure of human deoxyhaemoglobin at 1.74 Å resolution", *J. Mol. Biol.* 175, 159–174 (1984) | Four chains, contacts as for `green_fluorescent_protein` |
 | 44 | `groel_ring` | PDB `1AON` | Z. Xu, A. L. Horwich and P. B. Sigler, "The crystal structure of the asymmetric GroEL–GroES–(ADP)7 chaperonin complex", *Nature* 388, 741–750 (1997) | One seven-fold ring, contacts as for `green_fluorescent_protein` |
 | 45 | `celegans_male_gap_junction` | Netzschleuder `celegans_2019` (`male_gap_junction_corrected`) | S. J. Cook et al., "Whole-animal connectomes of both *Caenorhabditis elegans* sexes", *Nature* 571(7763), 63–71 (2019) | Neurons and gap junctions; largest component |
-| 46 | `human_connectome` | braingraph.org `Averaged_graph_Scale5.graphml`, averaged over people of the OASIS-3 study | C. Kerepesi, B. Szalkai, B. Varga and V. Grolmusz, "The braingraph.org database of high resolution structural connectomes and the brain graph tools", *Cogn. Neurodyn.* 11(5), 483–486 (2017); P. J. LaMontagne et al., "OASIS-3", medRxiv, doi:10.1101/2019.12.13.19014902 (2019) | Brain regions joined by fibre tracts averaging at least one, less spurious cross-hemisphere subcortical edges; largest component. Unclear provenance: for showing the tool, not for claims about the brain. **Public use must acknowledge OASIS:** "Data were provided in part by OASIS-3: Principal Investigators: T. Benzinger, D. Marcus, J. Morris; NIH P30 AG066444, P50 AG00561, P30 NS09857781, P01 AG026276, P01 AG003991, R01 AG043434, UL1 TR000448, R01 EB009352." |
+| 46 | `human_connectome` | braingraph.org `Averaged_graph_Scale5.graphml`, averaged over people of the OASIS-3 study | C. Kerepesi, B. Szalkai, B. Varga and V. Grolmusz, "The braingraph.org database of high resolution structural connectomes and the brain graph tools", *Cogn. Neurodyn.* 11(5), 483–486 (2017); P. J. LaMontagne et al., "OASIS-3", medRxiv, doi:10.1101/2019.12.13.19014902 (2019) | Brain regions joined by fiber tracts averaging at least one, less spurious cross-hemisphere subcortical edges; largest component. Unclear provenance: for showing the tool, not for claims about the brain. **Public use must acknowledge OASIS:** "Data were provided in part by OASIS-3: Principal Investigators: T. Benzinger, D. Marcus, J. Morris; NIH P30 AG066444, P50 AG00561, P30 NS09857781, P01 AG026276, P01 AG003991, R01 AG043434, UL1 TR000448, R01 EB009352." |
 
 ## Infrastructure
 
 | # | Dataset | Origin | Citation | Notes |
 |--:|---|---|---|---|
 | 47 | `power` | Netzschleuder `power` | D. J. Watts and S. H. Strogatz, "Collective dynamics of 'small-world' networks", *Nature* 393(6684), 440–442 (1998) | The Western US power grid; anonymised, no labels or positions |
-| 48 | `european_power_grid` | [GridKit Europe extract](https://zenodo.org/records/47317) (SciGRID, derived from OpenStreetMap) | B. Wiegmans, "GridKit: European and North-American extracts", Zenodo (2016); upstream licence ODbL | Substations and lines at 330 kV and above, at map positions; largest component |
+| 48 | `european_power_grid` | [GridKit Europe extract](https://zenodo.org/records/47317) (SciGRID, derived from OpenStreetMap) | B. Wiegmans, "GridKit: European and North-American extracts", Zenodo (2016); upstream license ODbL | Substations and lines at 330 kV and above, at map positions; largest component |
 | 49 | `internet_top_pop` | Netzschleuder `internet_top_pop` (Kdl) | S. Knight, H. X. Nguyen, N. Falkner, R. Bowden and M. Roughan, "The Internet Topology Zoo", *IEEE J. Sel. Areas Commun.* 29(9), 1765–1775 (2011) | Backbone points of presence, at map positions |
 
 ## Transportation
 
 | # | Dataset | Origin | Citation | Notes |
 |--:|---|---|---|---|
-| 50 | `london_transport` | Netzschleuder `london_transport` | M. De Domenico, A. Solé-Ribalta, S. Gómez and A. Arenas, "Navigability of interconnected networks under random failures", *PNAS* 111(23), 8351–8356 (2014) | Tube, Overground and DLR merged, at map positions. Upstream licence ODbL |
-| 51–52 | `urban_streets_ahmedabad`, `urban_streets_savannah` | Netzschleuder `urban_streets` (`ahmedabad`, `savannah`) | P. Crucitti, V. Latora and S. Porta, "Centrality measures in spatial networks of urban streets", *Phys. Rev. E* 73, 036125 (2006); V. Latora, V. Nicosia and G. Russo, *Complex Networks: Principles, Methods and Applications*, Cambridge University Press (2017); Netzschleuder licence AGPL-v3 | Street intersections and segments in one square mile, at map positions |
+| 50 | `london_transport` | Netzschleuder `london_transport` | M. De Domenico, A. Solé-Ribalta, S. Gómez and A. Arenas, "Navigability of interconnected networks under random failures", *PNAS* 111(23), 8351–8356 (2014) | Tube, Overground and DLR merged, at map positions. Upstream license ODbL |
+| 51–52 | `urban_streets_ahmedabad`, `urban_streets_savannah` | Netzschleuder `urban_streets` (`ahmedabad`, `savannah`) | P. Crucitti, V. Latora and S. Porta, "Centrality measures in spatial networks of urban streets", *Phys. Rev. E* 73, 036125 (2006); V. Latora, V. Nicosia and G. Russo, *Complex Networks: Principles, Methods and Applications*, Cambridge University Press (2017); Netzschleuder license AGPL-v3 | Street intersections and segments in one square mile, at map positions |
 | 53 | `eu_airlines` | Netzschleuder `eu_airlines` | A. Cardillo et al., "Emergence of network features from multiplexity", *Sci. Rep.* 3(1), 1344 (2013) | Airline layers merged, at map positions; largest component |
 
 ## Software
 
 | # | Dataset | Origin | Citation | Notes |
 |--:|---|---|---|---|
-| 54–60 | `cfg_*` (seven) | The [systems network corpus](https://github.com/utah-vis-collective/systems-network-corpus) | — | Control-flow graphs of C functions from the Rodinia and MiBench benchmarks; direction dropped. Shared by its maintainers for use here (no licence file) |
+| 54–60 | `cfg_*` (seven) | The [systems network corpus](https://github.com/utah-vis-collective/systems-network-corpus) | — | Control-flow graphs of C functions from the Rodinia and MiBench benchmarks; direction dropped. Shared by its maintainers for use here (no license file) |

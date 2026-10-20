@@ -19,7 +19,7 @@ import { TEXT } from "../../controlText";
 
 const EMPTY: Uint32Array = new Uint32Array(0);
 
-// Onion reads the Cores stage's results, Eigenvector the Centrality stage's.
+// Onion reads the Shells stage's results, Eigenvector the Centrality stage's.
 const sortReady = (g: Graph, sort: LabelSort) =>
   sort === "onion" ? !!g.cores : sort === "eigenvector" ? !!g.centrality : true;
 const NONE = new Uint32Array(0);
@@ -55,7 +55,7 @@ export function LabelsPane({ slot }: { slot: SlotId }) {
   );
   const sort = useStore(labelsSettings, (s) => labelSortIn(s, slot));
   const [order, setOrder] = useState(EMPTY);
-  // Onion and Eigenvector arrive with the Cores stage; until then those sorts
+  // Onion and Eigenvector arrive with the Shells stage; until then those sorts
   // wait, and Degree and Labels (A–Z) work at once.
   const keysReady = useStore(data, (s) => !!s.graph && sortReady(s.graph, sort));
   const fade = useFadeIn(graph, keysReady && !labelsMissing(graph, sort));

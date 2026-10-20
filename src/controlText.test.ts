@@ -3,11 +3,11 @@ import helpText from "../docs/help_pane.txt?raw";
 import tooltipsText from "../docs/tooltips_ui.txt?raw";
 import { parseTooltips, TEXT, TOOLTIPS, TOOLTIPS_READ } from "./controlText";
 import "./controlOptions";
-import { CURATED_INTRO, INTRO } from "./panes/dataset/intros";
+import { INTRO } from "./panes/dataset/intros";
 
-// Tooltips are read from docs/tooltips_ui.txt. The Data list's sentences are
-// cut from Help: Help's words in Help's order from one paragraph, with words
-// left out.
+// Tooltips are read from docs/tooltips_ui.txt. The Data list's + New
+// sentence is cut from Help: Help's words in Help's order from one paragraph,
+// with words left out.
 
 // A word without the punctuation around it, so a cut can end a clause early.
 // Case is ignored, and "+NEW" reads as "+ NEW".
@@ -90,9 +90,9 @@ describe("tooltips", () => {
   });
 });
 
-describe("the Data list's sentences", () => {
-  it("are cut from Help", () => {
-    const uncut = [INTRO, CURATED_INTRO].filter((s) => !paragraphs.some((p) => cutFrom(words(s), p)));
+describe("the Data list's + New sentence", () => {
+  it("is cut from Help", () => {
+    const uncut = [INTRO].filter((s) => !paragraphs.some((p) => cutFrom(words(s), p)));
     expect(uncut).toEqual([]);
   });
 });

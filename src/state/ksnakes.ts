@@ -5,7 +5,7 @@ import { fitView } from "./views";
 import { layout, retyped } from "./layout";
 import type { SlotId } from "./layout";
 
-// Cores' settings, chosen in the bottom strip while it is focused. Each Cores
+// Shells' settings, chosen in the bottom strip while it is focused. Each Shells
 // slot has its own, and a dataset switch is a fresh start.
 
 export type Ordering = (typeof ORDERINGS)[number]["id"];
@@ -70,7 +70,7 @@ data.subscribe((s, prev) => {
   if (s.graph !== prev.graph) ksnakesSettings.set({ bySlot: {} });
 });
 
-// A slot that becomes Cores starts from the defaults.
+// A slot that becomes Shells starts from the defaults.
 layout.subscribe((s, prev) => {
   const fresh = retyped(s.slots, prev.slots);
   if (!fresh.some((slot) => ksnakesSettings.get().bySlot[slot])) return;

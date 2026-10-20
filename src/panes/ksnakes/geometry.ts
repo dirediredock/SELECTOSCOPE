@@ -3,7 +3,7 @@ import { ORDERINGS } from "../../controlOptions";
 import type { Ordering, PipelineMode } from "../../state/ksnakes";
 import type { SweepAxis } from "../../state/sweep";
 
-// Cores placement, in px at 100% zoom with y up: the pipeline gives each
+// Shells placement, in px at 100% zoom with y up: the pipeline gives each
 // node its core, onion layer, island and, per singleton mode and ordering, its
 // position in its shell's row (src/pipeline/ksnakes.ts); this turns them
 // into bins and positions for the ordering and singleton group picked in the
@@ -99,10 +99,10 @@ export function snakeStructure(ks: KSnakes): SnakeStructure {
   }
   const mode = (m: PipelineMode) => {
     const orders = ks.orders[m];
-    if (!orders) throw new Error(`Cores: no ${m} orders`);
+    if (!orders) throw new Error(`Shells: no ${m} orders`);
     const one = (o: Ordering) => {
       const row = orders.row[o];
-      if (!row) throw new Error(`Cores: no ${m} ${o} order`);
+      if (!row) throw new Error(`Shells: no ${m} ${o} order`);
       return orderOf(ks, shellOf, cores.length, row, m === "aggregate");
     };
     return Object.fromEntries(ORDERINGS.map((o) => [o.id, one(o.id)])) as Record<Ordering, SnakeOrder>;
@@ -168,7 +168,7 @@ const spaceBetween = (a: SnakeBin, b: SnakeBin): number => (slotsOf(a) > 1 || sl
 // are a full spacing from the tightest row's end nodes, as far as its inner
 // cuts are from theirs, and every row shares them. Each island is centred
 // between its cuts, or with `flushRight` (Size) rests against its right cut,
-// the spare room to its left; the cuts stay put. With `pull` (Top-down's
+// the spare room to its left; the cuts stay put. With `pull` (Barycenter's
 // edges), every row below the densest is placed under its neighbours instead
 // (placeUnder), its cuts midway between neighbouring bins.
 export interface SnakePlacement {
@@ -237,7 +237,7 @@ export function snakeXY(
   return { xy, cuts, spacing: u };
 }
 
-// Top-down's placement, row by row from the densest down, in place on `lefts`:
+// Barycenter's placement, row by row from the densest down, in place on `lefts`:
 // each bin goes to the mean x of its members' neighbours in denser rows, as
 // those rows are placed, an edge d rows away weighing 1/d (the pull that
 // ordered it, pipeline/ksnakes.ts). Then the bins move apart only as far as

@@ -10,7 +10,7 @@ import type { SweepAxis } from "../../state/sweep";
 // graph's largest entry at its top, one scale for every bin, so heights
 // compare across bins.
 //
-// Spacing moves each line right by its place in the wave order: one
+// Spacing moves each line right by its place in the shape order: one
 // measure of its census in percent (censusValues), each with a fixed end on the left
 // (LEFT), so lines at one x have alike values in every bin. Each line's key is
 // its value, or by rank its class (0, 1, 2, ... for the distinct values), and
@@ -50,11 +50,11 @@ export function censusStructure(hc: HopCensus, present?: Uint8Array): CensusStru
 
 // Each line's measures, every one a percent, read from its census as a
 // distribution over hops (divided by its total, so a line's size never
-// counts): degree, its first entry, as a share of the graph's stubs (2m, every
-// node's degree summed), so it reads as the line's first height; reach, its mean
+// counts): degree, its first entry over the other nodes (n − 1), its degree
+// centrality, so it reads as the line's first height; reach, its mean
 // hop as a share of its eccentricity; spread, its standard deviation in
 // hops, as a share of its eccentricity; and skew, which side of the mean hop
-// the wave's width lies on: how much further its last tenth lies past the mean
+// the shape's width lies on: how much further its last tenth lies past the mean
 // hop than its first tenth lies before it (arrival), as a share of its
 // eccentricity, positive for a long tail and negative for a long run-up. A
 // skewness read from tenths, not the third moment, which within a bin mostly
@@ -68,10 +68,8 @@ export function censusValues({ ecc, offset, stubs }: HopCensus, present?: Uint8A
   const reach = new Float64Array(n);
   const spread = new Float64Array(n);
   const skew = new Float64Array(n);
-  // While the census lands, shares are of the lines landed so far.
   const has = (v: number) => !present || present[v] === 1;
-  let stubTotal = 0;
-  for (let v = 0; v < n; v++) if (has(v)) stubTotal += stubs[offset[v]!]!;
+  const others = Math.max(1, n - 1);
   for (let v = 0; v < n; v++) {
     if (!has(v)) continue;
     const first = offset[v]!, end = offset[v + 1]!;
@@ -87,7 +85,7 @@ export function censusValues({ ecc, offset, stubs }: HopCensus, present?: Uint8A
       m2 += stubs[i]! * d * d;
     }
     const span = Math.max(1, ecc[v]!);
-    degree[v] = stubs[first]! / stubTotal;
+    degree[v] = stubs[first]! / others;
     reach[v] = mean / span;
     spread[v] = Math.sqrt(m2 / total) / span;
     const line = stubs.subarray(first, end);

@@ -49,9 +49,9 @@ DATASET, BUILDING FROM CSV: Add an edge list with +EDGELIST, type a NAME if you 
 
 DATASET, UPLOADING FROM JSON: With +DATASET build from a file saved by EXPORT; type a NAME if you like, and click ADD to open as a new row.
 
-DATASET, CURATED: Click EXPORT JSON to save an already built dataset. Adding LABELS or a BESPOKE layout from a pane makes a copy of your own.
+DATASET, CURATED: Click EXPORT JSON to save an already built dataset, or EXPORT CSVS for a zip of its files to build from.
 
-DATASET, YOUR OWN: Click EXPORT JSON to save an already built dataset, and REMOVE to erase it.
+DATASET, YOUR OWN: Click EXPORT JSON to save an already built dataset, EXPORT CSVS for a zip of its files to build from, and REMOVE to erase it.
 
 DATASET, BUILDING: While your dataset builds, STOP stops the build; the row keeps what has landed.
 
@@ -59,7 +59,7 @@ CHANGE: Shows which CSV files your dataset has and which it lacks. Replacing any
 
 CHANGE, FROM JSON: Add LABELS or a BESPOKE layout to your dataset, or remove one you added.
 
-SHOW: Turn on THUMBNAILS to see the NODELINK preview of the dataset.
+SHOW: Turn on THUMBNAILS to see an edges-only NODELINK preview of the dataset, in its BESPOKE 2D layout when available.
 
 ADD DATASET: Click +NEW to upload your own data.
 
@@ -76,9 +76,9 @@ VERTICAL ORDER BY: Sorts the vertical order of rows by LABELS (A–Z), DEGREE, O
 
 NODELINK PANE
 
-LAYOUT: Shows the network in a force-directed 2D or 3D view, or in the dataset's own BESPOKE 2D or BESPOKE 3D layout. Toggle INTERACTIVE to start a force-directed simulation from the current layout, where nodes can be moved by dragging.
+LAYOUT: Shows the network in a force-directed 2D or 3D layout, or in the dataset's own BESPOKE 2D or BESPOKE 3D layout when available. Toggle INTERACTIVE to start a force-directed simulation from the current layout, where nodes can be moved by dragging.
 
-LAYOUT, TOO LARGE: Because of computing cost, INTERACTIVE mode is unavailable for datasets above 6000 nodes or 20000 edges.
+LAYOUT, TOO LARGE: Because of runtime computing cost, INTERACTIVE mode is unavailable for datasets above 6000 nodes or 20000 edges.
 
 
 MATRIX PANE
@@ -88,13 +88,13 @@ DIAGONAL ORDER BY: Sets the matrix seriation, or the symmetric ordering of nodes
 LAYOUT: Shows the matrix as a DIAMOND, with the diagonal running vertically, or as the traditional SQUARE.
 
 
-CORES PANE
+SHELLS PANE
 
-HORIZONTAL ORDER BY: Sets the horizontal order of connected components, by TOP-DOWN or SIZE. Toggle GROUP SINGLETONS to aggregate all the singleton nodes within their respective k-core shell.
+HORIZONTAL ORDER BY: Sets the horizontal order of connected components, by SIZE or BARYCENTER. Toggle GROUP SINGLETONS to aggregate all the singleton nodes within their respective k-core shell.
 
 VERTICAL: Adjusts the aspect ratio of the visual pattern with SPACING, and GRIDLINES makes visible the connected component bins.
 
 
 HOPS PANE
 
-HORIZONTAL WAVE ORDER BY: Orders the polylines by wave shape, SPACING sets how far they move horizontally, and RANKING sets each set of equal values in one evenly spaced column.
+HORIZONTAL ORDER BY SHAPE: Orders the polylines by shape similarity, SPACING sets how far they move horizontally, and RANKING places them in an evenly spaced ranking, with equal values superimposed.

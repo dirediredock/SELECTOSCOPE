@@ -56,23 +56,35 @@ const poly = (pts: readonly (readonly number[])[]) => pts.map((p) => p.join(",")
 
 // Quick start's three parts: the top strip, the pane row and the bottom
 // strip. The panes are bare frames: the figure is about where things are.
+// Their name sits on a plate of pane fill, centred on the row, so it reads
+// across the frames' edges.
 export function InterfaceMap() {
   const W = 260;
   const widths = [30, 30, 70, 37, 36, 34];
   const xs = widths.map((_, i) => 4 + widths.slice(0, i).reduce((a, b) => a + b + 3, 0));
   const top = 26;
   const h = 70;
+  const mid = top + h / 2;
+  const bottom = top + h + 6;
   return (
-    <Figure w={W} h={150}>
+    <Figure w={W} h={bottom + 20}>
       <rect x={4} y={2} width={W - 8} height={18} rx={9} fill={INK.fill} stroke={INK.hair} />
       <Caption x={W / 2} y={14}>TOP CONTROL STRIP</Caption>
       {widths.map((w, i) => (
         <rect key={i} x={xs[i]} y={top} width={w} height={h} rx={3} fill={INK.panel} stroke={INK.hair} />
       ))}
-      <path d={`M4 ${top + h + 8} v4 H${W - 4} v-4`} fill="none" stroke={INK.hair} />
-      <Caption x={W / 2} y={top + h + 22}>PRIMARY VIEW</Caption>
-      <rect x={4} y={128} width={W - 8} height={18} rx={9} fill={INK.fill} stroke={INK.hair} />
-      <Caption x={W / 2} y={140}>BOTTOM CONTROL STRIP</Caption>
+      {/* The caption's ground: the panel's colour, solid under the words and
+          fading out over the panes' edges. */}
+      <defs>
+        <radialGradient id="map-fade">
+          <stop offset={0.6} stopColor={INK.panel} />
+          <stop offset={1} stopColor={INK.panel} stopOpacity={0} />
+        </radialGradient>
+      </defs>
+      <rect x={W / 2 - 56} y={mid - 13} width={112} height={24} fill="url(#map-fade)" />
+      <Caption x={W / 2} y={mid + 3}>MAIN SECTION</Caption>
+      <rect x={4} y={bottom} width={W - 8} height={18} rx={9} fill={INK.fill} stroke={INK.hair} />
+      <Caption x={W / 2} y={bottom + 12}>BOTTOM CONTROL STRIP</Caption>
     </Figure>
   );
 }
@@ -279,8 +291,8 @@ export function MatrixForms() {
   );
 }
 
-// Cores: shells as K spans, onion layers as heights, components in tubes.
-export function CoresAnatomy() {
+// Shells: shells as K spans, onion layers as heights, components in tubes.
+export function ShellsAnatomy() {
   const W = 260;
   const step = 11;
   // Onion layer 1 at the bottom; each boundary between spans adds two steps.
@@ -401,23 +413,23 @@ export function HopsAnatomy() {
   );
 }
 
-// Each wave order's two ends, read from real data: in Game of Thrones' E5
+// Each shape order's two ends, read from real data: in Game of Thrones' E5
 // bin, the mean shape (shares of each line's total, in %) of the tenth of its
 // lines the order puts furthest left, and of those it puts furthest right.
 // So each figure shows what the order really does there, alikeness included.
 // The figure then exaggerates each end (exaggerate), so the contrast reads at
 // a glance.
-const WAVE_ENDS: Record<Exclude<CensusMeasure, "degree">, [number[], number[]]> = {
+const SHAPE_ENDS: Record<Exclude<CensusMeasure, "degree">, [number[], number[]]> = {
   reach: [[1.5, 21.8, 56.4, 17.2, 3.1, 0], [0.6, 3.8, 8.3, 47.2, 39.0, 1.0]],
   spread: [[1.2, 10.6, 28.5, 39.1, 19.8, 0.9], [0.6, 9.1, 60.6, 26.4, 3.2, 0]],
   skew: [[0.4, 7.5, 60.0, 27.7, 4.4, 0], [1.4, 13.8, 36.1, 44.5, 4.3, 0]],
 };
 
 // The bin's mean shape, which each end is pushed away from.
-const WAVE_MEAN = [0.9, 11.0, 44.1, 34.3, 9.4, 0.3];
+const SHAPE_MEAN = [0.9, 11.0, 44.1, 34.3, 9.4, 0.3];
 // How far each order's ends are pushed, each as far as reads at the figure's
 // size: Reach's mean hop needs a clear gap from hop 0; Spread and Skew lie
-// in the wave's shape, which needs most.
+// in the polyline's shape, which needs most.
 const AMPLIFY: Record<Exclude<CensusMeasure, "degree">, number> = { reach: 2.2, spread: 3, skew: 3 };
 
 // An end pushed `k` times as far from the bin's mean shape, every hop but the
@@ -425,7 +437,7 @@ const AMPLIFY: Record<Exclude<CensusMeasure, "degree">, number> = { reach: 2.2, 
 // and scaled back to 100.
 function exaggerate(c: number[], k: number): number[] {
   const last = c.length - 1;
-  const pushed = c.map((x, i) => Math.max(i < last ? 1 : 0, WAVE_MEAN[i]! + k * (x - WAVE_MEAN[i]!)));
+  const pushed = c.map((x, i) => Math.max(i < last ? 1 : 0, SHAPE_MEAN[i]! + k * (x - SHAPE_MEAN[i]!)));
   const total = pushed.reduce((a, x) => a + x, 0);
   return pushed.map((x) => (100 * x) / total);
 }
@@ -445,23 +457,23 @@ const DEGREE_LINES: [number[], number[]] = [
   [1, 5, 14, 16, 4],
 ];
 
-// One wave order: its left end, and its right end slid two bins' widths
+// One shape order: its left end, and its right end slid two bins' widths
 // along, as Spacing spreads them. Beneath each, faint, what the measure reads
-// off the wave: Degree a dot at the line's first value, Reach a dashed
+// off the shape: Degree a dot at the line's first value, Reach a dashed
 // line at the mean hop and a bracket from hop 0 to it, Spread a bracket of 1.5 standard deviations either side of it,
 // Skew a dashed line at the mean hop with the lead from the first tenth to it
 // and the tail from it to the last tenth.
-const WAVE_SLIDE = 2;
+const SHAPE_SLIDE = 2;
 
-export function WaveOrder({ measure }: { measure: CensusMeasure }) {
+export function ShapeOrder({ measure }: { measure: CensusMeasure }) {
   const side = 60;
   const x0 = 8;
   const base = 4 + side;
-  const ends = measure === "degree" ? DEGREE_LINES : WAVE_ENDS[measure].map((c) => exaggerate(c, AMPLIFY[measure]));
+  const ends = measure === "degree" ? DEGREE_LINES : SHAPE_ENDS[measure].map((c) => exaggerate(c, AMPLIFY[measure]));
   const ecc = ends[0].length - 1;
   const top = Math.max(...ends.flat());
   const hop = side / ecc;
-  const right = x0 + (1 + WAVE_SLIDE) * side;
+  const right = x0 + (1 + SHAPE_SLIDE) * side;
   const mark = (c: number[], dx: number, i: number) => {
     const at = (h: number) => dx + h * hop;
     if (measure === "reach") {
@@ -494,13 +506,13 @@ export function WaveOrder({ measure }: { measure: CensusMeasure }) {
   };
   return (
     <Figure w={right + x0} h={side + 30}>
-      {ends.map((c, i) => mark(c, x0 + i * WAVE_SLIDE * side, i))}
+      {ends.map((c, i) => mark(c, x0 + i * SHAPE_SLIDE * side, i))}
       <line x1={x0} y1={base} x2={right} y2={base} stroke={INK.grid} />
       {ends.map((c, i) => (
-        <CensusLine key={i} solid pts={c.map((v, h) => [x0 + i * WAVE_SLIDE * side + h * hop, base - (v / top) * (side - 6)])} />
+        <CensusLine key={i} solid pts={c.map((v, h) => [x0 + i * SHAPE_SLIDE * side + h * hop, base - (v / top) * (side - 6)])} />
       ))}
       {measure === "degree" &&
-        ends.map((c, i) => <Dot key={i} x={x0 + i * WAVE_SLIDE * side} y={base - (c[0]! / top) * (side - 6)} r={3.2} />)}
+        ends.map((c, i) => <Dot key={i} x={x0 + i * SHAPE_SLIDE * side} y={base - (c[0]! / top) * (side - 6)} r={3.2} />)}
       <Caption x={x0} y={side + 26} anchor="start">← left</Caption>
       <Caption x={right} y={side + 26} anchor="end">right →</Caption>
     </Figure>

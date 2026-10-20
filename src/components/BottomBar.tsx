@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef } from "react";
 import type { ReactNode } from "react";
 import { focus, openNew, setNewHover, setUpload, toggleHelp, toggleFigures, toggleThumbnails, ui } from "../state/uiStore";
-import { data, exportJson } from "../data/dataStore";
+import { data, exportCsvs, exportJson } from "../data/dataStore";
 import { exportable } from "../data/format";
 import { reportTip } from "./report";
 import { UserFilePill } from "./UserFilePill";
@@ -339,8 +339,8 @@ function ChangeSection({ id, csv }: { id: string; csv: boolean }) {
 }
 
 // The dataset on screen, as its row: Stop while this row's build runs (a
-// build is stopped from its own row only), Export once its build is
-// finished, and, for the user's own rows, Remove.
+// build is stopped from its own row only), Export JSON and Export CSVs once
+// its build is finished, and, for the user's own rows, Remove.
 function DatasetSection() {
   const current = useStore(data, (s) => s.current);
   const origin = useStore(userData, (s) => datasetOf(s, current)?.origin ?? null);
@@ -351,6 +351,9 @@ function DatasetSection() {
       {building && <Transport cells={STOP_CELLS} state="running" running onClick={stopBuild} />}
       <Action onClick={exportJson} disabled={!ready}>
         Export JSON
+      </Action>
+      <Action onClick={exportCsvs} disabled={!ready}>
+        Export CSVs
       </Action>
       {origin !== null && (
         <Action onClick={() => removeRow(current!)}>
@@ -552,16 +555,16 @@ function KSnakesControls({ slot }: { slot: SlotId }) {
   );
 }
 
-// Horizontal wave order by: the measure that orders the lines sideways,
+// Horizontal order by shape: the measure that orders the lines sideways,
 // whether they are spaced by rank or by its value (Ranking), and how far they
 // slide (Spacing, multiples of a bin's side, on a squared rail).
 function HopCensusControls({ slot }: { slot: SlotId }) {
   const s = useStore(hopcensusSettings, (st) => hopcensusIn(st, slot));
   return (
     <>
-      <Section label="Horizontal wave order by" tip={TEXT.hopcensus.measureTip}>
+      <Section label="Horizontal order by shape" tip={TEXT.hopcensus.measureTip}>
         <Choice
-          label="Horizontal wave order by"
+          label="Horizontal order by shape"
           options={CENSUS_MEASURES}
           value={s.measure}
           onPick={(v) => setMeasure(slot, v)}

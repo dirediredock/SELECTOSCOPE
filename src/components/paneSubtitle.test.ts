@@ -21,15 +21,15 @@ describe("pane subtitles", () => {
     expect(matrixSubtitle({ seriation: "pc2", form: "square" })).toBe("PC2, square");
   });
 
-  it("names the Cores order, and grouped singletons", () => {
-    expect(ksnakesSubtitle({ ordering: "topdown", group: false })).toBe("Top-down");
+  it("names the Shells order, and grouped singletons", () => {
+    expect(ksnakesSubtitle({ ordering: "topdown", group: false })).toBe("Barycenter");
     expect(ksnakesSubtitle({ ordering: "packed", group: true })).toBe("Size, grouped");
   });
 
-  it("names Hops' wave order, and Ranking while it is on", () => {
-    expect(hopcensusSubtitle({ measure: "spread", rank: true })).toBe("Wave spread, ranked");
-    expect(hopcensusSubtitle({ measure: "reach", rank: false })).toBe("Wave reach");
-    expect(hopcensusSubtitle({ measure: "skew", rank: false })).toBe("Wave skew");
+  it("names Hops' shape order, and Ranking while it is on", () => {
+    expect(hopcensusSubtitle({ measure: "spread", rank: true })).toBe("Spread similarity, ranked");
+    expect(hopcensusSubtitle({ measure: "reach", rank: false })).toBe("Reach similarity");
+    expect(hopcensusSubtitle({ measure: "skew", rank: false })).toBe("Skew similarity");
   });
 
   it("gives Data none", () => {

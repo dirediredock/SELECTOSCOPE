@@ -15,8 +15,9 @@ function isControl(e: KeyboardEvent) {
 }
 
 // The arrows go to a control only while it holds keyboard focus, or while text
-// is being edited. Why: a click leaves focus on what it pressed (Run, a
-// choice), and the band must still step on the next arrow.
+// is being edited. A pointer click lets go of the button it pressed (onClick
+// below), since Chrome counts the next key as keyboard focus on it; the
+// focus-visible test is the fallback.
 function keepsArrows(e: KeyboardEvent) {
   const target = e.target as HTMLElement | null;
   if (!target) return false;
@@ -53,16 +54,25 @@ export function attachKeyboardShortcuts(): () => void {
     const dir = arrow(e);
     if (dir !== 0) releaseStep(dir);
   };
+  // A button pressed with the pointer (Run, a choice) lets go of focus, as the
+  // slider and the Arrow pill do, so the next arrow steps the band and Space
+  // holds the hand. Enter or Space on it (detail 0) keeps focus.
+  const onClick = (e: MouseEvent) => {
+    if (e.detail === 0) return;
+    (e.target as HTMLElement | null)?.closest?.("button")?.blur();
+  };
   const onBlur = () => {
     releaseSpace();
     releaseStep();
   };
+  window.addEventListener("click", onClick);
   window.addEventListener("keydown", onKeyDown);
   window.addEventListener("keyup", onKeyUp);
   window.addEventListener("keydown", onArrowDown, capture);
   window.addEventListener("keyup", onArrowUp, capture);
   window.addEventListener("blur", onBlur);
   return () => {
+    window.removeEventListener("click", onClick);
     window.removeEventListener("keydown", onKeyDown);
     window.removeEventListener("keyup", onKeyUp);
     window.removeEventListener("keydown", onArrowDown, capture);

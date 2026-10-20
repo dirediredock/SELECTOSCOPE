@@ -62,6 +62,23 @@ describe("exploration shortcuts", () => {
     expect(pressStep).toHaveBeenCalledWith(1);
   });
 
+  it("lets go of a button pressed with the pointer, not from the keyboard", () => {
+    const button = { blur: vi.fn() };
+    const click = (detail: number) => {
+      const event = new Event("click");
+      Object.assign(event, { detail });
+      Object.defineProperty(event, "target", { value: { closest: () => button } });
+      events.dispatchEvent(event);
+    };
+    click(0);
+    expect(button.blur).not.toHaveBeenCalled();
+    click(1);
+    expect(button.blur).toHaveBeenCalledOnce();
+    detach();
+    click(1);
+    expect(button.blur).toHaveBeenCalledOnce();
+  });
+
   it("steps and releases a sweep on an exploration surface", () => {
     expect(key("keydown", "ArrowDown").defaultPrevented).toBe(true);
     expect(pressStep).toHaveBeenCalledWith(1);

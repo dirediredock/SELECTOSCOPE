@@ -48,13 +48,13 @@ export function fitView(slot: SlotId) {
 }
 
 // The home view alone, with no fit request: a pane that fits its own way
-// (Cores) is left at home.
+// (Shells) is left at home.
 export function homeView(slot: SlotId) {
   setView(slot, homeOf(typeOf(slot)));
 }
 
 // Zoom by `factor` keeping the cursor fixed. (x, y) is the cursor relative to
-// the pane's centre. A fit may sit below ZOOM_MIN (Cores' Fit all on a tall
+// the pane's centre. A fit may sit below ZOOM_MIN (Shells' Fit all on a tall
 // pattern); zooming from there never jumps up to it.
 export function zoomAt(t: Transform, factor: number, x: number, y: number): Transform {
   const k = Math.min(ZOOM_MAX, Math.max(Math.min(ZOOM_MIN, t.k), t.k * factor));

@@ -54,8 +54,8 @@ export interface BuildJson {
 
 type LayoutKey = "fd_2d" | "fd_3d" | "bespoke_2d" | "bespoke_3d";
 
-// Coordinates go out with 5 decimals.
-const coords = (xy: Float32Array) => Array.from(xy, (x) => Math.round(x * 1e5) / 1e5 || 0);
+// Coordinates go out with 5 decimals, here and in Export CSVs.
+export const coords = (xy: Float32Array) => Array.from(xy, (x) => Math.round(x * 1e5) / 1e5 || 0);
 
 // A graph is exportable once every stage it needs has landed; FD 3D is
 // optional (the pane computes it on demand).

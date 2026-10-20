@@ -1,4 +1,4 @@
-// The Cores pane's node placement: shells, onion layers, islands, and two
+// The Shells pane's node placement: shells, onion layers, islands, and two
 // orderings of each shell's bins, with singletons separate or aggregated.
 //
 // Per node:
