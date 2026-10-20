@@ -3,7 +3,6 @@ import type { CSSProperties, ReactNode } from "react";
 import { useStore } from "../../state/createStore";
 import { LIST_ROWS } from "../../components/VirtualList";
 import {
-  Action,
   ArrowStepper,
   FilePill,
   HelpToggle,
