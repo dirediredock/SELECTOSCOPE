@@ -11,7 +11,7 @@ import { fromJson, stringify } from "../src/data/format";
 import { BUILDS, bake, manifest } from "./bake";
 
 const rows = manifest();
-const SAMPLE = ["karate_club", "les_miserables_multidensity", "london_transport", "indo_european", "power"];
+const SAMPLE = ["karate_club", "les_miserables_multidensity", "london_transport", "indo_european", "human_connectome", "power"];
 const names = process.env.BAKE_ALL ? rows.map((r) => r.name) : SAMPLE;
 
 describe("builds", () => {

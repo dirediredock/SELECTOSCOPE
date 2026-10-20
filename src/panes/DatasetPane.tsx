@@ -98,7 +98,8 @@ function Intro({ text, onHeight }: { text: string; onHeight: (text: string, h: n
 // Thumbnails turns each dataset row into a tile the pane's width, a picture
 // of the dataset's 2D layout over its title; an uploaded one's fills in once
 // its layout lands. The curated groups' first header opens with a sentence on
-// what they are.
+// what they are. A curated row whose manifest gives it a note (a licence,
+// an acknowledgement) shows that note as its tooltip.
 // The strip's + New stands for the + New row: hovering it glides the list to
 // the top with that row hovered, and leaving glides back to the ringed row.
 // When another pane takes focus the list glides the ringed row to its middle,
@@ -265,6 +266,7 @@ export function DatasetPane({ slot }: { slot: SlotId }) {
                       ? `${row.user.graph!.n} / ${row.user.graph!.m}`
                       : "stopped",
                 alert: datasetAlert(row.user),
+                tip: undefined,
                 current: row.user.id === current,
                 onClick: () => pickRow(row.user.id),
               }
@@ -283,6 +285,7 @@ export function DatasetPane({ slot }: { slot: SlotId }) {
                     `${row.entry.nodes} / ${row.entry.edges}`
                   ),
                 alert: row.entry.name === requested && !downloading && loadFailed,
+                tip: row.entry.note,
                 current: row.entry.name === current,
                 onClick: () => {
                   setUpload(null);
@@ -295,6 +298,8 @@ export function DatasetPane({ slot }: { slot: SlotId }) {
             type="button"
             className={"list-row is-dataset" + (item.current ? " is-current" : "")}
             aria-current={item.current || undefined}
+            data-tip={item.tip}
+            data-tip-wide={item.tip ? "" : undefined}
             onClick={item.onClick}
           >
             <span className="list-text">{item.title}</span>

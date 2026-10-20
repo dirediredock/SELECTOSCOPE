@@ -17,6 +17,9 @@ import tooltipsText from "../docs/tooltips.txt?raw";
 //   trays         only trays carry tooltips, never a single control: a tray's
 //                 tip is its lead, then why it is idle, joined by trayTip
 //                 (controls.tsx). A file pill shows its file's report alone.
+//                 The one row with a tip of its own: a curated dataset's,
+//                 whose note (a licence, an acknowledgement) comes from
+//                 public/datasets/manifest.csv, not from here.
 
 // docs/tooltips.txt: CAPS headings (a strip or a pane), each followed by
 // "LABEL: text" lines, one tooltip a line. A label is the tray's caps label,

@@ -29,6 +29,8 @@ export function DatasetTile(props: {
   hover?: boolean;
   // The refusal hue's dot before the counts.
   alert?: boolean;
+  // The dataset's note (a licence, an acknowledgement), shown as its tooltip.
+  tip?: string;
   onClick?: () => void;
   size: number;
 }) {
@@ -65,6 +67,8 @@ export function DatasetTile(props: {
       type="button"
       className={"list-row is-dataset is-tile" + (current ? " is-current" : "") + (props.hover ? " is-hover" : "")}
       aria-current={current || undefined}
+      data-tip={props.tip}
+      data-tip-wide={props.tip ? "" : undefined}
       onClick={props.onClick}
     >
       {props.blob ? (

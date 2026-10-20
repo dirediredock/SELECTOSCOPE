@@ -22,9 +22,14 @@ const names = column(manifest, "name")!;
 
 describe("curated datasets", () => {
   it("has a manifest with a folder per row", () => {
-    expect(manifest.header).toEqual(["name", "title", "group", "view"]);
+    expect(manifest.header).toEqual(["name", "title", "group", "view", "note"]);
     expect(names.length).toBeGreaterThan(50);
     for (const name of names) expect(existsSync(join(datasets, name, "edgelist.csv")), name).toBe(true);
+  });
+
+  // A note is its row's tooltip, so it ends as every tooltip does.
+  it("ends every note with a full stop", () => {
+    for (const [i, note] of column(manifest, "note")!.entries()) if (note) expect(note.endsWith("."), names[i]).toBe(true);
   });
 
   it.each(names)("%s parses, and its layouts cover every node once", (name) => {
