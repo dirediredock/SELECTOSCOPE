@@ -15,6 +15,7 @@ import { attachListPan } from "../interaction/listPan";
 import { DatasetTile } from "./dataset/DatasetTile";
 import { CURATED_INTRO, INTRO } from "./dataset/intros";
 import { scaled } from "../uiScale";
+import { DATA_TOOLTIPS } from "../controlText";
 
 type Row =
   | { group: string; spaced?: boolean }
@@ -98,8 +99,8 @@ function Intro({ text, onHeight }: { text: string; onHeight: (text: string, h: n
 // Thumbnails turns each dataset row into a tile the pane's width, a picture
 // of the dataset's 2D layout over its title; an uploaded one's fills in once
 // its layout lands. The curated groups' first header opens with a sentence on
-// what they are. A curated row whose manifest gives it a note (a licence,
-// an acknowledgement) shows that note as its tooltip.
+// what they are. A curated row's tooltip says what its nodes and edges are
+// (docs/tooltips_data.txt).
 // The strip's + New stands for the + New row: hovering it glides the list to
 // the top with that row hovered, and leaving glides back to the ringed row.
 // When another pane takes focus the list glides the ringed row to its middle,
@@ -285,7 +286,7 @@ export function DatasetPane({ slot }: { slot: SlotId }) {
                     `${row.entry.nodes} / ${row.entry.edges}`
                   ),
                 alert: row.entry.name === requested && !downloading && loadFailed,
-                tip: row.entry.note,
+                tip: DATA_TOOLTIPS.get(row.entry.name),
                 current: row.entry.name === current,
                 onClick: () => {
                   setUpload(null);

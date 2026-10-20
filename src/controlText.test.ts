@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import helpText from "../docs/help.txt?raw";
-import tooltipsText from "../docs/tooltips.txt?raw";
+import helpText from "../docs/help_pane.txt?raw";
+import tooltipsText from "../docs/tooltips_ui.txt?raw";
 import { parseTooltips, TEXT, TOOLTIPS, TOOLTIPS_READ } from "./controlText";
 import "./controlOptions";
 import { CURATED_INTRO, INTRO } from "./panes/dataset/intros";
 
-// Tooltips are read from docs/tooltips.txt. The Data list's sentences are
+// Tooltips are read from docs/tooltips_ui.txt. The Data list's sentences are
 // cut from Help: Help's words in Help's order from one paragraph, with words
 // left out.
 
@@ -80,7 +80,7 @@ describe("tooltips", () => {
     expect(all.length).toBe(TOOLTIPS.size);
   });
 
-  it("use every line of docs/tooltips.txt", () => {
+  it("use every line of docs/tooltips_ui.txt", () => {
     expect(parseTooltips(tooltipsText).size).toBe(TOOLTIPS.size);
     expect([...TOOLTIPS.keys()].filter((k) => !TOOLTIPS_READ.has(k))).toEqual([]);
   });

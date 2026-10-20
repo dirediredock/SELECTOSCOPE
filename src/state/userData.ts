@@ -1,5 +1,6 @@
 // The user's own datasets: the Data pane's Uploaded rows, each built from
-// CSVs or opened from a build file, and the drafts + New gathers: the CSV
+// CSVs, opened from a build file, or copied from a curated dataset to take
+// a file of the user's, and the drafts + New gathers: the CSV
 // draft (an edge list and its name) and the JSON draft (a build file, read
 // on pick, and its name). They last for the session only, and the files never leave the
 // browser; a build hands them to the engine (engine/engine.ts).
@@ -9,8 +10,10 @@
 // starts. Why one id: a row built again from new files stays the same row.
 
 import { startBuild as runEngine, stopBuild as stopEngine } from "../engine/engine";
-import type { DatasetTexts } from "../pipeline/ingest";
+import { attach } from "../pipeline/ingest";
+import type { DatasetTexts, OptionalTexts } from "../pipeline/ingest";
 import { BuildFileError, cancelLoad, data, readBuildFile, showGraph } from "../data/dataStore";
+import { withFiles } from "../data/assemble";
 import { exportable } from "../data/format";
 import type { Graph } from "../data/graph";
 import { createStore } from "./createStore";
@@ -19,6 +22,7 @@ import { setUpload, ui } from "./uiStore";
 export type FileKind = "edgelist" | "labels" | "layout3d" | "layout2d";
 
 export const OPTIONAL_KINDS = ["labels", "layout2d", "layout3d"] as const;
+export type OptionalKind = (typeof OPTIONAL_KINDS)[number];
 
 export interface UserFile {
   fileName: string;
@@ -31,7 +35,8 @@ export interface UserDataset {
   // Its title. It follows the edge list's file name until the user edits it.
   name: string;
   nameEdited: boolean;
-  // All null for a dataset opened from a build file.
+  // A row opened from a build file, or copied from a curated one, has no
+  // edge list: only the optional files the user has added to it.
   files: Record<FileKind, UserFile | null>;
   // Bumped on every file change, so a build knows which files it read.
   version: number;
@@ -42,7 +47,10 @@ export interface UserDataset {
   refusal: string | null;
   // The stage that failed in its last build, if one did.
   failure: string | null;
+  // "json": opened from a build file, or copied from a curated dataset.
   origin: "csv" | "json";
+  // A json row's graph as it was opened or copied, before the user's files.
+  base: Graph | null;
   // Listed as a row once it has one.
   graph: Graph | null;
 }
@@ -83,6 +91,7 @@ const fresh = (origin: UserDataset["origin"]): UserDataset => ({
   refusal: null,
   failure: null,
   origin,
+  base: null,
   graph: null,
 });
 
@@ -143,7 +152,7 @@ async function setFile(id: string, kind: FileKind, file: File | null, rebuild: b
     version: d.version + 1,
   });
   if (kind === "edgelist" && file && !d.nameEdited) rename(id, baseName(file.name), false);
-  if (rebuild) buildDataset(id);
+  if (rebuild) (d.origin === "json" ? layFiles : buildDataset)(id);
 }
 
 // The edge list carries the others, so it is only ever replaced, keeping them.
@@ -190,14 +199,51 @@ export function buildState(d: UserDataset, building: boolean): BuildState {
   return d.graph && exportable(d.graph) ? "done" : "idle";
 }
 
-function textsOf(d: UserDataset): DatasetTexts | null {
-  if (!d.files.edgelist) return null;
-  const texts: DatasetTexts = { edgelist: d.files.edgelist.text };
+function optionalTexts(d: UserDataset): OptionalTexts {
+  const texts: OptionalTexts = {};
   for (const kind of OPTIONAL_KINDS) {
     const f = d.files[kind];
     if (f) texts[kind] = f.text;
   }
   return texts;
+}
+
+function textsOf(d: UserDataset): DatasetTexts | null {
+  return d.files.edgelist ? { edgelist: d.files.edgelist.text, ...optionalTexts(d) } : null;
+}
+
+// A json row's files laid over its base graph, at once and on screen: no
+// engine run, since every stage it has stays as it was.
+function layFiles(id: string) {
+  const d = datasetOf(userData.get(), id);
+  if (!d?.base) return;
+  const texts = optionalTexts(d);
+  const graph = withFiles(d.base, attach(d.base.nodeId, texts), Object.keys(texts) as OptionalKind[]);
+  graph.name = "user";
+  graph.title = d.name;
+  update(id, { graph, builtVersion: d.version });
+  stopEngine();
+  cancelLoad();
+  showGraph(graph, id);
+}
+
+// A file added to the curated dataset on screen: a row of the user's own,
+// the curated graph with the file, under the same title; the curated
+// dataset stays as it is.
+export async function copyCurated(kind: OptionalKind, file: File) {
+  const { graph, current } = data.get();
+  if (!graph || datasetOf(userData.get(), current)) return;
+  const text = await file.text();
+  if (data.get().graph !== graph) return; // another dataset picked while the file was read
+  const d: UserDataset = {
+    ...fresh("json"),
+    name: graph.title,
+    base: graph,
+    files: { ...NO_FILES, [kind]: { fileName: file.name, text } },
+    version: 1,
+  };
+  userData.set((s) => ({ datasets: [d, ...s.datasets] }));
+  layFiles(d.id);
 }
 
 // Builds the dataset from its files, on screen. It lists once its edge list
@@ -305,7 +351,7 @@ export function addJson() {
   graph.title = s.jsonName.trim() || graph.title || baseName(fileName);
   stopEngine();
   cancelLoad();
-  const d: UserDataset = { ...fresh("json"), name: graph.title, graph };
+  const d: UserDataset = { ...fresh("json"), name: graph.title, base: graph, graph };
   userData.set((st) => ({
     datasets: [d, ...st.datasets],
     jsonDraft: null,

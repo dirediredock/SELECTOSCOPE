@@ -1,63 +1,99 @@
 TOP CONTROL STRIP
 
 SELECTION SET: Choose whether a drawn area takes NODES, EDGES or BOTH.
+
 SELECTION COUNT: Shows how much of the graph each set holds; hover and CLEAR to empty the selection set.
+
 SELECTION COUNT, SWEEPING: Shows how much of the graph each set holds. While a sweep is active, the SELECTION COUNT follows the band.
+
 BRUSH: Chooses a RECTANGLE or a LASSO as the modality for the drawn selection.
+
 EXTEND SET: Grow or shrink your selection one hop at a time.
+
 BRUSH AND EXTEND SET, SWEEPING: While a sweep is active, BRUSH and EXTEND SET are inactive.
+
 THEME: CONTRAST fades everything but the selection set, and DARK can make selections stand out more.
+
 
 PANE HEADER
 
 TITLE: Click to change pane type or pane aspect ratio.
+
 ZOOM %: Click % to fit.
+
 ?: Click ? to switch between the DATA pane and HELP pane.
+
 
 EVERY PANE'S BOTTOM CONTROL STRIP
 
 ?: Click ? to switch between the DATA pane and HELP pane.
+
 ZOOM: Click + and - to zoom in and out, click % to fit.
+
 AUTO SWEEP, IDLE: Click RUN to animate a band across the pane, lighting what it covers in every pane.
+
 AUTO SWEEP, RUNNING: STOP ends the sweep.
+
 AUTO SWEEP, PAUSED: RESUME carries on a paused sweep.
+
 SWEEP CONTROLS: Shape the band with VERTICAL to change scan direction, AREA and SPEED to change band width and speed. ARROW for manual steps, by click or with arrowkeys.
+
 SWEEP CONTROLS, LABELS PANE: Shape the band: AREA changes how much of the pane it covers, SPEED how fast it travels, and ARROW steps it, as the arrow keys do.
+
 SWEEP CONTROLS, IDLE: These controls are available when a sweep is active.
+
 
 DATA PANE
 
 DATASET, BUILDING FROM CSV: Add an edge list with +EDGELIST, type a NAME if you like, and click ADD to build it.
+
 DATASET, UPLOADING FROM JSON: With +DATASET build from a file saved by EXPORT; type a NAME if you like, and click ADD to open as a new row.
-DATASET, CURATED: Click EXPORT JSON to save an already built dataset.
+
+DATASET, CURATED: Click EXPORT JSON to save an already built dataset. Adding LABELS or a BESPOKE layout from a pane makes a copy of your own.
+
 DATASET, YOUR OWN: Click EXPORT JSON to save an already built dataset, and REMOVE to erase it.
+
 DATASET, BUILDING: While your dataset builds, STOP stops the build; the row keeps what has landed.
+
 CHANGE: Shows which CSV files your dataset has and which it lacks. Replacing any CSVs builds again.
+
+CHANGE, FROM JSON: Add LABELS or a BESPOKE layout to your dataset, or remove one you added.
+
 SHOW: Turn on THUMBNAILS to see the NODELINK preview of the dataset.
+
 ADD DATASET: Click +NEW to upload your own data.
+
 
 HELP PANE
 
 SHOW: Turn off the HELP illustrations, leaving only text.
 
+
 LABELS PANE
 
 VERTICAL ORDER BY: Sorts the vertical order of rows by LABELS (A–Z), DEGREE, ONION or EIGENVECTOR.
 
+
 NODELINK PANE
 
 LAYOUT: Shows the network in a force-directed 2D or 3D view, or in the dataset's own BESPOKE 2D or BESPOKE 3D layout. Toggle INTERACTIVE to start a force-directed simulation from the current layout, where nodes can be moved by dragging.
+
 LAYOUT, TOO LARGE: Because of computing cost, INTERACTIVE mode is unavailable for datasets above 6000 nodes or 20000 edges.
+
 
 MATRIX PANE
 
 DIAGONAL ORDER BY: Sets the matrix seriation, or the symmetric ordering of nodes along the side of the matrix.
+
 LAYOUT: Shows the matrix as a DIAMOND, with the diagonal running vertically, or as the traditional SQUARE.
+
 
 CORES PANE
 
 HORIZONTAL ORDER BY: Sets the horizontal order of connected components, by TOP-DOWN or SIZE. Toggle GROUP SINGLETONS to aggregate all the singleton nodes within their respective k-core shell.
+
 VERTICAL: Adjusts the aspect ratio of the visual pattern with SPACING, and GRIDLINES makes visible the connected component bins.
+
 
 HOPS PANE
 

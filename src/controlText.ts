@@ -1,4 +1,6 @@
-import tooltipsText from "../docs/tooltips.txt?raw";
+import dataTooltipsText from "../docs/tooltips_data.txt?raw";
+import tooltipsText from "../docs/tooltips_ui.txt?raw";
+import { parseTooltipLines } from "./tooltipLines";
 
 // Every word the controls speak or show on hover but never print: accessible
 // names where there is no visible text (a glyph, a tile), and every tooltip (a
@@ -10,7 +12,7 @@ import tooltipsText from "../docs/tooltips.txt?raw";
 // Format:
 //   names         sentence case, a few words, no full stop ("Zoom out"),
 //                 kept here
-//   tooltips      read from docs/tooltips.txt, the one place their wording is
+//   tooltips      read from docs/tooltips_ui.txt, the one place their wording is
 //                 edited. Each sentence ends with a full stop
 //                 (controlText.test.ts checks every one, and that every line
 //                 there is used).
@@ -18,32 +20,27 @@ import tooltipsText from "../docs/tooltips.txt?raw";
 //                 tip is its lead, then why it is idle, joined by trayTip
 //                 (controls.tsx). A file pill shows its file's report alone.
 //                 The one row with a tip of its own: a curated dataset's,
-//                 whose note (a licence, an acknowledgement) comes from
-//                 public/datasets/manifest.csv, not from here.
+//                 what its nodes and edges are (and any licence or
+//                 acknowledgement), read from docs/tooltips_data.txt.
 
-// docs/tooltips.txt: CAPS headings (a strip or a pane), each followed by
-// "LABEL: text" lines, one tooltip a line. A label is the tray's caps label,
-// with ", VARIANT" for a state of it.
+// docs/tooltips_ui.txt: the headings are a strip or a pane, and a label is the
+// tray's caps label, with ", VARIANT" for a state of it.
 export function parseTooltips(text: string): Map<string, string> {
   const out = new Map<string, string>();
-  let heading = "";
-  for (const raw of text.split("\n")) {
-    const line = raw.trim();
-    if (!line) continue;
-    const colon = line.indexOf(": ");
-    if (colon < 0) {
-      if (line !== line.toUpperCase()) throw new Error(`docs/tooltips.txt: "${line}" is neither a CAPS heading nor LABEL: text`);
-      heading = line;
-      continue;
-    }
-    const key = `${heading} / ${line.slice(0, colon)}`;
-    if (out.has(key)) throw new Error(`docs/tooltips.txt: ${key} is given twice`);
-    out.set(key, line.slice(colon + 2).trim());
+  for (const { heading, label, text: tip } of parseTooltipLines(text, "docs/tooltips_ui.txt")) {
+    const key = `${heading} / ${label}`;
+    if (out.has(key)) throw new Error(`docs/tooltips_ui.txt: ${key} is given twice`);
+    out.set(key, tip);
   }
   return out;
 }
 
 export const TOOLTIPS = parseTooltips(tooltipsText);
+
+// docs/tooltips_data.txt: the headings are the Data pane's groups, and a
+// label is a curated dataset's name (scripts/datasets.test.ts holds the file
+// to the manifest).
+export const DATA_TOOLTIPS = new Map(parseTooltipLines(dataTooltipsText, "docs/tooltips_data.txt").map((l) => [l.label, l.text]));
 
 // The keys TEXT reads, so a line nothing reads is caught (controlText.test.ts).
 export const TOOLTIPS_READ = new Set<string>();
@@ -51,7 +48,7 @@ export const TOOLTIPS_READ = new Set<string>();
 function tip(heading: string, label: string): string {
   const key = `${heading} / ${label}`;
   const text = TOOLTIPS.get(key);
-  if (text === undefined) throw new Error(`docs/tooltips.txt has no ${label} under ${heading}`);
+  if (text === undefined) throw new Error(`docs/tooltips_ui.txt has no ${label} under ${heading}`);
   TOOLTIPS_READ.add(key);
   return text;
 }
@@ -143,6 +140,7 @@ export const TEXT = {
     ownTip: tip(DATA, "DATASET, YOUR OWN"),
     buildingTip: tip(DATA, "DATASET, BUILDING"),
     changeTip: tip(DATA, "CHANGE"),
+    changeJsonTip: tip(DATA, "CHANGE, FROM JSON"),
     thumbnailsTip: tip(DATA, "SHOW"),
     newTip: tip(DATA, "ADD DATASET"),
     // The refusal hue's dot, which shows only a colour.

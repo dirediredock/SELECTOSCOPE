@@ -69,8 +69,9 @@ export function parseCsv(text: string): Table {
   return { header, rows };
 }
 
-// One column's cells, by name; null when the header lacks it.
+// One column's cells, by name in any case ("Source" is source); null when
+// the header lacks it.
 export function column(table: Table, name: string): string[] | null {
-  const at = table.header.indexOf(name);
+  const at = table.header.findIndex((h) => h.toLowerCase() === name);
   return at < 0 ? null : table.rows.map((r) => r[at]);
 }

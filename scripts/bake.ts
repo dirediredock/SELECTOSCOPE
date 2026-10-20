@@ -23,14 +23,12 @@ export interface ManifestRow {
   title: string;
   group: string;
   view: OpeningView;
-  // The Data pane row's tooltip (a licence, an acknowledgement); empty for none.
-  note: string;
 }
 
 export function manifest(): ManifestRow[] {
   const t = parseCsv(readFileSync(join(DATASETS, "manifest.csv"), "utf8"));
-  const [name, title, group, view, note] = ["name", "title", "group", "view", "note"].map((c) => column(t, c)!);
-  return name.map((n, i) => ({ name: n, title: title[i], group: group[i], view: (view[i] || null) as OpeningView, note: note[i] }));
+  const [name, title, group, view] = ["name", "title", "group", "view"].map((c) => column(t, c)!);
+  return name.map((n, i) => ({ name: n, title: title[i], group: group[i], view: (view[i] || null) as OpeningView }));
 }
 
 // The build, and its Data pane thumbnail.
@@ -54,8 +52,7 @@ if (isMain) {
   }
   const index = rows.map((r) => {
     const meta = JSON.parse(readFileSync(join(BUILDS, `${r.name}.json`), "utf8")).meta;
-    const entry = { name: r.name, title: r.title, group: r.group, view: r.view, nodes: meta.nodes, edges: meta.edges, has_labels: meta.has_labels };
-    return r.note ? { ...entry, note: r.note } : entry;
+    return { name: r.name, title: r.title, group: r.group, view: r.view, nodes: meta.nodes, edges: meta.edges, has_labels: meta.has_labels };
   });
   writeFileSync(join(BUILDS, "index.json"), JSON.stringify({ datasets: index }));
 }

@@ -1,6 +1,7 @@
+import { data } from "../data/dataStore";
 import { useStore } from "../state/createStore";
-import { addFile, datasetOf, fileRefused, removeFile, userData } from "../state/userData";
-import type { FileKind } from "../state/userData";
+import { addFile, copyCurated, datasetOf, fileRefused, removeFile, userData } from "../state/userData";
+import type { FileKind, OptionalKind } from "../state/userData";
 import { FilePill } from "./controls";
 import { ROLE_NAMES, fileLines, reportTip } from "./report";
 
@@ -44,8 +45,12 @@ export function UserFilePill(props: { id: string; kind: FileKind; rebuild: boole
   );
 }
 
-// The CSV row on screen, if the dataset on screen is one: the panes offer
-// its missing files under their messages.
-export function useCsvRow(current: string | null): string | null {
-  return useStore(userData, (s) => (datasetOf(s, current)?.origin === "csv" ? current : null));
+// Under a pane's message, the file the dataset on screen lacks. The user's
+// own row takes it and builds again; a curated dataset is copied into a row
+// of the user's own with the file (copyCurated).
+export function MissingFilePill({ kind }: { kind: OptionalKind }) {
+  const current = useStore(data, (s) => s.current);
+  const own = useStore(userData, (s) => !!datasetOf(s, current));
+  if (own) return <UserFilePill id={current!} kind={kind} rebuild />;
+  return <FilePill name={ROLE_NAMES[kind]} added={false} accent="extra" onPick={(f) => copyCurated(kind, f)} />;
 }

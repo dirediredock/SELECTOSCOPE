@@ -145,12 +145,12 @@ USING YOUR OWN DATA
 
 Click the +NEW row in the DATA pane to add your own network data. Choose BUILD FROM CSV to create a dataset from an edgelist, or UPLOAD FROM JSON to open a previously built and exported SELECTOSCOPE dataset. All processing happens in your browser, and your files never leave it. Selectoscope supports up to 10,000 nodes and 100,000 edges.
 
-To build a dataset, the main file format is the EDGELIST, a CSV file with 'source' and 'target' columns, one edge per row. Selectoscope automatically cleans the edgelist information: edge direction is ignored, self-loops are removed, duplicate edges are merged, and only the largest connected component is kept. Click ADD to build.
+To build a dataset, the main file format is the EDGELIST, a CSV file with 'source' and 'target' columns, one edge per row. Column names can be in any case ('Source' reads as 'source'). Nodes must match across CSVs under a 'node_id' column, where values are treated as plain trimmed strings. Can be any text, but must match exactly across EDGELIST, LABELS, BESPOKE 2D, and BESPOKE 3D files. For example, "1" and "01" count as different 'node_id' entries.
+
+Selectoscope automatically cleans the edgelist information: edge direction is ignored, self-loops are removed, duplicate edges are merged, and only the largest connected component is kept. Click ADD to build.
 
 Per dataset built through CSV, optional files must use the 'node_id' column and match the EDGELIST. There are three optional CSV files to upload. The BESPOKE 2D layout requires 'node_id', 'x', and 'y' columns, and BESPOKE 3D requires 'node_id', 'x', 'y', and 'z' columns, both of which must account for every node in EDGELIST. The LABELS requires 'node_id' and 'label' columns, and in contrast to the bespoke layouts, labels can be partial.
 
 Once built, the options in CHANGE can add, replace, or remove files.
 
 Click EXPORT JSON to save a built dataset. Reopen the dataset using + NEW and UPLOAD FROM JSON, without rebuilding.
-
-The curated datasets are already built and ready to use.
