@@ -1,13 +1,13 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { closeMenu, setHelp, ui } from "../state/uiStore";
-import { DATASET_VIEWS, FIT_SHAPES, MAX_AR, SWAPPABLE } from "../state/panes";
+import { DATASET_VIEWS, FIT_SHAPES, MAX_AR, SCROLL_SHAPES, SWAPPABLE } from "../state/panes";
 import type { PaneType } from "../state/panes";
-import { setSlotType } from "../state/layout";
+import { layout, setSlotType } from "../state/layout";
 import { useStore } from "../state/createStore";
 import type { SlotId } from "../state/layout";
 import { fitView } from "../state/views";
-import { fitSlotToWidth } from "./fitRow";
+import { setSlotShape } from "./fitRow";
 import { PANE_MIN_PX } from "./paneWidths";
 import { TEXT } from "../controlText";
 import { scaled } from "../uiScale";
@@ -15,7 +15,7 @@ import { scaled } from "../uiScale";
 interface PaneMenuProps {
   slot: SlotId;
   type: PaneType;
-  ar: number;
+  ar: number | null;
 }
 
 // How close a Fit pane's shape must be to a ratio, or its width to the
@@ -23,8 +23,8 @@ interface PaneMenuProps {
 const SHAPE_TOLERANCE = 0.02;
 const MIN_TOLERANCE_PX = scaled(2);
 
-// One tile: `ar` null is the Fit row's minimum width; `glyph` is the shape
-// the tile draws.
+// One tile: `ar` null is the row's minimum width; `glyph` is the shape the
+// tile draws.
 interface Tile {
   ar: number | null;
   glyph: number;
@@ -35,13 +35,14 @@ interface Tile {
 // row per pane type (for Data, its list and Help), then the
 // shape tiles. Neutral, the current type and
 // shape tinted. Closes on a pick or a press anywhere else.
-// In Scroll mode four tiles set the pane's ratio. In Fit mode three tiles
-// (minimum, portrait golden, square) set the pane's width at its height, and
-// the pane's current shape is the one tinted. Either way the pane refits, as
-// Fit all does.
-export function PaneMenu({ slot, type }: PaneMenuProps) {
+// Three tiles set the pane's shape: in Fit (minimum, portrait golden, square)
+// its width at its height, in Scroll (minimum, tall 3:1, portrait golden) its
+// ratio. The pane's current shape is
+// the one tinted. Either way the pane refits, as Fit all does.
+export function PaneMenu({ slot, type, ar }: PaneMenuProps) {
   const ref = useRef<HTMLDivElement>(null);
   const help = useStore(ui, (s) => s.help);
+  const fit = useStore(layout, (s) => s.mode === "fit");
   const [size, setSize] = useState<{ w: number; h: number } | null>(null);
 
   useLayoutEffect(() => {
@@ -49,9 +50,10 @@ export function PaneMenu({ slot, type }: PaneMenuProps) {
     setSize(pane ? { w: pane.offsetWidth, h: pane.offsetHeight } : null);
   }, []);
 
-  // No shape wider than the pane may be (Data: minimum and portrait golden).
-  const tiles = FIT_SHAPES.filter((t) => t.ar === null || t.ar <= (MAX_AR[type] ?? Infinity));
+  // No shape wider than the pane may be (Data: no Square).
+  const tiles = (fit ? FIT_SHAPES : SCROLL_SHAPES).filter((t) => t.ar === null || t.ar <= (MAX_AR[type] ?? Infinity));
   const isCurrent = (t: Tile) => {
+    if (!fit) return t.ar === null || ar === null ? t.ar === ar : Math.abs(ar / t.ar - 1) < SHAPE_TOLERANCE;
     if (!size) return false;
     if (t.ar === null) return Math.abs(size.w - PANE_MIN_PX) <= MIN_TOLERANCE_PX;
     return Math.abs(size.w / size.h / t.ar - 1) < SHAPE_TOLERANCE;
@@ -126,8 +128,7 @@ export function PaneMenu({ slot, type }: PaneMenuProps) {
             className={`menu-ratio${isCurrent(t) ? " is-current" : ""}`}
             aria-label={t.label}
             onClick={() => {
-              const tileAr = t.ar;
-              fitSlotToWidth(slot, (h) => (tileAr === null ? PANE_MIN_PX : tileAr * h));
+              setSlotShape(slot, t.ar);
               fitView(slot);
               closeMenu();
             }}

@@ -7,6 +7,7 @@ import { blockPageZoom } from "./interaction/navigate";
 import { TooltipLayer } from "./components/Tooltip";
 import { initData } from "./data/dataStore";
 import { stopBuild } from "./engine/engine";
+import { watchRowMode } from "./state/layout";
 
 export default function App() {
   useEffect(() => {
@@ -16,6 +17,8 @@ export default function App() {
   useEffect(blockPageZoom, []);
 
   useEffect(attachKeyboardShortcuts, []);
+
+  useEffect(watchRowMode, []);
 
   return (
     <div className="app">

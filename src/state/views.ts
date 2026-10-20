@@ -1,4 +1,5 @@
 import { createStore } from "./createStore";
+import { paneInfo } from "./panes";
 import type { PaneType } from "./panes";
 import { layout, retyped, typeOf } from "./layout";
 import type { SlotId } from "./layout";
@@ -79,7 +80,13 @@ data.subscribe((s, prev) => {
   if (s.graph !== prev.graph) layout.get().slots.forEach((x) => fitView(x.slot));
 });
 
-// A new type opens at its home view, as Fit all does.
+// A new type opens at its home view, as Fit all does. A new row mode refits
+// every canvas pane (lists keep their scroll), and a new Scroll ratio its pane.
 layout.subscribe((s, prev) => {
+  if (s.mode !== prev.mode) s.slots.filter((x) => !paneInfo(x.type).list).forEach((x) => fitView(x.slot));
   retyped(s.slots, prev.slots).forEach(fitView);
+  s.slots.forEach((x) => {
+    const p = prev.slots.find((q) => q.slot === x.slot);
+    if (p && p.type === x.type && p.ar !== x.ar) fitView(x.slot);
+  });
 });

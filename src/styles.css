@@ -1622,7 +1622,10 @@ textarea {
   container: pane-body / inline-size;
 }
 
-/* Both end panes can scroll to dead centre. */
+/* ---------- Scroll row ----------
+   The base rules above: each pane the row's height at its --ar, the row
+   scrolling sideways and snapping to each pane's centre. Both end panes can
+   scroll to dead centre. */
 .pane:first-of-type {
   margin-inline-start: max(var(--pane-edge), calc(50cqw - var(--pane-w) / 2));
 }
@@ -1631,26 +1634,9 @@ textarea {
   margin-inline-end: max(var(--pane-edge), calc(50cqw - var(--pane-w) / 2));
 }
 
-/* The run snap points: zero-size markers that PaneRow places at the centre of
-   every run of 2, 3 and 4 neighbouring panes and of the whole row, i.e. midway
-   between the run's first left edge and last right edge (see snapPoints.ts).
-   The row opens on the NodeLink to Hops run (see PaneRow), not here. The
-   negative margin cancels the flex gap the anchor would otherwise add after the
-   last pane. */
-.span-snap-anchor {
-  position: relative;
-  width: 0;
-  height: 0;
-  margin-inline-start: calc(-1 * var(--pane-gap));
-}
-
-.span-snap-anchor > div {
-  position: absolute;
-  top: 0;
-  width: 0;
-  height: 1px;
-  pointer-events: none;
-  scroll-snap-align: center;
+/* A pane at the menu's Minimum: the Fit row's narrowest, whatever its height. */
+.panes:not(.is-fit) .pane[data-narrow] {
+  --pane-w: var(--pane-min);
 }
 
 /* ---------- Fit row ----------
@@ -1684,10 +1670,6 @@ textarea {
 
 .panes.is-fit .pane:last-of-type {
   margin-inline-end: var(--fit-gap);
-}
-
-.panes.is-fit .span-snap-anchor {
-  display: none;
 }
 
 /* The gap between two panes, as a handle. Three dots at its middle mark it

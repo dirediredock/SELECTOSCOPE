@@ -42,6 +42,7 @@ Hold Space and drag to pan.
 Click a pane's zoom % at the respective pane header (or bottom control strip) to fit the visual pattern into the pane.
 Click a pane's title or header to change pane type or pane aspect ratio.
 Drag the border between two panes to resize them. Double-click it to make panes on each side of the border have equal pane width.
+When the browser window is taller than it is wide, panes keep their shapes at full height and scroll sideways instead.
 Slide CONTRAST in the top control strip to fade everything but the selection set, and turn on DARK to make selections stand out more, in some cases.
 
 PANES

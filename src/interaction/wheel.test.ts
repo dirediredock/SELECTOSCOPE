@@ -38,4 +38,9 @@ describe("listWheelSideways", () => {
   it("leaves a pinch alone", () => {
     expect(listWheelSideways(w(30, 0, true))).toBe(false);
   });
+
+  it("leaves a sideways swipe to the row when the row scrolls", () => {
+    expect(listWheelSideways(w(30, 0), true)).toBe(false);
+    expect(listWheelSideways(w(-12, 3), true)).toBe(false);
+  });
 });

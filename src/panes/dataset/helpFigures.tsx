@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { useStore } from "../../state/createStore";
 import { ui } from "../../state/uiStore";
 import type { CensusMeasure } from "../../state/hopcensus";
+import { SWEEP_AREA } from "../../state/sweep";
 import { arrival, censusOrder, censusStructure } from "../hopcensus/geometry";
 
 // Help's diagrams: small schematics drawn as the panes draw (the neutral mark
@@ -190,6 +191,9 @@ export function Gestures() {
   };
   const top = H / 4 + 1;
   const low = (3 * H) / 4 - 1;
+  // The 3D card's sphere sits a little low, so its arrow arcs over its top
+  // inside the pane.
+  const ball = { y: low + 4, r: 14 };
   return (
     <Figure w={4 * W + 3 * gap + 8} h={H + 34}>
       <ArrowHead id={id} />
@@ -229,11 +233,11 @@ export function Gestures() {
           <Arrow id={id} d={`M37 ${top} L49 ${top}`} />
         </>,
         <>
-          <circle cx={W / 2} cy={low} r={15} fill="none" stroke={INK.edge} />
-          <ellipse cx={W / 2} cy={low} rx={15} ry={5} fill="none" stroke={INK.edge} />
-          <ellipse cx={W / 2} cy={low} rx={9} ry={15} fill="none" stroke={INK.edge} opacity={0.4} />
-          <ellipse cx={W / 2} cy={low} rx={4} ry={15} fill="none" stroke={INK.node} />
-          <Arrow id={id} d={`M${W / 2 - 12} ${low + 19} Q${W / 2} ${low + 24} ${W / 2 + 12} ${low + 19}`} />
+          <circle cx={W / 2} cy={ball.y} r={ball.r} fill="none" stroke={INK.edge} />
+          <ellipse cx={W / 2} cy={ball.y} rx={ball.r} ry={5} fill="none" stroke={INK.edge} />
+          <ellipse cx={W / 2} cy={ball.y} rx={8.5} ry={ball.r} fill="none" stroke={INK.edge} opacity={0.4} />
+          <ellipse cx={W / 2} cy={ball.y} rx={4} ry={ball.r} fill="none" stroke={INK.node} />
+          <Arrow id={id} d={`M${W / 2 - 12} ${ball.y - ball.r + 1} Q${W / 2} ${ball.y - ball.r - 9} ${W / 2 + 12} ${ball.y - ball.r + 1}`} />
         </>,
       )}
       {card(
@@ -256,18 +260,24 @@ export function Gestures() {
   );
 }
 
-// The matrix drawn both ways: two communities and one bridge, every edge
-// twice, with a cell of air between the points and the outline.
+// The matrix drawn both ways: three communities of uneven size, dense with a
+// few holes, a scatter of edges between them and node 4 a small hub into the
+// second, every edge twice, with a cell of air between the points and the
+// outline.
+const MATRIX_GROUPS = [0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2];
+const MATRIX_HOLES = [[0, 3], [1, 4], [5, 7], [9, 11]];
+const MATRIX_LINKS = [[4, 5], [4, 6], [4, 8], [2, 6], [8, 9], [7, 10], [1, 9]];
+
 export function MatrixForms() {
-  const n = 10;
-  const cell = 7;
+  const n = MATRIX_GROUPS.length;
+  const cell = 6;
+  const has = (list: number[][], i: number, j: number) => list.some(([a, b]) => (a === i && b === j) || (a === j && b === i));
   const pts: [number, number][] = [];
   for (let i = 0; i < n; i++)
     for (let j = 0; j < n; j++) {
       if (i === j) continue;
-      const same = (i < 5) === (j < 5);
-      const bridge = (i === 4 && j === 5) || (i === 5 && j === 4);
-      if ((same && (i + j) % 3 !== 0) || bridge) pts.push([i, j]);
+      const same = MATRIX_GROUPS[i] === MATRIX_GROUPS[j];
+      if ((same && !has(MATRIX_HOLES, i, j)) || has(MATRIX_LINKS, i, j)) pts.push([i, j]);
     }
   const side = (n + 2) * cell;
   const matrix = (
@@ -275,7 +285,7 @@ export function MatrixForms() {
       <rect x={0} y={0} width={side} height={side} fill="none" stroke={INK.hair} />
       <line x1={0} y1={0} x2={side} y2={side} stroke={INK.grid} strokeDasharray="2 2" />
       {pts.map(([i, j]) => (
-        <circle key={`${i}-${j}`} cx={(j + 1.5) * cell} cy={(i + 1.5) * cell} r={1.8} fill={INK.node} />
+        <circle key={`${i}-${j}`} cx={(j + 1.5) * cell} cy={(i + 1.5) * cell} r={1.6} fill={INK.node} />
       ))}
     </>
   );
@@ -357,25 +367,28 @@ export function ShellsAnatomy() {
 // real lines: the first entry is the node's degree; the last is the edges
 // inside the farthest layer, counted twice, so it is even and small; a line
 // rises as the search spreads and falls at the periphery; and lines of one
-// graph meet about the same total. The central bin's lines arrive at once,
-// the far bin's over more hops with a lower peak.
+// graph meet about the same total. Each bin is one family: lines start low,
+// rise to one peak and fall, the peak a little later line by line, so placed
+// by reach they fan out to the right rather than tangle. The central bin's
+// lines arrive at once, the far bin's over more hops with a lower peak.
 const HOPS_BINS: { ecc: number; lines: number[][] }[] = [
-  { ecc: 2, lines: [[4, 32, 4], [9, 27, 4], [16, 22, 2]] },
-  { ecc: 3, lines: [[3, 12, 21, 4], [4, 15, 19, 2], [5, 18, 15, 2]] },
-  { ecc: 4, lines: [[2, 6, 14, 16, 2], [2, 8, 16, 12, 2], [3, 10, 17, 8, 2]] },
+  { ecc: 3, lines: [[6, 30, 22, 2], [5, 26, 27, 2], [4, 22, 30, 4], [3, 18, 35, 4]] },
+  { ecc: 4, lines: [[4, 14, 26, 14, 2], [3, 12, 24, 19, 2], [3, 10, 22, 23, 2], [2, 8, 20, 26, 4]] },
+  { ecc: 5, lines: [[2, 6, 14, 20, 16, 2], [2, 5, 12, 19, 20, 2], [2, 4, 10, 17, 23, 4], [2, 4, 8, 14, 26, 6]] },
 ];
 const HOPS_TOP = Math.max(...HOPS_BINS.flatMap((b) => b.lines.flat())); // the top of every bin
-const HOPS_MAX_ECC = 4;
+const HOPS_MAX_ECC = 5;
 
 // A census as a polyline: x from hop 0 at `x0`, `side / maxEcc` a hop; y
 // from a bin's bottom to its top at HOPS_TOP, with a little headroom.
 const censusPoints = (census: number[], x0: number, top: number, side: number, max = HOPS_TOP) =>
   census.map((c, i) => [x0 + (i * side) / HOPS_MAX_ECC, top + side - (c / max) * (side - 6)]);
 
-// A census line in the figures: few lines, so a firmer ink than the pane's
-// half, with round joins and ends.
+// A census line in the figures, with round joins and ends: `solid` for a
+// figure of two lines, a firmer ink than the pane's half; otherwise a family of
+// lines, lighter and finer so their crossings stay quiet.
 const CensusLine = ({ pts, solid = false }: { pts: number[][]; solid?: boolean }) => (
-  <polyline points={poly(pts)} fill="none" stroke={INK.node} strokeWidth={1.5} strokeLinejoin="round" strokeLinecap="round" opacity={solid ? 0.85 : 0.5} />
+  <polyline points={poly(pts)} fill="none" stroke={INK.node} strokeWidth={solid ? 1.5 : 1.25} strokeLinejoin="round" strokeLinecap="round" opacity={solid ? 0.85 : 0.6} />
 );
 
 // Where the pane opens: each line slid by its reach, Ranking off, at Spacing
@@ -403,7 +416,7 @@ export function HopsAnatomy() {
           <g key={b.ecc}>
             <line x1={x0} y1={top + side} x2={x0 + 2 * side} y2={top + side} stroke={INK.grid} />
             {b.lines.map((l, j) => (
-              <CensusLine key={j} solid pts={censusPoints(l, x0 + HOPS_PLACE[n++]! * side, top, side)} />
+              <CensusLine key={j} pts={censusPoints(l, x0 + HOPS_PLACE[n++]! * side, top, side)} />
             ))}
             <Caption x={x0 + 2 * side + gutter / 2} y={top + side / 2 + 3.5}>{`E${b.ecc}`}</Caption>
           </g>
@@ -519,22 +532,22 @@ export function ShapeOrder({ measure }: { measure: CensusMeasure }) {
   );
 }
 
-// Auto Sweep's band, evoked: a portrait golden pane body with the band a
-// fifth of the way through, one thickness in both panes, its tint fading out at
-// both edges along its travel so it reads as light passing, and at the
-// pane's centre a chevron knocked out of a slate disc (the focused pane's
+// Auto Sweep's band, evoked: a portrait golden pane body three quarters of the
+// way through a pass, the band's front a crisp line and behind it a short
+// comet tail, the band's opening area, its tint fading out away from the
+// front, and at the pane's centre a chevron knocked out of a slate disc (the focused pane's
 // colour) pointing the way it travels: top to bottom and, with Vertical off,
 // left to right.
 export function SweepBand() {
   const W = 70;
   const H = Math.round(W * 1.618);
-  const reach = 0.2;
-  const band = 18;
+  const reach = 0.75;
+  const tail = SWEEP_AREA.opening / 100;
   const glow = (gid: string, vertical: boolean) => (
     <linearGradient id={gid} x1="0" y1="0" x2={vertical ? "0" : "1"} y2={vertical ? "1" : "0"}>
       <stop offset="0" style={{ stopColor: INK.edgeSel, stopOpacity: 0 }} />
-      <stop offset="0.5" style={{ stopColor: INK.edgeSel, stopOpacity: 0.45 }} />
-      <stop offset="1" style={{ stopColor: INK.edgeSel, stopOpacity: 0 }} />
+      <stop offset="0.6" style={{ stopColor: INK.edgeSel, stopOpacity: 0.12 }} />
+      <stop offset="1" style={{ stopColor: INK.edgeSel, stopOpacity: 0.4 }} />
     </linearGradient>
   );
   const pane = (dx: number, vertical: boolean, label: string) => {
@@ -549,9 +562,15 @@ export function SweepBand() {
         <rect x={0} y={0} width={W} height={H} rx={4} fill={INK.panel} />
         <g clipPath={`url(#${gid}-clip)`}>
           {vertical ? (
-            <rect x={0} y={reach * H} width={W} height={band} fill={`url(#${gid})`} />
+            <>
+              <rect x={0} y={(reach - tail) * H} width={W} height={tail * H} fill={`url(#${gid})`} />
+              <line x1={0} y1={reach * H} x2={W} y2={reach * H} stroke={INK.edgeSel} strokeWidth={1.5} />
+            </>
           ) : (
-            <rect x={reach * W} y={0} width={band} height={H} fill={`url(#${gid})`} />
+            <>
+              <rect x={(reach - tail) * W} y={0} width={tail * W} height={H} fill={`url(#${gid})`} />
+              <line x1={reach * W} y1={0} x2={reach * W} y2={H} stroke={INK.edgeSel} strokeWidth={1.5} />
+            </>
           )}
         </g>
         <rect x={0} y={0} width={W} height={H} rx={4} fill="none" stroke={INK.hair} />
