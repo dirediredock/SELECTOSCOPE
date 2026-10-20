@@ -14,8 +14,8 @@ Consider these steps as a quick start:
 2. Drag in any pane to brush a selection area around a visual pattern that catches your eye.
 3. Then look across to other panes, the same nodes light up blue and edges orange, wherever they sit.
 4. Click ▲ in EXTEND SET to grow your selection by one hop, and see how far the selection spreads.
-5. Run AUTO SWEEP at the bottom control strip to scan an animated selection band area across the vertical span of the pane, then watch the selection across every other pane.
-6. Hover the SELECTION COUNT in the top control strip and click CLEAR to start over, or lasso an empty region in any pane.
+5. Hover the SELECTION COUNT in the top control strip and click CLEAR to start over, or lasso an empty region in any pane.
+6. Run AUTO SWEEP at the bottom control strip to scan an animated selection band area across the vertical span of the pane, then watch the selection across every other pane.
 
 ## Panes
 
@@ -42,6 +42,8 @@ Per dataset built through CSV, optional files must use the 'node_id' column and 
 Once built, the options in CHANGE can add, replace, or remove files.
 
 Click EXPORT JSON to save a built dataset. Reopen the dataset using + NEW and UPLOAD FROM JSON, without rebuilding.
+
+Click EXPORT CSVS to save any built dataset, curated ones included, as a zip of CSV files to edit and rebuild with BUILD FROM CSV: the cleaned EDGELIST, plus LABELS, BESPOKE 2D, and BESPOKE 3D when the dataset has them, with layouts rescaled to unit size.
 
 The curated datasets are already built and ready to use.
 

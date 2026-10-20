@@ -12,8 +12,8 @@ Consider these steps as a quick start:
 2. Drag in any pane to brush a selection area around a visual pattern that catches your eye.
 3. Then look across to other panes, the same nodes light up blue and edges orange, wherever they sit.
 4. Click ▲ in EXTEND SET to grow your selection by one hop, and see how far the selection spreads.
-5. Run AUTO SWEEP at the bottom control strip to scan an animated selection band area across the vertical span of the pane, then watch the selection across every other pane.
-6. Hover the SELECTION COUNT in the top control strip and click CLEAR to start over, or lasso an empty region in any pane.
+5. Hover the SELECTION COUNT in the top control strip and click CLEAR to start over, or lasso an empty region in any pane.
+6. Run AUTO SWEEP at the bottom control strip to scan an animated selection band area across the vertical span of the pane, then watch the selection across every other pane.
 
 Click ? to come back to this HELP pane at any time.
 
@@ -151,6 +151,6 @@ Selectoscope automatically cleans the edgelist information: edge direction is ig
 
 Per dataset built through CSV, optional files must use the 'node_id' column and match the EDGELIST. There are three optional CSV files to upload. The BESPOKE 2D layout requires 'node_id', 'x', and 'y' columns, and BESPOKE 3D requires 'node_id', 'x', 'y', and 'z' columns, both of which must account for every node in EDGELIST. The LABELS requires 'node_id' and 'label' columns, and in contrast to the bespoke layouts, labels can be partial.
 
-Once built, the options in CHANGE can add, replace, or remove files.
+Once built, the options in CHANGE can add, replace, or remove files; and click EXPORT CSV to save the built CSV files.
 
-Click EXPORT JSON to save a built dataset. Reopen the dataset using + NEW and UPLOAD FROM JSON, without rebuilding.
+Click EXPORT JSON to save a built dataset as a single file. Reopen the dataset though +NEW and UPLOAD FROM JSON, without rebuilding.

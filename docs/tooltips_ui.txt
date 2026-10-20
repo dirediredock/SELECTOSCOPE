@@ -49,9 +49,9 @@ DATASET, BUILDING FROM CSV: Add an edge list with +EDGELIST, type a NAME if you 
 
 DATASET, UPLOADING FROM JSON: With +DATASET build from a file saved by EXPORT; type a NAME if you like, and click ADD to open as a new row.
 
-DATASET, CURATED: Click EXPORT JSON to save an already built dataset. Adding LABELS or a BESPOKE layout from a pane makes a copy of your own.
+DATASET, CURATED: Click EXPORT JSON to save an already built dataset, or EXPORT CSVS for a zip of its files to build from.
 
-DATASET, YOUR OWN: Click EXPORT JSON to save an already built dataset, and REMOVE to erase it.
+DATASET, YOUR OWN: Click EXPORT JSON to save an already built dataset, EXPORT CSVS for a zip of its files to build from, and REMOVE to erase it.
 
 DATASET, BUILDING: While your dataset builds, STOP stops the build; the row keeps what has landed.
 

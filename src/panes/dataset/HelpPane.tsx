@@ -141,15 +141,15 @@ export function HelpPane() {
               </Replica>
             </li>
             <li>
+              Hover the SELECTION COUNT in the top control strip and click CLEAR to start over, or lasso an empty
+              region in any pane.
+            </li>
+            <li>
               Run AUTO SWEEP at the bottom control strip to scan an animated selection band area across the vertical
               span of the pane, then watch the selection across every other pane.
               <Replica>
                 <Transport cells={RUN_CELLS} state="idle" running={false} onClick={none} />
               </Replica>
-            </li>
-            <li>
-              Hover the SELECTION COUNT in the top control strip and click CLEAR to start over, or lasso an empty
-              region in any pane.
             </li>
           </ol>
           <p>Click ? to come back to this HELP pane at any time.</p>
@@ -552,7 +552,7 @@ export function HelpPane() {
             To build a dataset, the main file format is the EDGELIST, a CSV file with 'source' and 'target' columns, one
             edge per row. Column names can be in any case ('Source' reads as 'source'). Nodes must match across CSVs
             under a 'node_id' column, where values are treated as plain trimmed strings. Can be any text, but must match
-            exactly across EDGELIST, LABELS, and BESPOKE 2D and BESPOKE 3D files. For example, "1" and "01" count as
+            exactly across EDGELIST, LABELS, BESPOKE 2D, and BESPOKE 3D files. For example, "1" and "01" count as
             different 'node_id' entries.
           </p>
           <p>
@@ -588,10 +588,13 @@ export function HelpPane() {
             <Action onClick={none}>Export JSON</Action>
           </Replica>
           <p>
-            The curated datasets are already built and ready to use. A curated dataset, or one opened from JSON, can
-            still take LABELS and BESPOKE layouts, added under the message in the LABELS or NODELINK pane. On a curated
-            dataset this makes a copy of your own under UPLOADED, and the curated one stays as it is.
+            Click EXPORT CSVS to save any built dataset, curated ones included, as a zip of CSV files to edit and
+            rebuild with BUILD FROM CSV: the cleaned EDGELIST, plus LABELS, BESPOKE 2D, and BESPOKE 3D when the dataset
+            has them, with layouts rescaled to unit size.
           </p>
+          <Replica>
+            <Action onClick={none}>Export CSVs</Action>
+          </Replica>
         </Sec>
       </div>
     </div>

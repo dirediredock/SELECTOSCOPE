@@ -44,30 +44,13 @@ export interface UiState {
   spaceHeld: boolean;
 }
 
-const THEME_KEY = "selectoscope-theme";
-
 // Contrast fades every unselected pattern inside the panes toward the pane's
 // background, so a selection that is hard to spot stands out: none at 0%, the
 // most at 100%, where a floor keeps the pattern faintly visible
 // (contrastShare). It lasts the session.
 export const CONTRAST = { min: 0, max: 100, opening: 0 } as const;
 
-// index.html has already applied any saved theme before first paint.
-const initialTheme: Theme =
-  document.documentElement.dataset.theme === "dark" ? "dark" : "light";
-
-// Off by default, and remembered across reloads.
-const THUMBS_KEY = "selectoscope-thumbnails";
-
-function savedThumbnails() {
-  try {
-    return localStorage.getItem(THUMBS_KEY) === "1";
-  } catch {
-    return false;
-  }
-}
-
-// Both by default, and remembered like Thumbnails.
+// Both by default, and remembered across reloads.
 const SELECT_KEY = "selectoscope-select";
 
 function savedSelectMode(): SelectTarget {
@@ -87,9 +70,11 @@ export const ui = createStore<UiState>({
   menuOpen: null,
   tool: "lasso",
   selectMode: savedSelectMode(),
-  theme: initialTheme,
+  // Light on every load, as index.html paints it.
+  theme: "light",
   contrast: CONTRAST.opening,
-  thumbnails: savedThumbnails(),
+  // On on every load: the pictures are the quickest read of each dataset.
+  thumbnails: true,
   upload: null,
   lastUpload: "csv",
   newHover: false,
@@ -139,11 +124,6 @@ export function setSelectMode(selectMode: SelectTarget) {
 export function toggleTheme() {
   const theme: Theme = ui.get().theme === "light" ? "dark" : "light";
   document.documentElement.dataset.theme = theme;
-  try {
-    localStorage.setItem(THEME_KEY, theme);
-  } catch {
-    // Private windows may block storage; the toggle still works for the session.
-  }
   ui.set({ theme });
 }
 
@@ -159,13 +139,7 @@ export function inkChanged(s: UiState, prev: UiState) {
 }
 
 export function toggleThumbnails() {
-  const thumbnails = !ui.get().thumbnails;
-  try {
-    localStorage.setItem(THUMBS_KEY, thumbnails ? "1" : "0");
-  } catch {
-    // As for the theme: without storage it lasts the session.
-  }
-  ui.set({ thumbnails });
+  ui.set({ thumbnails: !ui.get().thumbnails });
 }
 
 export function setUpload(upload: Upload | null) {

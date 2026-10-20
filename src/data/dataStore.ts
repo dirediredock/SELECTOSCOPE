@@ -3,9 +3,11 @@
 // stage's progress while its own result is missing.
 
 import { createStore } from "../state/createStore";
-import { fromJson, stringify } from "./format";
+import { csvFiles } from "./csvExport";
+import { exportable, fromJson, stringify } from "./format";
 import type { BuildJson } from "./format";
 import type { Graph, OpeningView } from "./graph";
+import { zip } from "./zip";
 
 export const STAGES = ["ingest", "basics", "centrality", "hops", "harmonics", "components", "fd2d", "fd3d"] as const;
 export type Stage = (typeof STAGES)[number];
@@ -92,8 +94,8 @@ export function showGraph(graph: Graph, current: string) {
 
 let latest = 0;
 
-// A curated dataset's build. The graph on screen stays until it lands; a
-// newer pick wins over an older one still in flight.
+// A curated dataset's build. The panes go empty while it downloads, as on
+// opening; a newer pick wins over an older one still in flight.
 export async function loadDataset(name: string, stop: () => void) {
   const state = data.get();
   if (state.loading && name === state.requested) return;
@@ -102,7 +104,8 @@ export async function loadDataset(name: string, stop: () => void) {
     data.set({ requested: null, loading: false, loadError: null });
     return;
   }
-  data.set({ requested: name, loading: true, progress: 0, loadError: null });
+  stop();
+  data.set({ graph: null, current: null, error: null, requested: name, loading: true, progress: 0, loadError: null });
   try {
     const res = await fetch(`builds/${name}.json`);
     if (!res.ok) throw new Error(`${name}.json: HTTP ${res.status}`);
@@ -112,7 +115,6 @@ export async function loadDataset(name: string, stop: () => void) {
     });
     const graph = fromJson(JSON.parse(text) as BuildJson);
     if (token !== latest) return;
-    stop();
     showGraph(graph, name);
   } catch (e) {
     if (token === latest) data.set({ loading: false, loadError: String(e) });
@@ -152,12 +154,22 @@ function download(blob: Blob, fileName: string) {
   setTimeout(() => URL.revokeObjectURL(a.href), 0);
 }
 
+// What a saved file is called: a user's graph goes by its title.
+const fileBase = (g: Graph) => (g.name === "user" ? g.title || "build" : g.name);
+
 // The graph on screen as a build file to save, once its build is finished.
-// A user's graph goes by its title.
 export function exportJson() {
   const g = data.get().graph;
   if (!g) return;
-  download(new Blob([stringify(g)], { type: "application/json" }), `${g.name === "user" ? g.title || "build" : g.name}.json`);
+  download(new Blob([stringify(g)], { type: "application/json" }), `${fileBase(g)}.json`);
+}
+
+// The graph on screen as a zip of the CSVs Build from CSV reads
+// (csvExport.ts), once its build is finished.
+export function exportCsvs() {
+  const g = data.get().graph;
+  if (!g || !exportable(g)) return;
+  download(new Blob([zip(csvFiles(g))], { type: "application/zip" }), `${fileBase(g)}.zip`);
 }
 
 // A file that isn't a build, with a short reason.
