@@ -73,8 +73,16 @@ export function InterfaceMap() {
       {widths.map((w, i) => (
         <rect key={i} x={xs[i]} y={top} width={w} height={h} rx={3} fill={INK.panel} stroke={INK.hair} />
       ))}
-      <rect x={W / 2 - 22} y={mid - 7} width={44} height={14} rx={7} fill={INK.panel} />
-      <Caption x={W / 2} y={mid + 3}>PANES</Caption>
+      {/* The caption's ground: the panel's colour, solid under the words and
+          fading out over the panes' edges. */}
+      <defs>
+        <radialGradient id="map-fade">
+          <stop offset={0.6} stopColor={INK.panel} />
+          <stop offset={1} stopColor={INK.panel} stopOpacity={0} />
+        </radialGradient>
+      </defs>
+      <rect x={W / 2 - 56} y={mid - 13} width={112} height={24} fill="url(#map-fade)" />
+      <Caption x={W / 2} y={mid + 3}>MAIN SECTION</Caption>
       <rect x={4} y={bottom} width={W - 8} height={18} rx={9} fill={INK.fill} stroke={INK.hair} />
       <Caption x={W / 2} y={bottom + 12}>BOTTOM CONTROL STRIP</Caption>
     </Figure>

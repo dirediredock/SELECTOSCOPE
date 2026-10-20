@@ -2123,11 +2123,13 @@ textarea {
   --scrollbar: color-mix(in srgb, var(--edge) 50%, var(--panel));
 }
 
-/* Vertical scrolling stops at the list's ends. Sideways swipes still chain to
-   the pane row, so the row can be swiped from anywhere. */
+/* Vertical scrolling stops at the list's ends. The list never moves
+   sideways: what a narrow pane can't fit is clipped (widen the pane), and a
+   sideways swipe over it does nothing (attachListPan). */
 .vlist {
   height: 100%;
   border-radius: inherit;
+  overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior-y: contain;
   /* The gutter stays when nothing overflows, so rows end in one place. */
@@ -2419,12 +2421,15 @@ textarea {
 /* A group's header: large caps in the strongest ink, set on the row's
    baseline, so each group stands out on a scroll. Its row is taller than a pill's (DatasetPane's GROUP_AIR), so air
    above it, not a line, divides it from the group before, and the label sits
-   nearer its own rows, a small gap above them (GROUP_GAP). It reads as a heading and never as a row to pick. */
+   nearer its own rows, a small gap above them (GROUP_GAP). It reads as a heading and never as a row to pick.
+   Too long for a narrow pane, it is cut at the edge, with no ellipsis. */
 .list-group {
   position: relative;
   display: flex;
   align-items: flex-end;
   height: 100%;
+  overflow: hidden;
+  white-space: nowrap;
   padding: 0 0.8rem calc(0.2rem + 0.5rem); /* 0.2rem + 6px */
   color: var(--text-strong);
   font-size: 1.1667rem; /* 14px, as Help's section headings */
