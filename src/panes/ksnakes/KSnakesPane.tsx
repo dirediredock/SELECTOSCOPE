@@ -35,7 +35,7 @@ const NODE_CLEAR = 1.5; // px between a dot and its island's outline
 type Target = Pick<KSnakesSettings, "ordering" | "group">;
 const keyOf = (t: Target) => `${t.group}/${t.ordering}`;
 
-// Cores: each node at its onion layer's height, K spans delimited by
+// Shells: each node at its onion layer's height, K spans delimited by
 // hairlines, each shell a row of bins, islands enclosed and singletons
 // optionally grouped into count pills, in the ordering and singleton mode
 // picked in the bottom strip (ordered by the pipeline). A change of either
@@ -139,7 +139,7 @@ export function KSnakesPane({ slot }: { slot: SlotId }) {
       if (!p) {
         const { st, graph } = structure;
         const order = st.orders[modeOf(target.group)][target.ordering];
-        // Top-down places its rows under their neighbours; Size justifies them.
+        // Barycenter places its rows under their neighbours; Size justifies them.
         const topdown = target.ordering === "topdown";
         const pull = topdown ? { source: graph.edgeSource, target: graph.edgeTarget } : null;
         p = snakeXY(st, graph.ksnakes!.onion, order, b.heights.onionY, b.width, !topdown, pull);

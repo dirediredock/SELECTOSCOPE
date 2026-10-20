@@ -97,7 +97,7 @@ For structural information: the PC1, PC2 and PC3 diagonal orders come from the P
 
 Every diagonal order starts from its denser pole: from the quarter of nodes at either pole, the higher mean degree faces the top of the pane.
 
-CORES PANE
+SHELLS PANE
 
 This pane is about the graph's density. For selection, a drawn area takes the node points inside it in NODES mode, while edges are drawn only when selected, as orange chords; or hovered, as a red chord. These chords can't be clicked, but a drawn area in EDGES or BOTH mode does select the edges between the nodes it covers.
 
@@ -105,11 +105,11 @@ Layout: A new visual idiom we call kSnakes, where nodes are points that are vert
 
 The horizontal order of connected components can be by:
 
-TOP-DOWN places each component at the mean horizontal position of its neighbors in denser shells, nearer shells counting more, so components that connect across shells line up, a layout that results from reducing edge crossings.
-
 SIZE packs components within a k-core shell horizontally from sparse to dense: by a component's highest onion value, then by its total onion value, then its size in number of nodes, arranged from left to right.
 
-The aspect ratio of the visual pattern can be adjusted with the SPACING slider. The vertical GRIDLINES that bin component locations for horizontal TOP-DOWN or SIZE ordering can be made visible as well.
+BARYCENTER places each component at the barycenter, or mean horizontal position, of its neighbors in denser shells, nearer shells counting more, so components that connect across shells line up, a layout that results from reducing edge crossings.
+
+The aspect ratio of the visual pattern can be adjusted with the SPACING slider. The vertical GRIDLINES that bin component locations for horizontal SIZE or BARYCENTER ordering can be made visible as well.
 
 Sometimes a k-core shell can have many singleton nodes, which can make the visual pattern crowded. Singletons are bare node points with no enclosure, placed vertically according to their onion value. The GROUP SINGLETONS toggle collects singletons within a k-core shell, holding one enclosure per onion value that aggregates and counts all of its singletons. A group's enclosure acts as all its singletons: hovering lights them all, a click selects them all, and once some are selected it reads selected over total.
 
@@ -119,15 +119,15 @@ This pane is about the graph's eccentricity. It shows a new visual idiom we call
 
 Layout: A polyline is drawn from a vector of integers in a shared coordinate system: stubs (edge ends) met for the first time at each hop from the node, starting from its degree at hop 0, until the whole graph is traversed. The shape of the polyline comes from the varying stub counts, while the traversal extent in hops maps to the length of polyline, or the node's eccentricity (reported as text on the right side of the pane). Locally, polylines are drawn within a unit square, all share the same vertical scale; the tallest and longest set the relative extremes within the unit square. In the overall vertical span of the pane, the most central nodes are at the top (shortest polyline lengths, the radius nodes), while the nodes on the graph's perimeter are at the bottom (longest polyline lengths, the diameter endpoint nodes).
 
-The SPACING slider sets how far the polylines move horizontally, following a chosen ordering by polyline wave shape:
+The SPACING slider sets how far the polylines move horizontally, following a chosen ordering by polyline shape similarity:
 
 DEGREE moves to the left polylines that start high (large degree), and those that start low right (low degree). In %, the share of the graph's stubs met at hop 0, which is the polyline's first value.
 
-REACH moves to the left waves whose bulk shape arrives in a few hops, and those whose bulk occurs late right. In %, the wave's mean hop, its centre of mass, as a share of its length.
+REACH moves to the left polylines whose bulk arrives in a few hops, and those whose bulk occurs late right. In %, the polyline's mean hop, its center of mass, as a share of its length.
 
-SPREAD moves to the left polylines whose wave shapes spread over many of their hops, and moves to the right polyline shapes that form a tight wave. In %, the wave's standard deviation in hops as a share of its length.
+SPREAD moves to the left polylines whose shapes spread over many of their hops, and moves to the right polyline shapes that form a tight peak. In %, the polyline's standard deviation in hops as a share of its length.
 
-SKEW moves to the left wave shapes whose bulk arrives early and trails off in a long tail, and moves to the right polylines that climb for long and end abruptly. In %, how much further the wave's last tenth of stubs lies past its mean hop, versus its first tenth lies before the mean hop, as a share of its length.
+SKEW moves to the left polyline shapes whose bulk arrives early and trails off in a long tail, and moves to the right polylines that climb for long and end abruptly. In %, how much further the polyline's last tenth of stubs lies past its mean hop, versus its first tenth lies before the mean hop, as a share of its length.
 
 The RANKING toggle converts each set of equal values into one evenly spaced column (so twins share one). When off, each polyline sits at its numeric value, so gaps and outliers show.
 

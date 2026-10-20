@@ -14,6 +14,6 @@ export default defineConfig({
   // The engine's workers import modules, so they build as ES modules.
   worker: { format: "es" },
   test: {
-    exclude: ["node_modules/**"],
+    exclude: ["node_modules/**", ".claude/**"],
   },
 });

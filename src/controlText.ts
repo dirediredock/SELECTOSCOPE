@@ -61,7 +61,7 @@ const HELP = "HELP PANE";
 const LABELS = "LABELS PANE";
 const NODELINK = "NODELINK PANE";
 const MATRIX = "MATRIX PANE";
-const CORES = "CORES PANE";
+const SHELLS = "SHELLS PANE";
 const HOPS = "HOPS PANE";
 
 export const TEXT = {
@@ -171,11 +171,11 @@ export const TEXT = {
   },
 
   ksnakes: {
-    orderingTip: tip(CORES, "HORIZONTAL ORDER BY"),
-    verticalTip: tip(CORES, "VERTICAL"),
+    orderingTip: tip(SHELLS, "HORIZONTAL ORDER BY"),
+    verticalTip: tip(SHELLS, "VERTICAL"),
   },
 
   hopcensus: {
-    measureTip: tip(HOPS, "HORIZONTAL WAVE ORDER BY"),
+    measureTip: tip(HOPS, "HORIZONTAL ORDER BY SHAPE"),
   },
 } as const;

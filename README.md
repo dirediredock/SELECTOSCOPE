@@ -27,7 +27,7 @@ Each pane draws the same loaded network in its own way.
 
 **Matrix.** The visual idiom is the classic Adjacency Matrix, where edges are points, and their respective nodes drawn as lines along rows and columns. By default the matrix is shown as a DIAMOND with the diagonal running vertically, though the traditional SQUARE view is also available.
 
-**Cores.** A new visual idiom we call kSnakes, where nodes are points that are vertically placed according to k-core shell membership (reported as text on the right side of the pane), which maps height to the depth into the graph's dense core. Nodes in the densest core are at the top, while nodes in the sparse periphery are at the bottom. Within each k-core shell, the onion decomposition (numbers on the left) sets every node's height, which creates snake-like visual patterns. Node points are drawn within an enclosure if they are part of the same connected component within that k-core shell.
+**Shells.** A new visual idiom we call kSnakes, where nodes are points that are vertically placed according to k-core shell membership (reported as text on the right side of the pane), which maps height to the depth into the graph's dense core. Nodes in the densest core are at the top, while nodes in the sparse periphery are at the bottom. Within each k-core shell, the onion decomposition (numbers on the left) sets every node's height, which creates snake-like visual patterns. Node points are drawn within an enclosure if they are part of the same connected component within that k-core shell.
 
 **Hops.** A new visual idiom we call HopCensus, where nodes are polyline drawn from a vector of integers in a shared coordinate system: stubs (edge ends) met for the first time at each hop from the node, starting from its degree at hop 0, until the whole graph is traversed. The shape of the polyline comes from the varying stub counts, while the traversal extent in hops maps to the length of polyline, or the node's eccentricity (reported as text on the right side of the pane). Locally, polylines are drawn within a unit square, all share the same vertical scale; the tallest and longest set the relative extremes within the unit square. In the overall vertical span of the pane, the most central nodes are at the top (shortest polyline lengths, the radius nodes), while the nodes on the graph's perimeter are at the bottom (longest polyline lengths, the diameter endpoint nodes).
 
@@ -95,4 +95,4 @@ git checkout main
 ```
 
 
-Curated dataset sources and their licences are in [docs/data_sources.md](docs/data_sources.md). The MIT licence covers the code; each dataset stays under its source's terms.
+Curated dataset sources and their licenses are in [docs/data_sources.md](docs/data_sources.md). The MIT license covers the code; each dataset stays under its source's terms.

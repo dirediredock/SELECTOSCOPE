@@ -123,7 +123,7 @@ const pulled: KSnakes = {
 };
 const pull = { source: Uint32Array.of(0, 1, 2, 3, 4, 6), target: Uint32Array.of(4, 4, 6, 6, 5, 5) };
 
-describe("snakeXY with a pull (Top-down)", () => {
+describe("snakeXY with a pull (Barycenter)", () => {
   const st = snakeStructure(pulled);
   const { onionY } = snakeHeights(st, 10, 30);
   const xs = (p: { xy: Float32Array }) => [0, 1, 2, 3, 4, 5, 6].map((v) => p.xy[2 * v]);

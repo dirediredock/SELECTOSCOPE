@@ -34,8 +34,8 @@ const INSETS = { left: 20, right: GUTTER + PAD_X, top: 20, bottom: 20 };
 // Hops: one polyline per node through its stub census, binned by
 // eccentricity, the smallest on top, each bin a square. At 100% zoom the
 // whole pattern fits the pane, lines slid by Spacing included, as the
-// matrix does, and it refits on every resize. A new wave order glides the
-// lines sideways to their new places, eased as Cores' and the matrix's
+// matrix does, and it refits on every resize. A new shape order glides the
+// lines sideways to their new places, eased as Shells' and the matrix's
 // glides are, and the view holds still; a new dataset changes at once. It
 // draws nodes only: the node set, or a sweep's nodes while one runs. Five canvases, each redrawn only when its inputs change:
 // base, sets, axes, hover, gesture.
@@ -53,7 +53,7 @@ export function HopCensusPane({ slot }: { slot: SlotId }) {
     const frame = frameScheduler();
 
     let structure: { graph: Graph; census: HopCensus; st: CensusStructure } | null = null;
-    // The wave order for the current measure, shared by the lines and the sweep.
+    // The shape order for the current measure, shared by the lines and the sweep.
     let ordered: { graph: Graph; st: CensusStructure; measure: CensusMeasure; rank: boolean; order: CensusOrder } | null = null;
     // What is on screen: each line's place along the order, which trails the
     // order's while a glide runs. A new order mid-glide starts from where the

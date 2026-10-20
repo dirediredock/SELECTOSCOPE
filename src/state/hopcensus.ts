@@ -8,10 +8,10 @@ import type { SlotId } from "./layout";
 // Hops' settings, chosen in the bottom strip. Each Hops slot has its
 // own, and a dataset switch is a fresh start.
 
-// What orders the lines sideways: the wave order (panes/hopcensus/geometry.ts).
+// What orders the lines sideways: the shape order (panes/hopcensus/geometry.ts).
 export type CensusMeasure = (typeof CENSUS_MEASURES)[number]["id"];
 
-// How far right the wave order moves a line at its far end, in multiples
+// How far right the shape order moves a line at its far end, in multiples
 // of a bin's side (panes/hopcensus/geometry.ts); 0 lines every line up at hop 0.
 export const SLIDE = { max: 50, opening: 1 } as const;
 

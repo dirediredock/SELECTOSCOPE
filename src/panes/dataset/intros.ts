@@ -1,5 +1,5 @@
-// The Data list's two sentences, set in body text, each cut from Help
-// (docs/help_pane.txt; controlText.test.ts checks them).
+// The Data list's two sentences, set in body text. The + New one is cut
+// from Help (docs/help_pane.txt; controlText.test.ts checks it).
 
 // What uploading is for, under the Uploaded header.
 export const INTRO = "Click the + New row to add your own network data.";

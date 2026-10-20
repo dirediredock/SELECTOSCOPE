@@ -1,4 +1,4 @@
-// The glide a pane runs when its marks move to a new arrangement (Cores'
+// The glide a pane runs when its marks move to a new arrangement (Shells'
 // orderings, the matrix's seriations): eased, from wherever the marks are.
 
 export const GLIDE_MS = 450;

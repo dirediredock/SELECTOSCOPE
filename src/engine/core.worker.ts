@@ -1,5 +1,5 @@
 // The engine's first worker: ingest, then the stages that read the whole
-// graph at once: cores, onion and the Cores pane's orderings, then
+// graph at once: cores, onion and the Shells pane's orderings, then
 // centrality. Each result is posted the moment it lands, so the panes
 // draw as the build goes.
 

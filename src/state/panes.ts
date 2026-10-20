@@ -8,7 +8,7 @@ export const PANES = [
   { id: "labels", title: "Labels", native: "node", list: true, ar: 1 / 3 },
   { id: "nodelink", title: "NodeLink", native: "node", list: false, ar: 1 },
   { id: "matrix", title: "Matrix", native: "edge", list: false, ar: 1 / 3 },
-  { id: "ksnakes", title: "Cores", native: "node", list: false, ar: 1 / 3 },
+  { id: "ksnakes", title: "Shells", native: "node", list: false, ar: 1 / 3 },
   { id: "hopcensus", title: "Hops", native: "node", list: false, ar: 1 / 3 },
 ] as const;
 

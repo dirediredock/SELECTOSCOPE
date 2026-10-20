@@ -1201,13 +1201,15 @@ textarea {
   vertical-align: 0.05em;
 }
 
-/* Name: edited in place, no field, only the caret. The track glows while it
-   is open, in neutral ink, since the glow is UI state. */
+/* Name: edited in place, no field, only the caret, in a hairline as the file
+   pills beside it. The track glows while it is open, in neutral ink, since
+   the glow is UI state. */
 .name-field {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0 0.9rem;
+  border: var(--edge-w) solid var(--edge);
   color: var(--text);
   cursor: text;
 }

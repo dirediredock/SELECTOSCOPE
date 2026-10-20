@@ -13,7 +13,7 @@ export interface HitTester {
   itemsInRect(x0: number, y0: number, x1: number, y1: number): number[];
   pickAt?(x: number, y: number): HoverItem | null;
   // The items picked with this one, when a mark stands for several (a
-  // Cores pill); hover and click then take them all.
+  // Shells pill); hover and click then take them all.
   groupOf?(id: number): readonly number[] | null;
 }
 

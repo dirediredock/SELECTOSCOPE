@@ -201,7 +201,7 @@ export function drawSets(
 ) {
   if (edges.size) {
     ctx.strokeStyle = ink.edge;
-    ctx.lineWidth = 1.5;
+    ctx.lineWidth = 0.5;
     strokeChords(ctx, s, edges);
   }
   if (nodes.size) {
@@ -233,7 +233,7 @@ export function drawHover(ctx: CanvasRenderingContext2D, s: SnakeScene, ink: Ink
   if (!hovered) return;
   if (hovered.type === "edge") {
     ctx.strokeStyle = ink.hover;
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 0.5;
     strokeChords(ctx, s, [hovered.id]);
     return;
   }

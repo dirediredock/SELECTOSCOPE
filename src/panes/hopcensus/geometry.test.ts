@@ -132,7 +132,7 @@ describe("censusOrder", () => {
     expect([...censusOrder(censusStructure(path5), "skew", true).place]).toEqual([1, 0, 1, 0, 1]);
   });
 
-  it("puts the broadest wave left", () => {
+  it("puts the broadest shape left", () => {
     expect([...censusOrder(censusStructure(path5), "spread", true).place]).toEqual([0, 0.5, 1, 0.5, 0]);
   });
 

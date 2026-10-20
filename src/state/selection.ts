@@ -48,7 +48,7 @@ export function toggleItem(type: ItemType, id: number) {
   put(type, next);
 }
 
-// A group picked as one (a Cores pill): added unless all of it is already
+// A group picked as one (a Shells pill): added unless all of it is already
 // in the set, then removed.
 export function toggleGroup(type: ItemType, ids: readonly number[]) {
   const next = new Set(setOf(type));
@@ -216,7 +216,7 @@ export function clearSet(type: ItemType) {
 
 // ---------- Hover: one item, shown red in every pane ----------
 
-// `group` is set when the item stands for several nodes at once (a Cores
+// `group` is set when the item stands for several nodes at once (a Shells
 // pill): then all of them are hovered, and `id` is one of them.
 export interface HoverItem {
   type: ItemType;

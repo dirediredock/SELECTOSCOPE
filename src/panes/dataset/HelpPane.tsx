@@ -29,7 +29,7 @@ import { TEXT } from "../../controlText";
 import { glideScroll } from "../../components/glideScroll";
 import { attachListPan } from "../../interaction/listPan";
 import { HELP_SECTIONS, helpNav, sectionAt, topTarget } from "./helpNav";
-import { CoresAnatomy, ExtendHops, Gestures, HopsAnatomy, InterfaceMap, MatrixForms, SweepBand, WaveOrder } from "./helpFigures";
+import { ExtendHops, Gestures, HopsAnatomy, InterfaceMap, MatrixForms, ShellsAnatomy, SweepBand, ShapeOrder } from "./helpFigures";
 
 // Where the sheet was left, for the session, so closing and reopening it
 // returns to the same place.
@@ -376,7 +376,7 @@ export function HelpPane() {
               <Choice label="Diagonal order by" options={SERIATIONS} value="harm1" onPick={none} />
             </Replica>
           </PaneBlock>
-          <PaneBlock title="Cores">
+          <PaneBlock title="Shells">
             <p>
               This pane is about the graph's density. For selection, a drawn area takes the node points inside it in
               NODES mode, while edges are drawn only when selected, as orange chords; or hovered, as a red chord. These
@@ -391,23 +391,23 @@ export function HelpPane() {
               node's height, which creates snake-like visual patterns. Node points are drawn within an enclosure if they
               are part of the same connected component within that k-core shell.
             </p>
-            <CoresAnatomy />
+            <ShellsAnatomy />
             <p>The horizontal order of connected components can be by:</p>
             <Replica>
               <Choice label="Horizontal order by" options={ORDERINGS} value="topdown" onPick={none} />
             </Replica>
             <p>
-              TOP-DOWN places each component at the mean horizontal position of its neighbors in denser shells,
-              nearer shells counting more, so components that connect across shells line up, a layout that results
-              from reducing edge crossings.
-            </p>
-            <p>
               SIZE packs components within a k-core shell horizontally from sparse to dense: by a component's highest
               onion value, then by its total onion value, then its size in number of nodes, arranged from left to right.
             </p>
             <p>
+              BARYCENTER places each component at the barycenter, or mean horizontal position, of its neighbors in
+              denser shells, nearer shells counting more, so components that connect across shells line up, a layout
+              that results from reducing edge crossings.
+            </p>
+            <p>
               The aspect ratio of the visual pattern can be adjusted with the SPACING slider. The vertical GRIDLINES that
-              bin component locations for horizontal TOP-DOWN or SIZE ordering can be made visible as well.
+              bin component locations for horizontal SIZE or BARYCENTER ordering can be made visible as well.
             </p>
             <Replica>
               <Slider label="Spacing" range={BIN_SPACING} value={BIN_SPACING.opening} onChange={none} />
@@ -445,10 +445,10 @@ export function HelpPane() {
             <HopsAnatomy />
             <p>
               The SPACING slider sets how far the polylines move horizontally, following a chosen ordering by polyline
-              wave shape:
+              shape similarity:
             </p>
             <Replica>
-              <Choice label="Horizontal wave order by" options={CENSUS_MEASURES} value="reach" onPick={none} />
+              <Choice label="Horizontal order by shape" options={CENSUS_MEASURES} value="reach" onPick={none} />
             </Replica>
             <Replica>
               <Slider
@@ -463,24 +463,24 @@ export function HelpPane() {
               DEGREE moves to the left polylines that start high (large degree), and those that start low right (low
               degree). In %, the share of the graph's stubs met at hop 0, which is the polyline's first value.
             </p>
-            <WaveOrder measure="degree" />
+            <ShapeOrder measure="degree" />
             <p>
-              REACH moves to the left waves whose bulk shape arrives in a few hops, and those whose bulk occurs late
-              right. In %, the wave's mean hop, its centre of mass, as a share of its length.
+              REACH moves to the left polylines whose bulk arrives in a few hops, and those whose bulk occurs late
+              right. In %, the polyline's mean hop, its center of mass, as a share of its length.
             </p>
-            <WaveOrder measure="reach" />
+            <ShapeOrder measure="reach" />
             <p>
-              SPREAD moves to the left polylines whose wave shapes spread over many of their hops, and moves to the
-              right polyline shapes that form a tight wave. In %, the wave's standard deviation in hops as a share of
+              SPREAD moves to the left polylines whose shapes spread over many of their hops, and moves to the
+              right polyline shapes that form a tight peak. In %, the polyline's standard deviation in hops as a share of
               its length.
             </p>
-            <WaveOrder measure="spread" />
+            <ShapeOrder measure="spread" />
             <p>
-              SKEW moves to the left wave shapes whose bulk arrives early and trails off in a long tail, and moves to the
-              right polylines that climb for long and end abruptly. In %, how much further the wave's last tenth of stubs
+              SKEW moves to the left polyline shapes whose bulk arrives early and trails off in a long tail, and moves to the
+              right polylines that climb for long and end abruptly. In %, how much further the polyline's last tenth of stubs
               lies past its mean hop, versus its first tenth lies before the mean hop, as a share of its length.
             </p>
-            <WaveOrder measure="skew" />
+            <ShapeOrder measure="skew" />
             <p>
               The RANKING toggle converts each set of equal values into one evenly spaced column (so twins share one).
               When off, each polyline sits at its numeric value, so gaps and outliers show.
@@ -575,25 +575,23 @@ export function HelpPane() {
             <FilePill name="Bespoke 2D" added={false} accent="extra" onPick={none} />
             <FilePill name="Bespoke 3D" added={false} accent="extra" onPick={none} />
           </Replica>
-          <p>Once built, the options in CHANGE can add, replace, or remove files.</p>
+          <p>
+            Once built, the options in CHANGE can add, replace, or remove files; and click EXPORT CSV to save the built
+            CSV files.
+          </p>
           <Replica>
             <FilePill name="Edgelist" added accent="key" replace onPick={none} />
             <FilePill name="Labels" added accent="extra" onPick={none} onRemove={none} />
           </Replica>
+          <Replica>
+            <Action onClick={none}>Export CSVs</Action>
+          </Replica>
           <p>
-            Click EXPORT JSON to save a built dataset. Reopen the dataset using + NEW and UPLOAD FROM JSON, without
-            rebuilding.
+            Click EXPORT JSON to save a built dataset as a single file. Reopen the dataset though +NEW and UPLOAD FROM
+            JSON, without rebuilding.
           </p>
           <Replica>
             <Action onClick={none}>Export JSON</Action>
-          </Replica>
-          <p>
-            Click EXPORT CSVS to save any built dataset, curated ones included, as a zip of CSV files to edit and
-            rebuild with BUILD FROM CSV: the cleaned EDGELIST, plus LABELS, BESPOKE 2D, and BESPOKE 3D when the dataset
-            has them, with layouts rescaled to unit size.
-          </p>
-          <Replica>
-            <Action onClick={none}>Export CSVs</Action>
           </Replica>
         </Sec>
       </div>

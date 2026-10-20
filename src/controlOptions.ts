@@ -56,18 +56,18 @@ export const FORMS = [
 
 // How each shell's bins are ordered across its row (src/pipeline/ksnakes.ts).
 // Two edges cross when they join the same two shells and their bins' orders
-// swap. The strip offers Top-down and Packed, the baseline, which it names
-// Size: it sorts by the bins' onions and sizes alone.
+// swap. The strip offers Packed first, the baseline, which it names Size: it
+// sorts by the bins' onions and sizes alone; then Barycenter (topdown).
 export const ORDERINGS = [
-  { id: "topdown", label: "Top-down" },
   { id: "packed", label: "Size" },
+  { id: "topdown", label: "Barycenter" },
 ] as const;
 
-// Hops' wave orders: one measure of each node's census, each a percent
-// (panes/hopcensus/geometry.ts). Each label names the wave's measure and
-// reads after the section's caps, as "Horizontal wave order by reach".
+// Hops' shape orders: one measure of each node's census, each a percent
+// (panes/hopcensus/geometry.ts). Each label names the shape's measure and
+// reads after the section's caps, as "Horizontal order by shape: reach".
 // They run: Degree, the line's first value; then three read
-// along the line, as a wave's shape is: Reach, its centre of mass, when it
+// along the line, as its shape is: Reach, its centre of mass, when it
 // arrives on average (the default); Spread, over how much of its length it arrives, the
 // pane's own, drawn by no other pane; and Skew, which side of its middle that
 // width lies on.

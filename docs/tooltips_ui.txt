@@ -88,13 +88,13 @@ DIAGONAL ORDER BY: Sets the matrix seriation, or the symmetric ordering of nodes
 LAYOUT: Shows the matrix as a DIAMOND, with the diagonal running vertically, or as the traditional SQUARE.
 
 
-CORES PANE
+SHELLS PANE
 
-HORIZONTAL ORDER BY: Sets the horizontal order of connected components, by TOP-DOWN or SIZE. Toggle GROUP SINGLETONS to aggregate all the singleton nodes within their respective k-core shell.
+HORIZONTAL ORDER BY: Sets the horizontal order of connected components, by SIZE or BARYCENTER. Toggle GROUP SINGLETONS to aggregate all the singleton nodes within their respective k-core shell.
 
 VERTICAL: Adjusts the aspect ratio of the visual pattern with SPACING, and GRIDLINES makes visible the connected component bins.
 
 
 HOPS PANE
 
-HORIZONTAL WAVE ORDER BY: Orders the polylines by wave shape, SPACING sets how far they move horizontally, and RANKING sets each set of equal values in one evenly spaced column.
+HORIZONTAL ORDER BY SHAPE: Orders the polylines by shape similarity, SPACING sets how far they move horizontally, and RANKING sets each set of equal values in one evenly spaced column.

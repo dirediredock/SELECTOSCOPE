@@ -12,7 +12,7 @@ function bruteCrossings(M: number[][]) {
   return total;
 }
 
-describe("Cores orderings", () => {
+describe("Shells orderings", () => {
   it("counts crossings as the pairs that swap", () => {
     const M = [
       [0, 2, 1],

@@ -20,7 +20,7 @@ import { useStore } from "../state/createStore";
 // The subtitle beside a pane's title: what the pane's strip has chosen,
 // in the strip's own words, so every header says what it shows even when
 // another pane holds the strip. A readout only. A setting at its default that
-// changes little (Cores' singletons apart, the matrix's
+// changes little (Shells' singletons apart, the matrix's
 // diamond, Spacing 0) adds nothing.
 
 const labelOf = <T extends { id: string; label: string }>(options: readonly T[], id: string) =>
@@ -39,10 +39,11 @@ export const matrixSubtitle = ({ seriation, form }: MatrixSettings) =>
 export const ksnakesSubtitle = ({ ordering, group }: Pick<KSnakesSettings, "ordering" | "group">) =>
   labelOf(ORDERINGS, ordering) + (group ? ", grouped" : "");
 
-// The wave order, and Ranking while it is on, even at Spacing 0, where
-// the lines don't slide but the sweep still follows the order.
+// The shape order, as its measure's similarity, and Ranking while it is on,
+// even at Spacing 0, where the lines don't slide but the sweep still follows
+// the order.
 export const hopcensusSubtitle = ({ measure, rank }: Pick<HopCensusSettings, "measure" | "rank">) =>
-  "Wave " + labelOf(CENSUS_MEASURES, measure).toLowerCase() + (rank ? ", ranked" : "");
+  labelOf(CENSUS_MEASURES, measure) + " similarity" + (rank ? ", ranked" : "");
 
 export function paneSubtitle(type: PaneType, slot: SlotId): string | null {
   switch (type) {

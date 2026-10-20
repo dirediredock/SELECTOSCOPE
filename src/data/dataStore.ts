@@ -15,7 +15,7 @@ export type Stage = (typeof STAGES)[number];
 // What each stage is called while it runs: a pane's subtitle and progress.
 export const STAGE_NAMES: Record<Stage, string> = {
   ingest: "Reading",
-  basics: "Cores",
+  basics: "Shells",
   centrality: "Centrality",
   hops: "Hops",
   harmonics: "Harmonics",

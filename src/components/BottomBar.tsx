@@ -555,16 +555,16 @@ function KSnakesControls({ slot }: { slot: SlotId }) {
   );
 }
 
-// Horizontal wave order by: the measure that orders the lines sideways,
+// Horizontal order by shape: the measure that orders the lines sideways,
 // whether they are spaced by rank or by its value (Ranking), and how far they
 // slide (Spacing, multiples of a bin's side, on a squared rail).
 function HopCensusControls({ slot }: { slot: SlotId }) {
   const s = useStore(hopcensusSettings, (st) => hopcensusIn(st, slot));
   return (
     <>
-      <Section label="Horizontal wave order by" tip={TEXT.hopcensus.measureTip}>
+      <Section label="Horizontal order by shape" tip={TEXT.hopcensus.measureTip}>
         <Choice
-          label="Horizontal wave order by"
+          label="Horizontal order by shape"
           options={CENSUS_MEASURES}
           value={s.measure}
           onPick={(v) => setMeasure(slot, v)}
