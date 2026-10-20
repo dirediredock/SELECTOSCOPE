@@ -1,7 +1,7 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import type { Store } from "../../state/createStore";
-import helpText from "../../../../docs/help.txt?raw";
+import helpText from "../../../../docs/help_pane.txt?raw";
 
 // uiStore reads the saved theme and settings on import.
 vi.hoisted(() => {
@@ -26,13 +26,14 @@ describe("Help", () => {
     expect(ids).toEqual(HELP_SECTIONS.map((s) => s.id));
   });
 
-  it("shows every line of docs/help.txt word for word", () => {
+  it("shows every line of docs/help_pane.txt word for word", () => {
     // The sheet's words: no copies or figures.
     const shown = html
       .replace(/<div class="help-replica-row">.*?<\/div><\/div>/g, " ")
       .replace(/<svg.*?<\/svg>/g, " ")
       .replace(/<[^>]+>/g, "")
       .replace(/&#x27;/g, "'")
+      .replace(/&quot;/g, '"')
       .replace(/&amp;/g, "&")
       .replace(/\s+/g, " ");
     const lines = helpText

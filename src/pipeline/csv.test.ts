@@ -33,4 +33,11 @@ describe("parseCsv", () => {
     expect(column(t, "y")).toEqual(["2"]);
     expect(column(t, "z")).toBeNull();
   });
+
+  it("finds columns whatever their case", () => {
+    const t = parseCsv("Source,TARGET,Node_ID\na,b,c\n");
+    expect(column(t, "source")).toEqual(["a"]);
+    expect(column(t, "target")).toEqual(["b"]);
+    expect(column(t, "node_id")).toEqual(["c"]);
+  });
 });

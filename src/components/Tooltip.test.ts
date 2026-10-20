@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { DELAY_MS, HANDOFF_MS, placeTip, tipParts, watchTips } from "./Tooltip";
+import { DELAY_MS, HANDOFF_MS, placeTip, placeTipBeside, tipParts, watchTips } from "./Tooltip";
 import { scaled } from "../uiScale";
 
 const rect = (left: number, top: number, width: number, height: number) =>
@@ -14,7 +14,7 @@ describe("placeTip", () => {
     expect(place.side).toBe("below");
     expect(place.top).toBeCloseTo(120 + scaled(24));
     expect(place.left).toBe(320);
-    expect(place.pointerX).toBe(100);
+    expect(place.pointer).toBe(100);
   });
 
   it("opens above in the bottom strip, and flips where there is no room", () => {
@@ -36,10 +36,33 @@ describe("placeTip", () => {
     const inset = scaled(22.2);
     const atLeft = placeTip(rect(0, 100, 6, 20), tip, win);
     expect(atLeft.left).toBeCloseTo(scaled(8));
-    expect(atLeft.pointerX).toBeCloseTo(inset);
+    expect(atLeft.pointer).toBeCloseTo(inset);
     const atRight = placeTip(rect(994, 100, 6, 20), tip, win);
     expect(atRight.left + tip.width).toBeCloseTo(win.width - scaled(8));
-    expect(atRight.pointerX).toBeCloseTo(tip.width - inset);
+    expect(atRight.pointer).toBeCloseTo(tip.width - inset);
+  });
+});
+
+describe("placeTipBeside", () => {
+  it("opens to the right of the anchor, centred on its middle", () => {
+    const place = placeTipBeside(rect(100, 300, 200, 20), tip, win);
+    expect(place.side).toBe("right");
+    expect(place.left).toBeCloseTo(300 + scaled(24));
+    expect(place.top).toBe(280);
+    expect(place.pointer).toBe(30);
+  });
+
+  it("flips left where there is no room on the right", () => {
+    const place = placeTipBeside(rect(700, 300, 200, 20), tip, win);
+    expect(place.side).toBe("left");
+    expect(place.left).toBeCloseTo(700 - scaled(24) - 200);
+  });
+
+  it("holds inside the window, the pointer clamped to the bubble's ends", () => {
+    const tall = { width: 200, height: 200 };
+    const place = placeTipBeside(rect(100, 0, 200, 10), tall, win);
+    expect(place.top).toBeCloseTo(scaled(8));
+    expect(place.pointer).toBeCloseTo(scaled(22.2));
   });
 });
 

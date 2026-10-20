@@ -14,7 +14,7 @@ import { attachListGesture } from "./listGesture";
 import type { ListGesture } from "./listGesture";
 import { useFadeIn } from "../../components/fadeIn";
 import { PaneMessage, WaitingOn } from "../../components/PaneMessage";
-import { UserFilePill, useCsvRow } from "../../components/UserFilePill";
+import { MissingFilePill } from "../../components/UserFilePill";
 import { TEXT } from "../../controlText";
 
 const EMPTY: Uint32Array = new Uint32Array(0);
@@ -59,8 +59,6 @@ export function LabelsPane({ slot }: { slot: SlotId }) {
   // wait, and Degree and Labels (A–Z) work at once.
   const keysReady = useStore(data, (s) => !!s.graph && sortReady(s.graph, sort));
   const fade = useFadeIn(graph, keysReady && !labelsMissing(graph, sort));
-  // On an uploaded CSV row, Add labels offers the labels file.
-  const csvRow = useCsvRow(useStore(data, (s) => s.current));
   const value = useMemo(() => graph && keysReady && sortValue(sort, sortKeys(graph)), [graph, sort, keysReady]);
 
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -206,7 +204,7 @@ export function LabelsPane({ slot }: { slot: SlotId }) {
         <div ref={bandRef} className="list-band" />
       </VirtualList>
       {labelsMissing(graph, sort) && (
-        <PaneMessage text={TEXT.labels.missing}>{csvRow && <UserFilePill id={csvRow} kind="labels" rebuild />}</PaneMessage>
+        <PaneMessage text={TEXT.labels.missing}><MissingFilePill kind="labels" /></PaneMessage>
       )}
       {graph && !keysReady && <WaitingOn stages={sort === "onion" ? ["basics"] : ["centrality"]} />}
     </>

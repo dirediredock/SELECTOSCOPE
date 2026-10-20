@@ -34,7 +34,7 @@ import { attachNodeDrag } from "./nodeDrag";
 import { drawHover, drawScene } from "./render";
 import { useFadeIn } from "../../components/fadeIn";
 import { PaneAction, PaneMessage, WaitingOn } from "../../components/PaneMessage";
-import { UserFilePill, useCsvRow } from "../../components/UserFilePill";
+import { MissingFilePill } from "../../components/UserFilePill";
 import { computeFd3d } from "../../engine/engine";
 import { TEXT } from "../../controlText";
 
@@ -270,8 +270,6 @@ export function NodeLinkPane({ slot }: { slot: SlotId }) {
   const hasFd3d = useStore(data, (st) => !!st.graph?.layoutFd3d);
   const fd3dOff = useStore(data, (st) => st.stages.fd3d.status === "off");
   const wants3d = !s.live && s.layout === "fd3d" && !!g && !hasFd3d;
-  // On an uploaded CSV row, a missing bespoke layout's message offers its file.
-  const csvRow = useCsvRow(useStore(data, (st) => st.current));
   // FD's frames draw once the harmonics seed it, so they fade in then.
   const seeded = useStore(data, (st) => st.stages.harmonics.status === "done");
   const fade = useFadeIn(g, !!g && (computed ? seeded || hasFd : s.layout === "fd3d" ? hasFd3d : !layoutMissing(g, s)));
@@ -284,7 +282,7 @@ export function NodeLinkPane({ slot }: { slot: SlotId }) {
       {wants3d && (fd3dOff ? <PaneAction text={TEXT.nodelink.missing.fd3d} onClick={computeFd3d} /> : <WaitingOn stages={["fd3d"]} />)}
       {!computed && s.layout !== "fd3d" && layoutMissing(g, s) && (
         <PaneMessage text={TEXT.nodelink.missing[s.layout]}>
-          {csvRow && <UserFilePill id={csvRow} kind={s.layout === "own3d" ? "layout3d" : "layout2d"} rebuild />}
+          <MissingFilePill kind={s.layout === "own3d" ? "layout3d" : "layout2d"} />
         </PaneMessage>
       )}
     </div>

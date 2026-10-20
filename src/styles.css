@@ -355,6 +355,14 @@ textarea {
   --tip-slide: -0.3333rem;
 }
 
+.tooltip[data-side="right"] {
+  --tip-slide-x: 0.3333rem;
+}
+
+.tooltip[data-side="left"] {
+  --tip-slide-x: -0.3333rem;
+}
+
 .tooltip.is-shown {
   visibility: visible;
   opacity: 1;
@@ -364,7 +372,7 @@ textarea {
 @keyframes tooltip-in {
   from {
     opacity: 0;
-    transform: translateY(var(--tip-slide, 0));
+    transform: translate(var(--tip-slide-x, 0), var(--tip-slide, 0));
   }
 }
 
@@ -412,12 +420,12 @@ textarea {
   font-weight: 600;
 }
 
-/* The pointer: two border-triangles centred on --tip-x, the outer in the
+/* The pointer: two border-triangles centred on --tip-at, the outer in the
    outline's colour and the inner in the panel's, so the outline runs
    unbroken from the body round the apex. */
 .tooltip-pointer {
   position: absolute;
-  left: var(--tip-x, 50%);
+  left: var(--tip-at, 50%);
   width: 0;
   height: 0;
 }
@@ -468,6 +476,60 @@ textarea {
 .tooltip[data-side="above"] .tooltip-pointer::after {
   top: -1px;
   border-top: var(--tip-inner-h) solid var(--panel);
+}
+
+/* Beside it (a Data row), the pointer stands on the edge facing the row,
+   --tip-at down from the top. */
+.tooltip[data-side="right"] .tooltip-pointer,
+.tooltip[data-side="left"] .tooltip-pointer {
+  top: var(--tip-at, 50%);
+}
+
+.tooltip[data-side="right"] .tooltip-pointer {
+  left: 0;
+}
+
+.tooltip[data-side="left"] .tooltip-pointer {
+  left: 100%;
+}
+
+.tooltip[data-side="right"] .tooltip-pointer::before,
+.tooltip[data-side="right"] .tooltip-pointer::after,
+.tooltip[data-side="left"] .tooltip-pointer::before,
+.tooltip[data-side="left"] .tooltip-pointer::after {
+  top: 0;
+  transform: translateY(-50%);
+}
+
+.tooltip[data-side="right"] .tooltip-pointer::before,
+.tooltip[data-side="left"] .tooltip-pointer::before {
+  border-width: calc(var(--tip-pointer-w) / 2) 0;
+}
+
+.tooltip[data-side="right"] .tooltip-pointer::after,
+.tooltip[data-side="left"] .tooltip-pointer::after {
+  border-width: var(--tip-inner-h) 0;
+}
+
+.tooltip[data-side="right"] .tooltip-pointer::before {
+  left: auto;
+  right: 0;
+  border-right: var(--tip-pointer-h) solid var(--edge);
+}
+
+.tooltip[data-side="right"] .tooltip-pointer::after {
+  left: auto;
+  right: -1px;
+  border-right: var(--tip-inner-h) solid var(--panel);
+}
+
+.tooltip[data-side="left"] .tooltip-pointer::before {
+  border-left: var(--tip-pointer-h) solid var(--edge);
+}
+
+.tooltip[data-side="left"] .tooltip-pointer::after {
+  left: -1px;
+  border-left: var(--tip-inner-h) solid var(--panel);
 }
 
 /* A section: a pill tray holding its caps label, then its controls. */

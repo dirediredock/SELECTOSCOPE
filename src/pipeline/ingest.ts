@@ -31,7 +31,7 @@ export const FILE_NAMES: Record<FileKind, string> = {
   layout3d: "layout_3d.csv",
 };
 
-const LAYOUT_FILES: [FileKind, LayoutKind, number][] = [
+const LAYOUT_FILES: ["layout2d" | "layout3d", LayoutKind, number][] = [
   ["layout2d", "bespoke2d", 2],
   ["layout3d", "bespoke3d", 3],
 ];
@@ -210,12 +210,30 @@ export function ingest(texts: DatasetTexts): Ingested {
     droppedEdges: a.length - m,
   };
 
-  const refused: Refusal[] = [];
-  const warnings: Warning[] = [];
   const idxOf = (id: string) => {
     const r = rank.get(id);
     return r === undefined ? undefined : idxOfRank[r];
   };
+  return { graph, report, ...readOptional(texts, n, idxOf) };
+}
+
+export type OptionalTexts = Partial<Record<Exclude<FileKind, "edgelist">, string>>;
+
+export type Attached = Pick<Ingested, "labels" | "layouts" | "refused" | "warnings">;
+
+// Optional files joined onto a graph already built (a curated build or an
+// opened file), by its nodes' ids as the CSVs wrote them. A row for a node
+// the cleaning dropped reads as an id the edge list never names: the graph
+// no longer knows it.
+export function attach(nodeId: string[], texts: OptionalTexts): Attached {
+  const at = new Map(nodeId.map((id, v) => [id, v]));
+  return readOptional(texts, nodeId.length, (id) => at.get(id));
+}
+
+// The labels and layouts, each joined on node_id or refused.
+function readOptional(texts: OptionalTexts, n: number, idxOf: (id: string) => number | undefined): Attached {
+  const refused: Refusal[] = [];
+  const warnings: Warning[] = [];
   let labels: string[] | null = null;
   if (texts.labels !== undefined) {
     const out = join("labels", texts.labels, ["label"], n, idxOf, refused, true);
@@ -248,7 +266,7 @@ export function ingest(texts: DatasetTexts): Ingested {
     if (bad) refused.push({ kind, reason: `${plural(bad, "coordinate")} not a number` });
     else layouts[layout] = flat;
   }
-  return { graph, labels, layouts, report, refused, warnings };
+  return { labels, layouts, refused, warnings };
 }
 
 // The file's value columns per node_idx, or null when refused. With

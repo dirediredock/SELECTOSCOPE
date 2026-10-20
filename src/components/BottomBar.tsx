@@ -321,13 +321,15 @@ function UploadControls({ upload }: { upload: Upload }) {
   );
 }
 
-// A row built from CSVs: its files again, what it has and what it lacks.
-// Replacing the edge list, or adding or removing another file, builds the
-// row again at once.
-function ChangeSection({ id }: { id: string }) {
+// A row of the user's own: its files again, what it has and what it lacks.
+// Replacing a CSV row's edge list, or adding or removing another file,
+// builds the row again at once. A row opened from JSON or copied from a
+// curated dataset has no edge list to replace: its other files go over the
+// graph as it came.
+function ChangeSection({ id, csv }: { id: string; csv: boolean }) {
   return (
-    <Section label="Change" tip={TEXT.dataset.changeTip}>
-      <UserFilePill id={id} kind="edgelist" rebuild />
+    <Section label="Change" tip={csv ? TEXT.dataset.changeTip : TEXT.dataset.changeJsonTip}>
+      {csv && <UserFilePill id={id} kind="edgelist" rebuild />}
       <RowName id={id} />
       {OPTIONAL_KINDS.map((kind) => (
         <UserFilePill key={kind} id={id} kind={kind} rebuild />
@@ -374,18 +376,18 @@ function AddDatasetSection() {
 }
 
 // The Data strip serves what the Data pane has ringed. + New: uploading
-// alone. A dataset: its row's actions, a CSV row's Change, Thumbnails, which
+// alone. A dataset: its row's actions, an own row's Change, Thumbnails, which
 // turns each row into a picture of the dataset's 2D layout, then + New.
 function DatasetControls() {
   const upload = useStore(ui, (s) => s.upload);
   const thumbnails = useStore(ui, (s) => s.thumbnails);
   const current = useStore(data, (s) => s.current);
-  const csv = useStore(userData, (s) => datasetOf(s, current)?.origin === "csv");
+  const origin = useStore(userData, (s) => datasetOf(s, current)?.origin ?? null);
   if (upload) return <UploadControls upload={upload} />;
   return (
     <>
       <DatasetSection />
-      {csv && <ChangeSection id={current!} />}
+      {origin && <ChangeSection id={current!} csv={origin === "csv"} />}
       <Section label="Show" tip={TEXT.dataset.thumbnailsTip}>
         <Switch label="Thumbnails" on={thumbnails} onToggle={toggleThumbnails} />
       </Section>

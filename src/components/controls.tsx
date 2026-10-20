@@ -9,7 +9,7 @@ import { TEXT } from "../controlText";
 // One labelled group of controls, like the top strip's Selection set, on its own
 // tray. The caps label names the group, so a bare "Run" or "Retry" is read in
 // its context. A live tray is white: the Selection set, the Selection count
-// and Auto Sweep. A tray's tip (docs/tooltips.txt, where a tray may have
+// and Auto Sweep. A tray's tip (docs/tooltips_ui.txt, where a tray may have
 // none) covers the whole tray, and the controls inside have none (but a file
 // pill's report). Why: one target per question, large enough to rest on.
 export function Section(props: { label: string; tip?: string; live?: boolean; idle?: boolean; children: ReactNode }) {

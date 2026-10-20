@@ -1,6 +1,6 @@
 import { createStore } from "../../state/createStore";
 
-// Help's sections, in docs/help.txt's order, for its strip's Sections.
+// Help's sections, in docs/help_pane.txt's order, for its strip's Sections.
 export const HELP_SECTIONS = [
   { id: "start", label: "Quick start" },
   { id: "select", label: "Selection controls" },

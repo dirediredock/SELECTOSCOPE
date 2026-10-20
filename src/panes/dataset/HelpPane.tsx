@@ -38,7 +38,7 @@ let savedScroll = 0;
 // How long the scrollbar stays after the last scroll, as in VirtualList.
 const SCROLLBAR_IDLE_MS = 1000;
 
-// The Data slot's other face: docs/help.txt, word for word, with an inert
+// The Data slot's other face: docs/help_pane.txt, word for word, with an inert
 // copy of each control it names and diagrams of what the panes draw. It
 // scrolls as the Data list does (a drag or Space + drag, the same slim
 // scrollbar), with no hover, no selection and no Contrast fade, since it is
@@ -550,9 +550,14 @@ export function HelpPane() {
           </Replica>
           <p>
             To build a dataset, the main file format is the EDGELIST, a CSV file with 'source' and 'target' columns, one
-            edge per row. Selectoscope automatically cleans the edgelist information: edge direction is ignored,
-            self-loops are removed, duplicate edges are merged, and only the largest connected component is kept. Click ADD to
-            build.
+            edge per row. Column names can be in any case ('Source' reads as 'source'). Nodes must match across CSVs
+            under a 'node_id' column, where values are treated as plain trimmed strings. Can be any text, but must match
+            exactly across EDGELIST, LABELS, and BESPOKE 2D and BESPOKE 3D files. For example, "1" and "01" count as
+            different 'node_id' entries.
+          </p>
+          <p>
+            Selectoscope automatically cleans the edgelist information: edge direction is ignored, self-loops are removed,
+            duplicate edges are merged, and only the largest connected component is kept. Click ADD to build.
           </p>
           <Replica>
             <FilePill name="Edgelist" added={false} accent="key" onPick={none} />
@@ -582,7 +587,11 @@ export function HelpPane() {
           <Replica>
             <Action onClick={none}>Export JSON</Action>
           </Replica>
-          <p>The curated datasets are already built and ready to use.</p>
+          <p>
+            The curated datasets are already built and ready to use. A curated dataset, or one opened from JSON, can
+            still take LABELS and BESPOKE layouts, added under the message in the LABELS or NODELINK pane. On a curated
+            dataset this makes a copy of your own under UPLOADED, and the curated one stays as it is.
+          </p>
         </Sec>
       </div>
     </div>

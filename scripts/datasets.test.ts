@@ -6,6 +6,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
+import { parseTooltipLines } from "../src/tooltipLines";
 import { column, parseCsv } from "../src/pipeline/csv";
 
 const datasets = join(dirname(fileURLToPath(import.meta.url)), "..", "public", "datasets");
@@ -22,14 +23,22 @@ const names = column(manifest, "name")!;
 
 describe("curated datasets", () => {
   it("has a manifest with a folder per row", () => {
-    expect(manifest.header).toEqual(["name", "title", "group", "view", "note"]);
+    expect(manifest.header).toEqual(["name", "title", "group", "view"]);
     expect(names.length).toBeGreaterThan(50);
     for (const name of names) expect(existsSync(join(datasets, name, "edgelist.csv")), name).toBe(true);
   });
 
-  // A note is its row's tooltip, so it ends as every tooltip does.
-  it("ends every note with a full stop", () => {
-    for (const [i, note] of column(manifest, "note")!.entries()) if (note) expect(note.endsWith("."), names[i]).toBe(true);
+  // docs/tooltips_data.txt: one line per dataset, in manifest order under
+  // its group's heading, each ending as every tooltip does.
+  it("has a tooltip for every dataset, under its group", () => {
+    const text = readFileSync(join(datasets, "..", "..", "docs", "tooltips_data.txt"), "utf8");
+    const lines = parseTooltipLines(text, "docs/tooltips_data.txt");
+    const groups = column(manifest, "group")!;
+    expect(lines.map((l) => l.label)).toEqual(names);
+    lines.forEach((l, i) => {
+      expect(l.heading, l.label).toBe(groups[i].toUpperCase());
+      expect(l.text.endsWith("."), l.label).toBe(true);
+    });
   });
 
   it.each(names)("%s parses, and its layouts cover every node once", (name) => {
