@@ -99,8 +99,8 @@ function Intro({ text, onHeight }: { text: string; onHeight: (text: string, h: n
 // Thumbnails turns each dataset row into a tile the pane's width, a picture
 // of the dataset's 2D layout over its title; an uploaded one's fills in once
 // its layout lands. The curated groups' first header opens with a sentence on
-// what they are. A curated row's tooltip says what its nodes and edges are
-// (docs/tooltips_data.txt).
+// what they are. A curated row's tooltip says what its nodes and edges are,
+// and cites where they came from (docs/tooltips_data.txt).
 // The strip's + New stands for the + New row: hovering it glides the list to
 // the top with that row hovered, and leaving glides back to the ringed row.
 // When another pane takes focus the list glides the ringed row to its middle,
@@ -301,6 +301,7 @@ export function DatasetPane({ slot }: { slot: SlotId }) {
             aria-current={item.current || undefined}
             data-tip={item.tip}
             data-tip-wide={item.tip ? "" : undefined}
+            data-tip-side={item.tip ? "right" : undefined}
             onClick={item.onClick}
           >
             <span className="list-text">{item.title}</span>

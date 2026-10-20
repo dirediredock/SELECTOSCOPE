@@ -7,7 +7,8 @@ import type { TipBlock } from "./report";
 // carries its text in `data-tip`; this layer, mounted once, shows it after
 // the pointer rests on
 // it, and at once on keyboard focus: under it, but over it in the bottom
-// strip, so a tip always opens toward the pane row. Every tip is an outlined
+// strip, so a tip always opens toward the pane row; a Data row's opens beside
+// it (`data-tip-side="right"`). Every tip is an outlined
 // talk bubble whose pointer marks its anchor. While shown it describes its
 // anchor (`aria-describedby`), and its text follows the anchor's, so a choice
 // or a state change inside a tray reads at once. A file pill's only tip is its
@@ -32,8 +33,10 @@ const POINTER_INSET = 22.2;
 export interface TipPlace {
   left: number;
   top: number;
-  side: "below" | "above"; // where the bubble sits, so the pointer faces the control
-  pointerX: number; // the pointer's centre, from the bubble's left edge
+  side: "below" | "above" | "right" | "left"; // where the bubble sits, so the pointer faces the control
+  // The pointer's centre along the edge facing the control: from the bubble's
+  // left edge below or above it, from its top edge to its right or left.
+  pointer: number;
 }
 
 // Centred on the anchor, clamped inside the window, on the side `prefer`
@@ -58,8 +61,26 @@ export function placeTip(
   const fitsAbove = above >= margin;
   const side = keep ? prefer : prefer === "above" ? (fitsAbove || !fitsBelow ? "above" : "below") : fitsBelow ? "below" : "above";
   const top = side === "below" ? below : Math.max(margin, above);
-  const pointerX = tip.width < 2 * inset ? tip.width / 2 : Math.min(Math.max(centre - left, inset), tip.width - inset);
-  return { left, top, side, pointerX };
+  const pointer = tip.width < 2 * inset ? tip.width / 2 : Math.min(Math.max(centre - left, inset), tip.width - inset);
+  return { left, top, side, pointer };
+}
+
+// Beside the anchor: to its right, or its left when there is no room there,
+// centred on its middle and clamped inside the window. The pointer stays on
+// the anchor's middle as far as the bubble's ends allow. Why: a Data row's
+// tip is long, and below the row it would cover the rows under it.
+export function placeTipBeside(anchor: DOMRect, tip: { width: number; height: number }, win: { width: number; height: number }): TipPlace {
+  const gap = scaled(GAP);
+  const margin = scaled(MARGIN);
+  const inset = scaled(POINTER_INSET);
+  const right = anchor.right + gap;
+  const leftOf = anchor.left - gap - tip.width;
+  const side = right + tip.width + margin <= win.width || leftOf < margin ? "right" : "left";
+  const left = Math.max(margin, Math.min(side === "right" ? right : leftOf, win.width - tip.width - margin));
+  const middle = anchor.top + anchor.height / 2;
+  const top = Math.min(Math.max(middle - tip.height / 2, margin), Math.max(margin, win.height - tip.height - margin));
+  const pointer = tip.height < 2 * inset ? tip.height / 2 : Math.min(Math.max(middle - top, inset), tip.height - inset);
+  return { left, top, side, pointer };
 }
 
 // Help writes other controls' names in caps (NODES, EXTEND SET); a tip sets
@@ -250,17 +271,20 @@ export function TooltipLayer() {
       return;
     }
     // Toward the pane row, unless the anchor names its side, which it keeps (a
-    // pane header: above, over the top strip).
+    // pane header: above, over the top strip), or asks for the right (a Data
+    // row: beside it, flipping left where there is no room).
     const side = shown.el.dataset.tipSide;
     const named = side === "above" || side === "below";
     const prefer = named ? side : shown.el.closest(".bottombar") ? "above" : "below";
     const win = { width: window.innerWidth, height: window.innerHeight };
-    setPlace(placeTip(shown.el.getBoundingClientRect(), el.getBoundingClientRect(), win, prefer, named));
+    const anchorBox = shown.el.getBoundingClientRect();
+    const tipBox = el.getBoundingClientRect();
+    setPlace(side === "right" ? placeTipBeside(anchorBox, tipBox, win) : placeTip(anchorBox, tipBox, win, prefer, named));
   }, [shown]);
 
   // Whole px, so the outline and its pointer land on the pixel grid.
   const style = place
-    ? ({ left: Math.round(place.left), top: Math.round(place.top), "--tip-x": `${Math.round(place.pointerX)}px` } as CSSProperties)
+    ? ({ left: Math.round(place.left), top: Math.round(place.top), "--tip-at": `${Math.round(place.pointer)}px` } as CSSProperties)
     : undefined;
   return (
     <div ref={box} id={id} role="tooltip" className={`tooltip${shown && place ? " is-shown" : ""}${shown?.el.dataset.tipWide !== undefined ? " is-wide" : ""}`} data-side={place?.side} style={style}>

@@ -1,21 +1,21 @@
 EXAMPLES
 
-example_onion: Example graph that illustrates onion decomposition. From Hébert-Dufresne, Grochow, Allard. (2016). Multi-scale structure and topological anomaly detection via a new network statistic: The onion decomposition. Scientific Reports, 6(1), 31708.
+example_onion: Example graph that illustrates onion decomposition. From Hébert-Dufresne, Grochow, Allard (2016). Multi-scale structure and topological anomaly detection via a new network statistic: The onion decomposition. Scientific Reports, 6(1), 31708.
 
-barbell_multidensity: Two seven-node cliques joined by a path of four nodes.
+barbell_multidensity: Two seven-node cliques joined by a path of four nodes: two dense regions with a sparse one between.
 
-les_miserables_multidensity: Two mirror copies of Les Misérables joined at the most peripheric node by a new edge; nodes are characters, and an edge joins two who appear in the same scene.
+les_miserables_multidensity: Two mirror copies of Les Misérables, far apart: a new edge joins the two copies of its most peripheral character; nodes are characters, and an edge joins two who appear in the same scene.
 
-game_thrones_multidensity: Two mirror copies of Game of Thrones joined at the most peripheric node by a new edge; nodes are characters, and an edge joins two named near each other in the text.
+game_thrones_multidensity: Two mirror copies of Game of Thrones, far apart: a new edge joins the two copies of its most peripheral character; nodes are characters, and an edge joins two named near each other in the text.
 
-tree_binomial: The binomial tree B7; nodes are vertices, and an edge joins a parent to its child.
+tree_binomial: The binomial tree B7; an edge joins a parent to its child.
 
 
 SPHERE
 
-fullerene_structures_C1500: A molecule of 1500 atoms; nodes are carbon atoms, and an edge is a bond.
+fullerene_structures_C1500: A giant fullerene molecule of 1500 atoms; nodes are carbon atoms, and an edge is a bond. From Aref, Wilson (2019). Balance and frustration in signed networks. Journal of Complex Networks, 7(2), 163–189.
 
-fullerene_structures_C3840: A molecule of 3840 atoms; nodes are carbon atoms, and an edge is a bond.
+fullerene_structures_C3840: A giant fullerene molecule of 3840 atoms; nodes are carbon atoms, and an edge is a bond. From Aref, Wilson (2019). Balance and frustration in signed networks. Journal of Complex Networks, 7(2), 163–189.
 
 icosphere_2562: A subdivided icosahedron; nodes are mesh vertices, and an edge is a side of a triangle.
 
@@ -24,28 +24,28 @@ icosphere_6252: A subdivided icosahedron; nodes are mesh vertices, and an edge i
 
 FLAT
 
-lattice_squares_4096: A square tiling; nodes are the corners of the squares, and edges are the sides.
+lattice_squares_4096: A square tiling; nodes are the corners of the squares, and an edge is a side.
 
-lattice_monotiles_5992: A disc of the hat aperiodic monotile tiling; nodes are tile corners, and an edge is a tile side. From Smith, Myers, Kaplan, Goodman-Strauss. (2023). An aperiodic monotile. Arxiv preprint.
+lattice_monotiles_5992: A disc of the hat aperiodic monotile tiling; nodes are tile corners, and an edge is a tile side. From Smith et al. (2024). An aperiodic monotile. Combinatorial Theory, 4(1).
 
-lattice_penrose_5981: A disc of a Penrose tiling; nodes are tile corners, and an edge is a tile side.
+lattice_penrose_5981: A disc of an aperiodic Penrose tiling; nodes are tile corners, and an edge is a tile side.
 
 fibonacci_sunflower: Points on a Fibonacci spiral, as seeds sit in a sunflower; an edge joins neighbouring points.
 
 
 GEOMETRIC
 
-spot: A toy cow mesh; nodes are mesh vertices, and an edge is a side of a triangle. From Keenan Crane's 3D Model Repository (cs.cmu.edu/~kmcrane/Projects/ModelRepository) 
+spot: A toy cow mesh; nodes are mesh vertices, and an edge is a side of a triangle. From Keenan Crane's 3D Model Repository (cs.cmu.edu/~kmcrane/Projects/ModelRepository).
 
-stanford_bunny: A scanned bunny mesh; nodes are mesh vertices, and an edge is a side of a triangle. From Stanford 3D Scanning Repository (graphics.stanford.edu/data/3Dscanrep).
+stanford_bunny: A scanned bunny mesh; nodes are mesh vertices, and an edge is a side of a triangle. From the Stanford 3D Scanning Repository (graphics.stanford.edu/data/3Dscanrep).
 
 torus_2560: A triangulated torus, 80 by 32; nodes are mesh vertices, and an edge is a side of a triangle.
 
-bob: A toy duck mesh; nodes are mesh vertices, and an edge is a side of a triangle. From Keenan Crane's 3D Model Repository (cs.cmu.edu/~kmcrane/Projects/ModelRepository) 
+bob: A toy duck mesh; nodes are mesh vertices, and an edge is a side of a triangle. From Keenan Crane's 3D Model Repository (cs.cmu.edu/~kmcrane/Projects/ModelRepository).
 
 cylinder_2560: A square grid wrapped into an open tube, 80 by 32; nodes are grid points, and an edge is a grid side.
 
-oloid: An oloid mesh; nodes are mesh vertices, and an edge is a side of a triangle. From Keenan Crane's 3D Model Repository (cs.cmu.edu/~kmcrane/Projects/ModelRepository) 
+oloid: An oloid mesh; nodes are mesh vertices, and an edge is a side of a triangle. From Keenan Crane's 3D Model Repository (cs.cmu.edu/~kmcrane/Projects/ModelRepository).
 
 
 FRACTAL
@@ -63,95 +63,95 @@ dragon_curve_4961: The Heighway dragon, folded 13 times; nodes are the points th
 
 LITERARY
 
-les_miserables: Nodes are characters in Hugo's novel; an edge joins two who appear in the same scene.
+les_miserables: Nodes are characters in Hugo's novel; an edge joins two who appear in the same scene. From Knuth (1993). The Stanford GraphBase. Addison-Wesley.
 
-game_thrones: Nodes are characters in A Storm of Swords; an edge joins two named near each other in the text.
+game_thrones: Nodes are characters in A Storm of Swords; an edge joins two named near each other in the text. From Beveridge, Shan (2016). Network of Thrones. Math Horizons, 23(4), 18–22.
 
-star_wars: Nodes are characters in Episodes I to VII; an edge joins two who speak in the same scene.
+star_wars: Nodes are characters in Episodes I to VII; an edge joins two who speak in the same scene. From Gabasova's star-wars-network-data (github.com/evelinag/star-wars-network-data). Licence CC BY 3.0.
 
 
 LANGUAGE
 
-indo_european: Nodes are Indo-European languages and the subgroups they belong to; an edge joins a subgroup to a member.
+indo_european: Nodes are Indo-European languages and the subgroups they belong to; an edge joins a subgroup to a member. From Glottolog 5.3 (glottolog.org). Licence CC BY 4.0.
 
-word_ladder: Nodes are five-letter English words; an edge joins two that differ in one letter.
+word_ladder: Nodes are five-letter English words; an edge joins two that differ in one letter. From the Stanford GraphBase (cs.stanford.edu/~knuth/sgb.html).
 
 
 WIKIPEDIA
 
-wiki_science: Nodes are Wikipedia articles on academic fields; an edge joins two with similar text.
+wiki_science: Nodes are Wikipedia articles on academic fields; an edge joins two with similar text. From Calderone (2020). A Wikipedia Based Map of Science. Figshare.
 
-thinkers: Nodes are thinkers on Wikipedia; an edge joins two when one influenced the other.
+thinkers: Nodes are thinkers on Wikipedia; an edge joins two when one influenced the other. From DBpedia (dbpedia.org). Licence CC BY-SA 3.0.
 
-mathematicians: Nodes are scholars on Wikipedia, at least one of each pair a mathematician; an edge joins an advisor and a student.
+mathematicians: Nodes are scholars on Wikipedia, at least one of each pair a mathematician; an edge joins an advisor and a student. From DBpedia (dbpedia.org). Licence CC BY-SA 3.0.
 
-programming_languages: Nodes are programming languages on Wikipedia; an edge joins two when one influenced the other.
+programming_languages: Nodes are programming languages on Wikipedia; an edge joins two when one influenced the other. From DBpedia (dbpedia.org). Licence CC BY-SA 3.0.
 
-music_genres: Nodes are music genres on Wikipedia; an edge joins a genre to one it came from, a subgenre or a fusion.
+music_genres: Nodes are music genres on Wikipedia; an edge joins a genre to one it came from, a subgenre or a fusion. From DBpedia (dbpedia.org). Licence CC BY-SA 3.0.
 
-jazz_musicians: Nodes are jazz musicians and bands on Wikipedia; an edge joins two listed as associated acts.
+jazz_musicians: Nodes are jazz musicians and bands on Wikipedia; an edge joins two listed as associated acts. From DBpedia (dbpedia.org). Licence CC BY-SA 3.0.
 
-amazon: Nodes are rivers of the Amazon basin on Wikipedia; an edge joins a river to the one it flows into.
+amazon: Nodes are rivers of the Amazon basin on Wikipedia; an edge joins a river to the one it flows into. From DBpedia (dbpedia.org). Licence CC BY-SA 3.0.
 
 
 SOCIAL
 
-karate_club: Nodes are members of a university karate club; an edge joins two who met outside the club. The labels are the two factions it split into.
+karate_club: Nodes are members of a university karate club; an edge joins two who met outside the club. The labels are the two factions it split into. From Zachary (1977). An information flow model for conflict and fission in small groups. Journal of Anthropological Research, 33(4), 452–473.
 
-netscience: Nodes are network scientists; an edge joins two who wrote a paper together.
+netscience: Nodes are network scientists; an edge joins two who wrote a paper together. From Newman (2006). Finding community structure in networks using the eigenvectors of matrices. Physical Review E, 74(3), 036104.
 
-dolphins: Nodes are bottlenose dolphins of Doubtful Sound; an edge joins two often seen together.
+dolphins: Nodes are bottlenose dolphins of Doubtful Sound; an edge joins two often seen together. From Lusseau et al. (2003). The bottlenose dolphin community of Doubtful Sound features a large proportion of long-lasting associations. Behavioral Ecology and Sociobiology, 54(4), 396–405.
 
 
 BIOLOGICAL
 
-plant_pollinator_kato: Nodes are plants and insects in a Kyoto beech forest; an edge joins an insect to a plant it visits.
+plant_pollinator_kato: Nodes are plants and insects in a Kyoto beech forest; an edge joins an insect to a plant it visits. From Kato et al. (1990). Insect-flower relationship in the primary beech forest of Ashu, Kyoto: an overview of the flowering phenology and seasonal pattern of insect visits. Contributions from the Biological Laboratory, Kyoto University, 27, 309–375.
 
-plant_pollinator_robertson: Nodes are plants and insects in Illinois; an edge joins an insect to a plant it visits.
+plant_pollinator_robertson: Nodes are plants and insects in Illinois; an edge joins an insect to a plant it visits. From Robertson (1929). Flowers and Insects: Lists of Visitors of Four Hundred and Fifty-Three Flowers. Carlinville, IL.
 
-green_fluorescent_protein: Nodes are the residues of the jellyfish protein; an edge joins two whose alpha carbons lie within 8 Å.
+green_fluorescent_protein: Nodes are the residues of the jellyfish protein; an edge joins two whose alpha carbons lie within 8 armstrongs. From the RCSB Protein Data Bank (rcsb.org), entry 1EMA.
 
-hemoglobin: Nodes are the residues of human hemoglobin's four chains; an edge joins two whose alpha carbons lie within 8 Å.
+hemoglobin: Nodes are the residues of human hemoglobin's four chains; an edge joins two whose alpha carbons lie within 8 armstrongs. From the RCSB Protein Data Bank (rcsb.org), entry 4HHB.
 
-groel_ring: Nodes are the residues of one seven-fold ring of a bacterial chaperonin; an edge joins two whose alpha carbons lie within 8 Å.
+groel_ring: Nodes are the residues of one seven-fold ring of a bacterial chaperonin; an edge joins two whose alpha carbons lie within 8 armstrongs. From the RCSB Protein Data Bank (rcsb.org), entry 1AON.
 
-celegans_male_gap_junction: Nodes are neurons of the male nematode; an edge is a gap junction between two.
+celegans_male_gap_junction: Nodes are neurons of the male nematode; an edge is a gap junction between two. From Cook et al. (2019). Whole-animal connectomes of both Caenorhabditis elegans sexes. Nature, 571(7763), 63–71.
 
-human_connectome: Nodes are brain regions; an edge joins two linked by fibre tracts, averaged over many people. From braingraph.org, averaged over OASIS-3 participants. Data were provided in part by OASIS-3: Principal Investigators: T. Benzinger, D. Marcus, J. Morris; NIH P30 AG066444, P50 AG00561, P30 NS09857781, P01 AG026276, P01 AG003991, R01 AG043434, UL1 TR000448, R01 EB009352.
+human_connectome: Nodes are brain regions; an edge joins two linked by fibre tracts, averaged over OASIS-3 participants. From braingraph.org. Data were provided in part by OASIS-3: Principal Investigators: T. Benzinger, D. Marcus, J. Morris; NIH P30 AG066444, P50 AG00561, P30 NS09857781, P01 AG026276, P01 AG003991, R01 AG043434, UL1 TR000448, R01 EB009352.
 
 
 INFRASTRUCTURE
 
-power: Nodes are generators, transformers and substations of the Western US grid; an edge is a power line.
+power: Nodes are generators, transformers and substations of the Western US grid; an edge is a power line. From Watts, Strogatz (1998). Collective dynamics of 'small-world' networks. Nature, 393(6684), 440–442.
 
-european_power_grid: Nodes are European substations at 330 kV and above, at geographic positions; an edge is a line between two.
+european_power_grid: Nodes are European substations at 330 kV and above, at geographic positions; an edge is a line between two. From the GridKit European extract (zenodo.org/records/47317). Licence ODbL.
 
-internet_top_pop: Nodes are backbone points of presence of a Midwest fiber network, at geographic positions; an edge is a link between two.
+internet_top_pop: Nodes are backbone points of presence of a Midwest fiber network, at geographic positions; an edge is a link between two. From Knight et al. (2011). The Internet Topology Zoo. IEEE Journal on Selected Areas in Communications, 29(9), 1765–1775.
 
 
 TRANSPORTATION
 
-london_transport: Nodes are Tube, Overground and DLR stations, at geographic positions; an edge joins two stations next to each other on a line.
+london_transport: Nodes are Tube, Overground and DLR stations, at geographic positions; an edge joins two stations next to each other on a line. From De Domenico et al. (2014). Navigability of interconnected networks under random failures. Proceedings of the National Academy of Sciences, 111(23), 8351–8356. Licence ODbL.
 
-urban_streets_ahmedabad: Nodes are street intersections in a square mile of Ahmedabad, at geographic positions; an edge is a street segment.
+urban_streets_ahmedabad: Nodes are street intersections in a square mile of Ahmedabad, at geographic positions; an edge is a street segment. From Crucitti, Latora, Porta (2006). Centrality measures in spatial networks of urban streets. Physical Review E, 73(3), 036125.
 
-urban_streets_savannah: Nodes are street intersections in a square mile of Savannah, at geographic positions; an edge is a street segment. From Crucitti, Latora, Porta. (2006). Centrality measures in spatial networks of urban streets. Physics Review 73, 036125.
+urban_streets_savannah: Nodes are street intersections in a square mile of Savannah, at geographic positions; an edge is a street segment. From Crucitti, Latora, Porta (2006). Centrality measures in spatial networks of urban streets. Physical Review E, 73(3), 036125.
 
-eu_airlines: Nodes are European airports, at geographic positions; an edge joins two with a direct flight on any airline.
+eu_airlines: Nodes are European airports, at geographic positions; an edge joins two with a direct flight on any airline. From Cardillo et al. (2013). Emergence of network features from multiplexity. Scientific Reports, 3(1), 1344.
 
 
 SOFTWARE
 
-cfg_nw_main: Nodes are the basic blocks of a C function; an edge joins two when control can pass from one to the other. Shared by the systems network corpus maintainers for use here; the corpus has no licence file.
+cfg_nw_main: Nodes are the basic blocks of a C function; an edge joins two when control can pass from one to the other. From the systems network corpus (github.com/utah-vis-collective/systems-network-corpus), shared by its maintainers for use here; it has no licence file.
 
-cfg_gsm_quantization: Nodes are the basic blocks of a C function; an edge joins two when control can pass from one to the other. Shared by the systems network corpus maintainers for use here; the corpus has no licence file.
+cfg_gsm_quantization: Nodes are the basic blocks of a C function; an edge joins two when control can pass from one to the other. From the systems network corpus (github.com/utah-vis-collective/systems-network-corpus), shared by its maintainers for use here; it has no licence file.
 
-cfg_susan_corners: Nodes are the basic blocks of a C function; an edge joins two when control can pass from one to the other. Shared by the systems network corpus maintainers for use here; the corpus has no licence file.
+cfg_susan_corners: Nodes are the basic blocks of a C function; an edge joins two when control can pass from one to the other. From the systems network corpus (github.com/utah-vis-collective/systems-network-corpus), shared by its maintainers for use here; it has no licence file.
 
-cfg_particlefilter: Nodes are the basic blocks of a C function; an edge joins two when control can pass from one to the other. Shared by the systems network corpus maintainers for use here; the corpus has no licence file.
+cfg_particlefilter: Nodes are the basic blocks of a C function; an edge joins two when control can pass from one to the other. From the systems network corpus (github.com/utah-vis-collective/systems-network-corpus), shared by its maintainers for use here; it has no licence file.
 
-cfg_lame_psycho: Nodes are the basic blocks of a C function; an edge joins two when control can pass from one to the other. Shared by the systems network corpus maintainers for use here; the corpus has no licence file.
+cfg_lame_psycho: Nodes are the basic blocks of a C function; an edge joins two when control can pass from one to the other. From the systems network corpus (github.com/utah-vis-collective/systems-network-corpus), shared by its maintainers for use here; it has no licence file.
 
-cfg_lout_manifest: Nodes are the basic blocks of a C function; an edge joins two when control can pass from one to the other. Shared by the systems network corpus maintainers for use here; the corpus has no licence file.
+cfg_lout_manifest: Nodes are the basic blocks of a C function; an edge joins two when control can pass from one to the other. From the systems network corpus (github.com/utah-vis-collective/systems-network-corpus), shared by its maintainers for use here; it has no licence file.
 
-cfg_lout_parse: Nodes are the basic blocks of a C function; an edge joins two when control can pass from one to the other. Shared by the systems network corpus maintainers for use here; the corpus has no licence file.
+cfg_lout_parse: Nodes are the basic blocks of a C function; an edge joins two when control can pass from one to the other. From the systems network corpus (github.com/utah-vis-collective/systems-network-corpus), shared by its maintainers for use here; it has no licence file.
