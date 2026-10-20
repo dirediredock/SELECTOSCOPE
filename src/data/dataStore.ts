@@ -40,6 +40,8 @@ export interface DatasetEntry {
   nodes: number;
   edges: number;
   has_labels: boolean;
+  // The row's tooltip, where the dataset has one: a licence, an acknowledgement.
+  note?: string;
 }
 
 export interface DataState {
