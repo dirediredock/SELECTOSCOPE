@@ -142,16 +142,16 @@ eu_airlines: Nodes are European airports, at geographic positions; an edge joins
 
 SOFTWARE
 
-cfg_nw_main: Nodes are the basic blocks of a C function; an edge joins two when control can pass from one to the other. From the systems network corpus (github.com/utah-vis-collective/systems-network-corpus), shared by its maintainers for use here; it has no license file.
+cfg_nw_main: Basic blocks of Needleman–Wunsch, which aligns two sequences by filling a score grid; an edge is a possible jump. From github.com/utah-vis-collective/systems-network-corpus.
 
-cfg_gsm_quantization: Nodes are the basic blocks of a C function; an edge joins two when control can pass from one to the other. From the systems network corpus (github.com/utah-vis-collective/systems-network-corpus), shared by its maintainers for use here; it has no license file.
+cfg_gsm_quantization: Basic blocks of the GSM speech codec's quantizer, which rounds vocal-tract coefficients to a few bits, with no loops; an edge is a possible jump. From github.com/utah-vis-collective/systems-network-corpus.
 
-cfg_susan_corners: Nodes are the basic blocks of a C function; an edge joins two when control can pass from one to the other. From the systems network corpus (github.com/utah-vis-collective/systems-network-corpus), shared by its maintainers for use here; it has no license file.
+cfg_susan_corners: Basic blocks of the SUSAN corner detector, which marks pixels whose neighbours mostly differ in brightness; an edge is a possible jump. From github.com/utah-vis-collective/systems-network-corpus.
 
-cfg_particlefilter: Nodes are the basic blocks of a C function; an edge joins two when control can pass from one to the other. From the systems network corpus (github.com/utah-vis-collective/systems-network-corpus), shared by its maintainers for use here; it has no license file.
+cfg_particlefilter: Basic blocks of a particle filter, which tracks an object through video with a cloud of weighted guesses; an edge is a possible jump. From github.com/utah-vis-collective/systems-network-corpus.
 
-cfg_lame_psycho: Nodes are the basic blocks of a C function; an edge joins two when control can pass from one to the other. From the systems network corpus (github.com/utah-vis-collective/systems-network-corpus), shared by its maintainers for use here; it has no license file.
+cfg_lame_psycho: Basic blocks of LAME's psychoacoustic model, which decides which sounds an MP3 can drop unheard; an edge is a possible jump. From github.com/utah-vis-collective/systems-network-corpus.
 
-cfg_lout_manifest: Nodes are the basic blocks of a C function; an edge joins two when control can pass from one to the other. From the systems network corpus (github.com/utah-vis-collective/systems-network-corpus), shared by its maintainers for use here; it has no license file.
+cfg_lout_manifest: Basic blocks of the Lout typesetter's evaluator, which expands each symbol into its definition; an edge is a possible jump. From github.com/utah-vis-collective/systems-network-corpus.
 
-cfg_lout_parse: Nodes are the basic blocks of a C function; an edge joins two when control can pass from one to the other. From the systems network corpus (github.com/utah-vis-collective/systems-network-corpus), shared by its maintainers for use here; it has no license file.
+cfg_lout_parse: Basic blocks of the Lout typesetter's parser, which reads tokens into a tree of objects; an edge is a possible jump. From github.com/utah-vis-collective/systems-network-corpus.
