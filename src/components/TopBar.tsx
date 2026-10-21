@@ -139,7 +139,11 @@ export function TopBar() {
     <header className="topbar">
       <div className="topbar-left">
         <Logo />
-        <h1 className="title">Selectoscope</h1>
+        <h1 className="title">
+          <a href="https://github.com/dirediredock/SELECTOSCOPE" target="_blank" rel="noopener noreferrer">
+            Selectoscope
+          </a>
+        </h1>
       </div>
 
       <div className="topbar-center">
