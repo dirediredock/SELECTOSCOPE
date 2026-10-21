@@ -43,63 +43,63 @@ The datasets are listed as the Data pane lists them: by group, numbered in its o
 | 16 | `torus_2560` | Synthetic | — | A triangulated torus, 80 × 32 |
 | 17 | `bob` | [Keenan Crane's 3D Model Repository](https://www.cs.cmu.edu/~kmcrane/Projects/ModelRepository/), `bob_isotropic.obj` | K. Crane (license CC0 1.0) | A toy duck mesh; vertex positions as the 3D layout |
 | 18 | `cylinder_2560` | Synthetic | — | A square grid wrapped into an open tube, 80 × 32 |
-| 19 | `oloid` | [Keenan Crane's 3D Model Repository](https://www.cs.cmu.edu/~kmcrane/Projects/ModelRepository/), `oloid.zip`, `oloid1024_tri.obj` | K. Crane (license CC0 1.0); the shape is Paul Schatz's (1929) | An oloid mesh; vertex positions as the 3D layout |
 
 ## Fractal
 
 | # | Dataset | Origin | Citation | Notes |
 |--:|---|---|---|---|
-| 20 | `sierpinski_triangle_3282` | Synthetic | — | The Sierpiński triangle |
-| 21 | `sierpinski_square_5280` | Synthetic | W. Sierpiński, "Sur une courbe cantorienne qui contient une image biunivoque et continue de toute courbe donnée", *C. R. Acad. Sci. Paris* 162, 629–632 (1916) | The Sierpiński carpet, level 4 |
-| 22 | `sierpinski_tetrahedron_2050` | Synthetic | — | The Sierpiński tetrahedron |
-| 23 | `sierpinski_cube_5328` | Synthetic | K. Menger, "Allgemeine Räume und Cartesische Räume", *Proc. Akad. Wetensch. Amsterdam* 29, 476–482 (1926) | The Menger sponge, level 2 |
-| 24 | `dragon_curve_4961` | Synthetic | M. Gardner, "Mathematical Games", *Scientific American* 216(3), 124–125 (1967), describing J. Heighway's dragon | The Heighway dragon, folded 13 times |
+| 19 | `sierpinski_triangle_3282` | Synthetic | — | The Sierpiński triangle |
+| 20 | `sierpinski_square_5280` | Synthetic | W. Sierpiński, "Sur une courbe cantorienne qui contient une image biunivoque et continue de toute courbe donnée", *C. R. Acad. Sci. Paris* 162, 629–632 (1916) | The Sierpiński carpet, level 4 |
+| 21 | `sierpinski_tetrahedron_2050` | Synthetic | — | The Sierpiński tetrahedron |
+| 22 | `sierpinski_cube_5328` | Synthetic | K. Menger, "Allgemeine Räume und Cartesische Räume", *Proc. Akad. Wetensch. Amsterdam* 29, 476–482 (1926) | The Menger sponge, level 2 |
+| 23 | `dragon_curve_4961` | Synthetic | M. Gardner, "Mathematical Games", *Scientific American* 216(3), 124–125 (1967), describing J. Heighway's dragon | The Heighway dragon, folded 13 times |
 
 ## Literary
 
 | # | Dataset | Origin | Citation | Notes |
 |--:|---|---|---|---|
-| 25 | `les_miserables` | Netzschleuder `lesmis` | D. E. Knuth, *The Stanford GraphBase*, Addison-Wesley (1993) | Scene coappearances; weights dropped |
-| 26 | `game_thrones` | [Netzschleuder](https://networks.skewed.de) network catalog (Tiago P. Peixoto), `game_thrones` | A. Beveridge and J. Shan, "Network of Thrones", *Math Horizons* 23(4), 18–22 (2016) | Character coappearances in *A Storm of Swords*; weights dropped |
-| 27 | `star_wars` | `starwars-full-interactions-allCharacters.json` from E. Gabasova's [star-wars-network-data](https://github.com/evelinag/star-wars-network-data) | E. Gabasova, "Star Wars social network", Zenodo, doi:10.5281/zenodo.1411479 (license CC BY 3.0) | Characters who speak in the same scene, Episodes I–VII; weights dropped, largest component |
+| 24 | `les_miserables` | Netzschleuder `lesmis` | D. E. Knuth, *The Stanford GraphBase*, Addison-Wesley (1993) | Scene coappearances; weights dropped |
+| 25 | `game_thrones` | [Netzschleuder](https://networks.skewed.de) network catalog (Tiago P. Peixoto), `game_thrones` | A. Beveridge and J. Shan, "Network of Thrones", *Math Horizons* 23(4), 18–22 (2016) | Character coappearances in *A Storm of Swords*; weights dropped |
+| 26 | `star_wars` | `starwars-full-interactions-allCharacters.json` from E. Gabasova's [star-wars-network-data](https://github.com/evelinag/star-wars-network-data) | E. Gabasova, "Star Wars social network", Zenodo, doi:10.5281/zenodo.1411479 (license CC BY 3.0) | Characters who speak in the same scene, Episodes I–VII; weights dropped, largest component |
 
 ## Language
 
 | # | Dataset | Origin | Citation | Notes |
 |--:|---|---|---|---|
-| 28 | `indo_european` | [Glottolog](https://glottolog.org) 5.3, `indo1319` | H. Hammarström, R. Forkel, M. Haspelmath and S. Bank, *Glottolog 5.3*, Max Planck Institute for Evolutionary Anthropology (license CC BY 4.0) | Languages and their subgroups, no dialects |
-| 29 | `word_ladder` | `sgb-words.txt` from [The Stanford GraphBase](https://cs.stanford.edu/~knuth/sgb.html) | D. E. Knuth, *The Stanford GraphBase*, Addison-Wesley (1993) | Five-letter words one letter apart; largest component |
+| 27 | `indo_european` | [Glottolog](https://glottolog.org) 5.3, `indo1319` | H. Hammarström, R. Forkel, M. Haspelmath and S. Bank, *Glottolog 5.3*, Max Planck Institute for Evolutionary Anthropology (license CC BY 4.0) | Languages and their subgroups, no dialects |
+| 28 | `word_ladder` | `sgb-words.txt` from [The Stanford GraphBase](https://cs.stanford.edu/~knuth/sgb.html) | D. E. Knuth, *The Stanford GraphBase*, Addison-Wesley (1993) | Five-letter words one letter apart; largest component |
 
 ## Wikipedia
 
 | # | Dataset | Origin | Citation | Notes |
 |--:|---|---|---|---|
-| 30 | `wiki_science` | Netzschleuder `wiki_science` | A. Calderone, "A Wikipedia Based Map of Science", Figshare (2020) | Articles on academic fields, linked by text similarity; weights dropped, largest component |
-| 31 | `thinkers` | [DBpedia](https://www.dbpedia.org) SPARQL endpoint, queried 2026-10-11, influence: `dbo:influenced`, `dbo:influencedBy`, `dbp:influenced`, `dbp:influencedBy`, `dbp:influences` | J. Lehmann, R. Isele, M. Jakob, A. Jentzsch, D. Kontokostas, P. N. Mendes, S. Hellmann, M. Morsey, P. van Kleef, S. Auer and C. Bizer, "DBpedia – A large-scale, multilingual knowledge base extracted from Wikipedia", *Semantic Web* 6(2), 167–195 (2015) (data license CC BY-SA 3.0) | Influence links, crawled from Carl Jung; direction dropped, largest component |
-| 32 | `mathematicians` | DBpedia `dbo:doctoralAdvisor`, `dbo:doctoralStudent`, `dbo:academicAdvisor`, `dbo:notableStudent`, `dbp:doctoralAdvisor`, `dbp:doctoralStudents`, `dbp:academicAdvisors`, `dbp:notableStudents` | as `thinkers` | Advisor–student links with at least one mathematician; direction dropped, largest component |
-| 33 | `programming_languages` | DBpedia as `thinkers` | as `thinkers` | Influence links, crawled from Fortran; direction dropped, largest component |
-| 34 | `music_genres` | DBpedia `dbo:stylisticOrigin`, `dbo:derivative`, `dbo:musicSubgenre`, `dbo:musicFusionGenre`, `dbp:stylisticOrigins`, `dbp:derivatives`, `dbp:subgenres`, `dbp:fusiongenres` | as `thinkers` | Origin, derivative, subgenre and fusion links, crawled from rock; direction dropped, largest component |
-| 35 | `jazz_musicians` | DBpedia `dbo:associatedMusicalArtist`, `dbo:associatedBand`, `dbp:associatedActs` | as `thinkers` | Associated acts, both ends jazz; direction dropped, largest component |
-| 36 | `amazon` | DBpedia `dbo:riverMouth`, `dbp:mouth` (followed upstream), `dbo:tributary`, `dbo:leftTributary`, `dbo:rightTributary`, `dbp:tributariesLeft`, `dbp:tributariesRight` | as `thinkers` | Rivers joined to what they flow into, across the Amazon basin; direction dropped, largest component |
+| 29 | `wiki_science` | Netzschleuder `wiki_science` | A. Calderone, "A Wikipedia Based Map of Science", Figshare (2020) | Articles on academic fields, linked by text similarity; weights dropped, largest component |
+| 30 | `thinkers` | [DBpedia](https://www.dbpedia.org) SPARQL endpoint, queried 2026-10-11, influence: `dbo:influenced`, `dbo:influencedBy`, `dbp:influenced`, `dbp:influencedBy`, `dbp:influences` | J. Lehmann, R. Isele, M. Jakob, A. Jentzsch, D. Kontokostas, P. N. Mendes, S. Hellmann, M. Morsey, P. van Kleef, S. Auer and C. Bizer, "DBpedia – A large-scale, multilingual knowledge base extracted from Wikipedia", *Semantic Web* 6(2), 167–195 (2015) (data license CC BY-SA 3.0) | Influence links, crawled from Carl Jung; direction dropped, largest component |
+| 31 | `mathematicians` | DBpedia `dbo:doctoralAdvisor`, `dbo:doctoralStudent`, `dbo:academicAdvisor`, `dbo:notableStudent`, `dbp:doctoralAdvisor`, `dbp:doctoralStudents`, `dbp:academicAdvisors`, `dbp:notableStudents` | as `thinkers` | Advisor–student links with at least one mathematician; direction dropped, largest component |
+| 32 | `programming_languages` | DBpedia as `thinkers` | as `thinkers` | Influence links, crawled from Fortran; direction dropped, largest component |
+| 33 | `music_genres` | DBpedia `dbo:stylisticOrigin`, `dbo:derivative`, `dbo:musicSubgenre`, `dbo:musicFusionGenre`, `dbp:stylisticOrigins`, `dbp:derivatives`, `dbp:subgenres`, `dbp:fusiongenres` | as `thinkers` | Origin, derivative, subgenre and fusion links, crawled from rock; direction dropped, largest component |
+| 34 | `jazz_musicians` | DBpedia `dbo:associatedMusicalArtist`, `dbo:associatedBand`, `dbp:associatedActs` | as `thinkers` | Associated acts, both ends jazz; direction dropped, largest component |
+| 35 | `amazon` | DBpedia `dbo:riverMouth`, `dbp:mouth` (followed upstream), `dbo:tributary`, `dbo:leftTributary`, `dbo:rightTributary`, `dbp:tributariesLeft`, `dbp:tributariesRight` | as `thinkers` | Rivers joined to what they flow into, across the Amazon basin; direction dropped, largest component |
 
 ## Social
 
 | # | Dataset | Origin | Citation | Notes |
 |--:|---|---|---|---|
-| 37 | `karate_club` | Netzschleuder `karate` (78-edge version) | W. W. Zachary, "An information flow model for conflict and fission in small groups", *J. Anthropological Research* 33(4), 452–473 (1977) | Labels are the two factions |
-| 38 | `netscience` | Netzschleuder `netscience` | M. E. J. Newman, "Finding community structure in networks using the eigenvectors of matrices", *Phys. Rev. E* 74, 036104 (2006) | Coauthorships among network scientists; weights dropped, largest component |
-| 39 | `dolphins` | Netzschleuder `dolphins` | D. Lusseau, K. Schneider, O. J. Boisseau, P. Haase, E. Slooten and S. M. Dawson, "The bottlenose dolphin community of Doubtful Sound features a large proportion of long-lasting associations", *Behav. Ecol. Sociobiol.* 54(4), 396–405 (2003) | Frequent associations between dolphins |
+| 36 | `karate_club` | Netzschleuder `karate` (78-edge version) | W. W. Zachary, "An information flow model for conflict and fission in small groups", *J. Anthropological Research* 33(4), 452–473 (1977) | Labels are the two factions |
+| 37 | `netscience` | Netzschleuder `netscience` | M. E. J. Newman, "Finding community structure in networks using the eigenvectors of matrices", *Phys. Rev. E* 74, 036104 (2006) | Coauthorships among network scientists; weights dropped, largest component |
+| 38 | `dolphins` | Netzschleuder `dolphins` | D. Lusseau, K. Schneider, O. J. Boisseau, P. Haase, E. Slooten and S. M. Dawson, "The bottlenose dolphin community of Doubtful Sound features a large proportion of long-lasting associations", *Behav. Ecol. Sociobiol.* 54(4), 396–405 (2003) | Frequent associations between dolphins |
 
 ## Biological
 
 | # | Dataset | Origin | Citation | Notes |
 |--:|---|---|---|---|
-| 40 | `plant_pollinator_kato` | Netzschleuder `plant_pol_kato`, from the ICON project | M. Kato et al., "Insect-flower relationship in the primary beech forest of Ashu, Kyoto: an overview of the flowering phenology and seasonal pattern of insect visits", *Contr. Biol. Lab. Kyoto Univ.* 27, 309–375 (1990) | Plants and the insects visiting them, Kyoto; bipartite, largest component |
-| 41 | `plant_pollinator_robertson` | Netzschleuder `plant_pol_robertson`, from the ICON project | C. Robertson, *Flowers and Insects: Lists of Visitors of Four Hundred and Fifty-Three Flowers*, Carlinville, IL (1929) | Plants and the insects visiting them, Illinois; bipartite, largest component |
-| 42 | `green_fluorescent_protein` | [RCSB Protein Data Bank](https://www.rcsb.org) `1EMA` (the engineered S65T variant) | M. Ormö, A. B. Cubitt, K. Kallio, L. A. Gross, R. Y. Tsien and S. J. Remington, "Crystal structure of the *Aequorea victoria* green fluorescent protein", *Science* 273, 1392–1395 (1996) | Residues joined when their Cα atoms lie within 8 Å. PDB data are CC0 |
-| 43 | `hemoglobin` | PDB `4HHB` | G. Fermi, M. F. Perutz, B. Shaanan and R. Fourme, "The crystal structure of human deoxyhaemoglobin at 1.74 Å resolution", *J. Mol. Biol.* 175, 159–174 (1984) | Four chains, contacts as for `green_fluorescent_protein` |
-| 44 | `groel_ring` | PDB `1AON` | Z. Xu, A. L. Horwich and P. B. Sigler, "The crystal structure of the asymmetric GroEL–GroES–(ADP)7 chaperonin complex", *Nature* 388, 741–750 (1997) | One seven-fold ring, contacts as for `green_fluorescent_protein` |
-| 45 | `celegans_male_gap_junction` | Netzschleuder `celegans_2019` (`male_gap_junction_corrected`) | S. J. Cook et al., "Whole-animal connectomes of both *Caenorhabditis elegans* sexes", *Nature* 571(7763), 63–71 (2019) | Neurons and gap junctions; largest component |
+| 39 | `plant_pollinator_kato` | Netzschleuder `plant_pol_kato`, from the ICON project | M. Kato et al., "Insect-flower relationship in the primary beech forest of Ashu, Kyoto: an overview of the flowering phenology and seasonal pattern of insect visits", *Contr. Biol. Lab. Kyoto Univ.* 27, 309–375 (1990) | Plants and the insects visiting them, Kyoto; bipartite, largest component |
+| 40 | `plant_pollinator_robertson` | Netzschleuder `plant_pol_robertson`, from the ICON project | C. Robertson, *Flowers and Insects: Lists of Visitors of Four Hundred and Fifty-Three Flowers*, Carlinville, IL (1929) | Plants and the insects visiting them, Illinois; bipartite, largest component |
+| 41 | `green_fluorescent_protein` | [RCSB Protein Data Bank](https://www.rcsb.org) `1EMA` (the engineered S65T variant) | M. Ormö, A. B. Cubitt, K. Kallio, L. A. Gross, R. Y. Tsien and S. J. Remington, "Crystal structure of the *Aequorea victoria* green fluorescent protein", *Science* 273, 1392–1395 (1996) | Residues joined when their Cα atoms lie within 8 Å. PDB data are CC0 |
+| 42 | `hemoglobin` | PDB `4HHB` | G. Fermi, M. F. Perutz, B. Shaanan and R. Fourme, "The crystal structure of human deoxyhaemoglobin at 1.74 Å resolution", *J. Mol. Biol.* 175, 159–174 (1984) | Four chains, contacts as for `green_fluorescent_protein` |
+| 43 | `groel_ring` | PDB `1AON` | Z. Xu, A. L. Horwich and P. B. Sigler, "The crystal structure of the asymmetric GroEL–GroES–(ADP)7 chaperonin complex", *Nature* 388, 741–750 (1997) | One seven-fold ring, contacts as for `green_fluorescent_protein` |
+| 44 | `celegans_male_gap_junction` | Netzschleuder `celegans_2019` (`male_gap_junction_corrected`) | S. J. Cook et al., "Whole-animal connectomes of both *Caenorhabditis elegans* sexes", *Nature* 571(7763), 63–71 (2019) | Neurons and gap junctions; largest component |
+| 45 | `celegans_hermaphrodite_gap_junction` | Netzschleuder `celegans_2019` (`hermaphrodite_gap_junction_corrected`) | as `celegans_male_gap_junction` | Neurons and gap junctions; largest component |
 | 46 | `human_connectome` | braingraph.org `Averaged_graph_Scale5.graphml`, averaged over people of the OASIS-3 study | C. Kerepesi, B. Szalkai, B. Varga and V. Grolmusz, "The braingraph.org database of high resolution structural connectomes and the brain graph tools", *Cogn. Neurodyn.* 11(5), 483–486 (2017); P. J. LaMontagne et al., "OASIS-3", medRxiv, doi:10.1101/2019.12.13.19014902 (2019) | Brain regions joined by fiber tracts averaging at least one, less spurious cross-hemisphere subcortical edges; largest component. Unclear provenance: for showing the tool, not for claims about the brain. **Public use must acknowledge OASIS:** "Data were provided in part by OASIS-3: Principal Investigators: T. Benzinger, D. Marcus, J. Morris; NIH P30 AG066444, P50 AG00561, P30 NS09857781, P01 AG026276, P01 AG003991, R01 AG043434, UL1 TR000448, R01 EB009352." |
 
 ## Infrastructure

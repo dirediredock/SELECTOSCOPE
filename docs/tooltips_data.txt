@@ -45,8 +45,6 @@ bob: A toy duck mesh; nodes are mesh vertices, and an edge is a side of a triang
 
 cylinder_2560: A square grid wrapped into an open tube, 80 by 32; nodes are grid points, and an edge is a grid side.
 
-oloid: An oloid mesh; nodes are mesh vertices, and an edge is a side of a triangle. From Keenan Crane's 3D Model Repository (cs.cmu.edu/~kmcrane/Projects/ModelRepository).
-
 
 FRACTAL
 
@@ -116,6 +114,8 @@ hemoglobin: Nodes are the residues of human hemoglobin's four chains; an edge jo
 groel_ring: Nodes are the residues of one seven-fold ring of a bacterial chaperonin; an edge joins two whose alpha carbons lie within 8 armstrongs. From the RCSB Protein Data Bank (rcsb.org), entry 1AON.
 
 celegans_male_gap_junction: Nodes are neurons of the male nematode; an edge is a gap junction between two. From Cook et al. (2019). Whole-animal connectomes of both Caenorhabditis elegans sexes. Nature, 571(7763), 63–71.
+
+celegans_hermaphrodite_gap_junction: Nodes are neurons of the hermaphrodite nematode; an edge is a gap junction between two. From Cook et al. (2019). Whole-animal connectomes of both Caenorhabditis elegans sexes. Nature, 571(7763), 63–71.
 
 human_connectome: Nodes are brain regions; an edge joins two linked by fiber tracts, averaged over OASIS-3 participants. From braingraph.org. Data were provided in part by OASIS-3: Principal Investigators: T. Benzinger, D. Marcus, J. Morris; NIH P30 AG066444, P50 AG00561, P30 NS09857781, P01 AG026276, P01 AG003991, R01 AG043434, UL1 TR000448, R01 EB009352.
 

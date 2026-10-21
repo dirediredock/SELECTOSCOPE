@@ -17,7 +17,6 @@ stanford_bunny,Stanford Bunny,Geometric,3d
 torus_2560,Torus (2560),Geometric,3d
 bob,Toy Duck (Bob),Geometric,3d
 cylinder_2560,Cylinder (2560),Geometric,3d
-oloid,Oloid,Geometric,3d
 sierpinski_triangle_3282,Sierpinski (Triangle),Fractal,2d
 sierpinski_square_5280,Sierpinski (Square),Fractal,2d
 sierpinski_tetrahedron_2050,Sierpinski (Tetrahedron),Fractal,3d
@@ -44,6 +43,7 @@ green_fluorescent_protein,Fluorescent Protein (Jellyfish),Biological,3d
 hemoglobin,Hemoglobin (Human),Biological,3d
 groel_ring,Chaperonin (Bacteria),Biological,3d
 celegans_male_gap_junction,Nematode Synapses (M),Biological,
+celegans_hermaphrodite_gap_junction,Nematode Synapses (H),Biological,
 human_connectome,Human Brain,Biological,
 power,Western Power Grid,Infrastructure,
 european_power_grid,European Power Grid,Infrastructure,2d
