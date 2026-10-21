@@ -308,6 +308,11 @@ textarea {
   white-space: nowrap;
 }
 
+.title a {
+  color: inherit;
+  text-decoration: none;
+}
+
 /* The tooltip (components/Tooltip.tsx): one layer, laid out hidden so it can be
    measured at its text's width, then placed toward the pane row as an
    outlined talk bubble. Sizes are rem; the comments give px on screen. */
