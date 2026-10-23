@@ -35,18 +35,20 @@ fibonacci_sunflower: Points on a Fibonacci spiral, as seeds sit in a sunflower; 
 
 GEOMETRIC
 
-spot: A toy cow mesh; nodes are mesh vertices, and an edge is a side of a triangle. From Keenan Crane's 3D Model Repository (cs.cmu.edu/~kmcrane/Projects/ModelRepository).
-
-stanford_bunny: A scanned bunny mesh; nodes are mesh vertices, and an edge is a side of a triangle. From the Stanford 3D Scanning Repository (graphics.stanford.edu/data/3Dscanrep).
+cylinder_2560: A square grid wrapped into an open tube, 80 by 32; nodes are grid points, and an edge is a grid side.
 
 torus_2560: A triangulated torus, 80 by 32; nodes are mesh vertices, and an edge is a side of a triangle.
 
 bob: A toy duck mesh; nodes are mesh vertices, and an edge is a side of a triangle. From Keenan Crane's 3D Model Repository (cs.cmu.edu/~kmcrane/Projects/ModelRepository).
 
-cylinder_2560: A square grid wrapped into an open tube, 80 by 32; nodes are grid points, and an edge is a grid side.
+spot: A toy cow mesh; nodes are mesh vertices, and an edge is a side of a triangle. From Keenan Crane's 3D Model Repository (cs.cmu.edu/~kmcrane/Projects/ModelRepository).
+
+stanford_bunny: A scanned bunny mesh; nodes are mesh vertices, and an edge is a side of a triangle. From the Stanford 3D Scanning Repository (graphics.stanford.edu/data/3Dscanrep).
 
 
 FRACTAL
+
+dragon_curve_4961: The Heighway dragon, folded 13 times; nodes are the points the curve passes through, and an edge is one of its steps.
 
 sierpinski_triangle_3282: The Sierpiński triangle; nodes are the corners of its smallest triangles, and an edge is a side.
 
@@ -55,8 +57,6 @@ sierpinski_square_5280: The Sierpiński carpet, level 4; nodes are the corners o
 sierpinski_tetrahedron_2050: The Sierpiński tetrahedron; nodes are the corners of its smallest tetrahedra, and an edge is a side.
 
 sierpinski_cube_5328: The Menger sponge, level 2; nodes are the corners of its smallest cubes, and an edge is a side.
-
-dragon_curve_4961: The Heighway dragon, folded 13 times; nodes are the points the curve passes through, and an edge is one of its steps.
 
 
 LITERARY
@@ -131,11 +131,11 @@ internet_top_pop: Nodes are backbone points of presence of a Midwest fiber netwo
 
 TRANSPORTATION
 
-london_transport: Nodes are Tube, Overground and DLR stations, at geographic positions; an edge joins two stations next to each other on a line. From De Domenico et al. (2014). Navigability of interconnected networks under random failures. Proceedings of the National Academy of Sciences, 111(23), 8351–8356. License ODbL.
-
 urban_streets_ahmedabad: Nodes are street intersections in a square mile of Ahmedabad, at geographic positions; an edge is a street segment. From Crucitti, Latora, Porta (2006). Centrality measures in spatial networks of urban streets. Physical Review E, 73(3), 036125.
 
 urban_streets_savannah: Nodes are street intersections in a square mile of Savannah, at geographic positions; an edge is a street segment. From Crucitti, Latora, Porta (2006). Centrality measures in spatial networks of urban streets. Physical Review E, 73(3), 036125.
+
+london_transport: Nodes are Tube, Overground and DLR stations, at geographic positions; an edge joins two stations next to each other on a line. From De Domenico et al. (2014). Navigability of interconnected networks under random failures. Proceedings of the National Academy of Sciences, 111(23), 8351–8356. License ODbL.
 
 eu_airlines: Nodes are European airports, at geographic positions; an edge joins two with a direct flight on any airline. From Cardillo et al. (2013). Emergence of network features from multiplexity. Scientific Reports, 3(1), 1344.
 

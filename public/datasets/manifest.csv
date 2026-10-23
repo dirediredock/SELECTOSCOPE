@@ -12,16 +12,16 @@ lattice_squares_4096,Lattice (Square),Flat,2d
 lattice_monotiles_5992,Disc (Monotile),Flat,2d
 lattice_penrose_5981,Disc (Penrose),Flat,2d
 fibonacci_sunflower,Disc (Fibonacci),Flat,2d
-spot,Toy Cow (Spot),Geometric,3d
-stanford_bunny,Stanford Bunny,Geometric,3d
+cylinder_2560,Cylinder (2560),Geometric,3d
 torus_2560,Torus (2560),Geometric,3d
 bob,Toy Duck (Bob),Geometric,3d
-cylinder_2560,Cylinder (2560),Geometric,3d
+spot,Toy Cow (Spot),Geometric,3d
+stanford_bunny,Stanford Bunny,Geometric,3d
+dragon_curve_4961,Dragon Curve,Fractal,2d
 sierpinski_triangle_3282,Sierpinski (Triangle),Fractal,2d
 sierpinski_square_5280,Sierpinski (Square),Fractal,2d
 sierpinski_tetrahedron_2050,Sierpinski (Tetrahedron),Fractal,3d
 sierpinski_cube_5328,Sierpinski (Cube),Fractal,3d
-dragon_curve_4961,Dragon Curve,Fractal,2d
 les_miserables,Les Misérables,Literary,
 game_thrones,Game of Thrones,Literary,
 star_wars,Star Wars (Episodes I–VII),Literary,
@@ -48,9 +48,9 @@ human_connectome,Human Brain,Biological,
 power,Western Power Grid,Infrastructure,
 european_power_grid,European Power Grid,Infrastructure,2d
 internet_top_pop,Midwest Fiber Internet,Infrastructure,2d
-london_transport,London Underground,Transportation,2d
 urban_streets_ahmedabad,Ahmedabad Streets,Transportation,2d
 urban_streets_savannah,Savannah Streets,Transportation,2d
+london_transport,London Underground,Transportation,2d
 eu_airlines,European Airlines,Transportation,2d
 cfg_nw_main,Sequence Alignment (Needleman–Wunsch),Software,2d
 cfg_gsm_quantization,Speech Codec (GSM),Software,2d

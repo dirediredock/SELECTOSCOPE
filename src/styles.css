@@ -43,12 +43,14 @@
 
   --glow: transparent;
 
-  /* Data colours. Never used for UI state. */
-  --node-sel: #1a4fd6; /* node set: blue */
-  --node-sel-soft: rgba(26, 79, 214, 0.18); /* its tint on list rows */
-  --edge-sel: #d98a00; /* edge set: orange */
-  --edge-sel-soft: rgba(217, 138, 0, 0.22); /* its tint in the selection count */
-  --hover: #d1123f; /* hovered item: red */
+  /* Data colours. Never used for UI state. Each keeps its hue in both themes
+     and shifts only in lightness; hover sits darker than the amber, so the two
+     stay apart for red-green colour blindness too. */
+  --node-sel: #007bcc; /* node set: blue */
+  --node-sel-soft: rgba(0, 123, 204, 0.18); /* its tint on list rows */
+  --edge-sel: #ef8600; /* edge set: orange */
+  --edge-sel-soft: rgba(239, 134, 0, 0.22); /* its tint in the selection count */
+  --hover: #d3003d; /* hovered item: red */
 
   /* Red has a second job: whatever stopped data loading, a refused file, a
      failed stage, a failed download. The one UI state allowed to use it. */
@@ -147,11 +149,11 @@
 
   --glow: transparent;
 
-  --node-sel: #5b8cff;
-  --node-sel-soft: rgba(91, 140, 255, 0.24);
-  --edge-sel: #ffb020;
-  --edge-sel-soft: rgba(255, 176, 32, 0.24);
-  --hover: #ff3d6a;
+  --node-sel: #0097f8;
+  --node-sel-soft: rgba(0, 151, 248, 0.24);
+  --edge-sel: #fb9500;
+  --edge-sel-soft: rgba(251, 149, 0, 0.24);
+  --hover: #ed0046;
 
   --refused: var(--hover);
 

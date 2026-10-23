@@ -139,6 +139,12 @@ export function drawBase(ctx: CanvasRenderingContext2D, s: SnakeScene, ink: Ink)
   });
   ctx.stroke();
   drawTubes(ctx, s, ink);
+  drawMarks(ctx, s, ink);
+}
+
+// Every node and pill in neutral ink: on the base, and again over the edge
+// set's chords, so the chords run behind them.
+function drawMarks(ctx: CanvasRenderingContext2D, s: SnakeScene, ink: Ink) {
   ctx.fillStyle = ink.markNode;
   fillNodes(ctx, s.view.pos, range(s.st.n), s.r, s.inPill);
   // Pills: a hairline like an island's around a panel-coloured interior.
@@ -203,6 +209,7 @@ export function drawSets(
     ctx.strokeStyle = ink.edge;
     ctx.lineWidth = 0.5;
     strokeChords(ctx, s, edges);
+    drawMarks(ctx, s, ink);
   }
   if (nodes.size) {
     // A panel-coloured halo keeps blue nodes distinct where they overlap.
