@@ -4,6 +4,7 @@ import { BottomBar } from "./components/BottomBar";
 import { PaneRow } from "./components/PaneRow";
 import { attachKeyboardShortcuts } from "./interaction/keyboard";
 import { blockPageZoom } from "./interaction/navigate";
+import { attachHoverFocus } from "./interaction/hoverFocus";
 import { TooltipLayer } from "./components/Tooltip";
 import { initData } from "./data/dataStore";
 import { stopBuild } from "./engine/engine";
@@ -17,6 +18,8 @@ export default function App() {
   useEffect(blockPageZoom, []);
 
   useEffect(attachKeyboardShortcuts, []);
+
+  useEffect(attachHoverFocus, []);
 
   useEffect(watchRowMode, []);
 

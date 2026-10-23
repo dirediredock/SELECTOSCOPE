@@ -38,21 +38,21 @@ The datasets are listed as the Data pane lists them: by group, numbered in its o
 
 | # | Dataset | Origin | Citation | Notes |
 |--:|---|---|---|---|
-| 14 | `spot` | [Keenan Crane's 3D Model Repository](https://www.cs.cmu.edu/~kmcrane/Projects/ModelRepository/), `spot.zip`, `spot_triangulated.obj` | K. Crane, U. Pinkall and P. Schröder, "Robust fairing via conformal curvature flow", *ACM Trans. Graph.* 32(4) (2013) (license CC0 1.0) | A toy cow mesh; vertex positions as the 3D layout |
-| 15 | `stanford_bunny` | [Stanford 3D Scanning Repository](https://graphics.stanford.edu/data/3Dscanrep/), `bun_zipper_res3` mesh | Stanford Computer Graphics Laboratory | A mesh; vertex positions as the 3D layout |
-| 16 | `torus_2560` | Synthetic | — | A triangulated torus, 80 × 32 |
-| 17 | `bob` | [Keenan Crane's 3D Model Repository](https://www.cs.cmu.edu/~kmcrane/Projects/ModelRepository/), `bob_isotropic.obj` | K. Crane (license CC0 1.0) | A toy duck mesh; vertex positions as the 3D layout |
-| 18 | `cylinder_2560` | Synthetic | — | A square grid wrapped into an open tube, 80 × 32 |
+| 14 | `cylinder_2560` | Synthetic | — | A square grid wrapped into an open tube, 80 × 32 |
+| 15 | `torus_2560` | Synthetic | — | A triangulated torus, 80 × 32 |
+| 16 | `bob` | [Keenan Crane's 3D Model Repository](https://www.cs.cmu.edu/~kmcrane/Projects/ModelRepository/), `bob_isotropic.obj` | K. Crane (license CC0 1.0) | A toy duck mesh; vertex positions as the 3D layout |
+| 17 | `spot` | [Keenan Crane's 3D Model Repository](https://www.cs.cmu.edu/~kmcrane/Projects/ModelRepository/), `spot.zip`, `spot_triangulated.obj` | K. Crane, U. Pinkall and P. Schröder, "Robust fairing via conformal curvature flow", *ACM Trans. Graph.* 32(4) (2013) (license CC0 1.0) | A toy cow mesh; vertex positions as the 3D layout |
+| 18 | `stanford_bunny` | [Stanford 3D Scanning Repository](https://graphics.stanford.edu/data/3Dscanrep/), `bun_zipper_res3` mesh | Stanford Computer Graphics Laboratory | A mesh; vertex positions as the 3D layout |
 
 ## Fractal
 
 | # | Dataset | Origin | Citation | Notes |
 |--:|---|---|---|---|
-| 19 | `sierpinski_triangle_3282` | Synthetic | — | The Sierpiński triangle |
-| 20 | `sierpinski_square_5280` | Synthetic | W. Sierpiński, "Sur une courbe cantorienne qui contient une image biunivoque et continue de toute courbe donnée", *C. R. Acad. Sci. Paris* 162, 629–632 (1916) | The Sierpiński carpet, level 4 |
-| 21 | `sierpinski_tetrahedron_2050` | Synthetic | — | The Sierpiński tetrahedron |
-| 22 | `sierpinski_cube_5328` | Synthetic | K. Menger, "Allgemeine Räume und Cartesische Räume", *Proc. Akad. Wetensch. Amsterdam* 29, 476–482 (1926) | The Menger sponge, level 2 |
-| 23 | `dragon_curve_4961` | Synthetic | M. Gardner, "Mathematical Games", *Scientific American* 216(3), 124–125 (1967), describing J. Heighway's dragon | The Heighway dragon, folded 13 times |
+| 19 | `dragon_curve_4961` | Synthetic | M. Gardner, "Mathematical Games", *Scientific American* 216(3), 124–125 (1967), describing J. Heighway's dragon | The Heighway dragon, folded 13 times |
+| 20 | `sierpinski_triangle_3282` | Synthetic | — | The Sierpiński triangle |
+| 21 | `sierpinski_square_5280` | Synthetic | W. Sierpiński, "Sur une courbe cantorienne qui contient une image biunivoque et continue de toute courbe donnée", *C. R. Acad. Sci. Paris* 162, 629–632 (1916) | The Sierpiński carpet, level 4 |
+| 22 | `sierpinski_tetrahedron_2050` | Synthetic | — | The Sierpiński tetrahedron |
+| 23 | `sierpinski_cube_5328` | Synthetic | K. Menger, "Allgemeine Räume und Cartesische Räume", *Proc. Akad. Wetensch. Amsterdam* 29, 476–482 (1926) | The Menger sponge, level 2 |
 
 ## Literary
 
@@ -114,8 +114,8 @@ The datasets are listed as the Data pane lists them: by group, numbered in its o
 
 | # | Dataset | Origin | Citation | Notes |
 |--:|---|---|---|---|
-| 50 | `london_transport` | Netzschleuder `london_transport` | M. De Domenico, A. Solé-Ribalta, S. Gómez and A. Arenas, "Navigability of interconnected networks under random failures", *PNAS* 111(23), 8351–8356 (2014) | Tube, Overground and DLR merged, at map positions. Upstream license ODbL |
-| 51–52 | `urban_streets_ahmedabad`, `urban_streets_savannah` | Netzschleuder `urban_streets` (`ahmedabad`, `savannah`) | P. Crucitti, V. Latora and S. Porta, "Centrality measures in spatial networks of urban streets", *Phys. Rev. E* 73, 036125 (2006); V. Latora, V. Nicosia and G. Russo, *Complex Networks: Principles, Methods and Applications*, Cambridge University Press (2017); Netzschleuder license AGPL-v3 | Street intersections and segments in one square mile, at map positions |
+| 50–51 | `urban_streets_ahmedabad`, `urban_streets_savannah` | Netzschleuder `urban_streets` (`ahmedabad`, `savannah`) | P. Crucitti, V. Latora and S. Porta, "Centrality measures in spatial networks of urban streets", *Phys. Rev. E* 73, 036125 (2006); V. Latora, V. Nicosia and G. Russo, *Complex Networks: Principles, Methods and Applications*, Cambridge University Press (2017); Netzschleuder license AGPL-v3 | Street intersections and segments in one square mile, at map positions |
+| 52 | `london_transport` | Netzschleuder `london_transport` | M. De Domenico, A. Solé-Ribalta, S. Gómez and A. Arenas, "Navigability of interconnected networks under random failures", *PNAS* 111(23), 8351–8356 (2014) | Tube, Overground and DLR merged, at map positions. Upstream license ODbL |
 | 53 | `eu_airlines` | Netzschleuder `eu_airlines` | A. Cardillo et al., "Emergence of network features from multiplexity", *Sci. Rep.* 3(1), 1344 (2013) | Airline layers merged, at map positions; largest component |
 
 ## Software

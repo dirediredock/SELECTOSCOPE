@@ -6,7 +6,6 @@ import { fitView, viewIn, views, zoomLabel } from "../state/views";
 import { SWEEP_STEPS, sweep, sweepSettings } from "../state/sweep";
 import { MAX_AR, paneInfo, slotTitle } from "../state/panes";
 import type { PaneType } from "../state/panes";
-import { layout } from "../state/layout";
 import type { SlotId } from "../state/layout";
 import { PaneMenu } from "./PaneMenu";
 import { usePaneSubtitle } from "./paneSubtitle";
@@ -29,12 +28,13 @@ interface PaneProps {
 
 // One pane in its banner: an outer frame holding the header band,
 // the content in an inner rounded frame, and the footer band. The banner is
-// plain, or gray when focused: its controls fill the bottom strip. Beside the
+// plain, or gray when focused: its controls fill the bottom strip (faintly
+// gray while the pointer crosses it on the way there). Beside the
 // title, a subtitle says what the strip has chosen (paneSubtitle.ts). While
 // this pane's sweep is active, the footer holds the sweep strip; Data's, which
 // never sweeps, stays empty, kept so every pane has the same frame.
-//   pointer moves over it        focus this pane (not while a button is held,
-//                                so a drag never hands focus on)
+//   pointer enters it            focus this pane (hoverFocus.ts: not while a
+//                                button is held, nor on the way to the strip)
 //   any press                    focus this pane
 //   keyboard focus within it     focus this pane
 //   click on the header          toggle the type and shape menu (Data: its
@@ -45,6 +45,7 @@ export function Pane({ slot, type, ar, share, children }: PaneProps) {
   const { list } = paneInfo(type);
   const title = useStore(ui, (s) => slotTitle(type, s.help));
   const isFocused = useStore(ui, (s) => s.focused === slot);
+  const isPassed = useStore(ui, (s) => s.passed === slot);
   const menuOpen = useStore(ui, (s) => s.menuOpen === slot);
   // A drag selects; with Space held, it navigates.
   const grab = useStore(ui, (s) => s.spaceHeld);
@@ -53,21 +54,13 @@ export function Pane({ slot, type, ar, share, children }: PaneProps) {
 
   return (
     <section
-      className={`pane${isFocused ? " is-focused" : ""}${grab ? " is-grab" : ""}`}
+      className={`pane${isFocused ? " is-focused" : ""}${isPassed ? " is-passed" : ""}${grab ? " is-grab" : ""}`}
       data-pane={type}
       data-slot={slot}
       data-list={list || undefined}
       data-narrow={ar === null || undefined}
       aria-label={title}
       style={{ "--ar": ar ?? undefined, "--share": share, "--max-ar": MAX_AR[type] } as CSSProperties}
-      // On every move, not just on entering: a drag released over this pane
-      // hands focus on at the next move. While + New is ringed only a press
-      // focuses, so the upload strip stays put on the way across the panes.
-      // In Scroll the pane under the row's centre has focus (PaneRow), so
-      // hover leaves it.
-      onPointerMove={(e) => {
-        if (e.buttons === 0 && ui.get().upload === null && layout.get().mode === "fit") focus(slot);
-      }}
       // Capture, so a press focuses even where a gesture stops propagation.
       onPointerDownCapture={() => focus(slot)}
       onFocusCapture={() => focus(slot)}
