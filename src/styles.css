@@ -71,6 +71,8 @@
   --pane-header-h: 2.8rem;
   --pane-footer-h: 1.5rem; /* 18px */
   --pane-focused: #2b313c;
+  /* Passed on the way to the strip: a step from the tray toward slate. */
+  --pane-passed: #b9bec7;
   --pane-title: #4f5665;
   --body-ring: 0 0 0 1px var(--edge);
 
@@ -159,6 +161,7 @@
 
   --pane-border: #6a7385;
   --pane-focused: #6b7487;
+  --pane-passed: #313846;
   --pane-frame: #1a1f29;
   --pane-title: #9aa3b5;
   --body-ring: 0 0 0 1px rgba(255, 255, 255, 0.06);
@@ -1513,6 +1516,10 @@ textarea {
 
 .pane.is-focused {
   background: var(--pane-focused);
+}
+
+.pane.is-passed {
+  background: var(--pane-passed);
 }
 
 /* The title sits a little below the band's centre, near the content. */

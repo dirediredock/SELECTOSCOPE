@@ -15,9 +15,13 @@ export type Upload = "csv" | "json";
 
 export interface UiState {
   // The pane whose controls fill the bottom strip: the last one the pointer
-  // entered, or the pane containing keyboard focus. It holds outside panes, so the strip
-  // stays put on the way to it.
+  // entered or pressed, or the pane containing keyboard focus. It holds
+  // outside panes and on the way from the pane to its controls, so the strip
+  // stays put on the way to it (hoverFocus.ts).
   focused: SlotId | null;
+  // A pane the pointer is crossing on the way to the strip, which doesn't
+  // take focus: its banner turns faintly gray, so the pass reads as seen.
+  passed: SlotId | null;
   // The pane whose header menu is open.
   menuOpen: SlotId | null;
   tool: Tool;
@@ -67,6 +71,7 @@ const openingSlot = layout.get().slots.find((s) => s.type === "nodelink")?.slot 
 
 export const ui = createStore<UiState>({
   focused: openingSlot,
+  passed: null,
   menuOpen: null,
   tool: "lasso",
   selectMode: savedSelectMode(),
@@ -85,7 +90,7 @@ export const ui = createStore<UiState>({
   spaceHeld: false,
 });
 
-// Pointer activity or keyboard focus in a pane gives it the strip.
+// Hover, a press or keyboard focus in a pane gives it the strip.
 export function focus(slot: SlotId) {
   if (ui.get().focused !== slot) ui.set({ focused: slot });
 }
