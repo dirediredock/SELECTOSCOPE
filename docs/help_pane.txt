@@ -84,7 +84,7 @@ Toggle INTERACTIVE mode to start a force-directed simulation from the current la
 
 MATRIX PANE
 
-This pane surfaces visual patterns from matrix seriation, or the symmetric ordering of nodes along the side of the matrix. For selection, a drawn area takes the edge points inside it: in EDGES mode the edge points directly, in NODES mode their endpoint nodes, and in BOTH the two modes act together.
+This pane surfaces visual patterns from matrix seriation, or the symmetric ordering of nodes along the side of the matrix. For selection, a drawn area takes the edge points inside it: in EDGES mode the edge points directly, in BOTH mode their node endpoints as well. In NODES mode a drawn area only selects matrix gridlines.
 
 Layout: The visual idiom is the classic Adjacency Matrix, where edges are points, and their respective nodes drawn as lines along rows and columns. By default the matrix is shown as a DIAMOND with the diagonal running vertically, though the traditional SQUARE view is also available.
 

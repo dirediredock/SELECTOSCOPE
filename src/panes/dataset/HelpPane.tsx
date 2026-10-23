@@ -457,9 +457,11 @@ export function HelpPane() {
             <p>
               This pane surfaces visual patterns from matrix seriation, or the
               symmetric ordering of nodes along the side of the matrix. For
-              selection, a drawn area takes the edge points inside it: in EDGES
-              mode the edge points directly, in NODES mode their endpoint nodes,
-              and in BOTH the two modes act together.
+              selection, in EDGES mode a drawn area takes the edge points inside
+              it. In NODES mode it takes the nodes whose columns it crosses, so
+              an area over a block of a bipartite graph picks one side of it.
+              In BOTH it takes the edge points inside it and their endpoint
+              nodes.
             </p>
             <p>
               Layout: The visual idiom is the classic Adjacency Matrix, where

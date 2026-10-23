@@ -22,6 +22,7 @@ import { cellSize, edgePoints, rowsOf, formBounds, posed, poseAt, sweepAxis } fr
 import { easeInOut, GLIDE_MS, lerpInto } from "../../canvas/glide";
 import type { MatrixPoints } from "./geometry";
 import { drawBase, drawHover, drawSets } from "./render";
+import { columnHits } from "./columnHits";
 import type { MatrixScene } from "./render";
 
 const PAD = 24; // px between the form and the pane edge, fitted
@@ -30,8 +31,10 @@ const PAD = 24; // px between the form and the pane edge, fitted
 // the node panes), in the seriation and form picked in the bottom strip.
 // A new seriation glides the points and node lines to their new cells, and a
 // new form turns the matrix to it (both at once, if they overlap); a new
-// dataset refits at once. It selects and hovers edges. The same four canvases as NodeLink, each
-// redrawn only when its own inputs change: base, sets, hover, gesture.
+// dataset refits at once. It hovers and clicks edges; a shape takes the edges
+// inside it, or in Nodes mode the columns it crosses. The same four canvases
+// as NodeLink, each redrawn only when its own inputs change: base, sets,
+// hover, gesture.
 export function MatrixPane({ slot }: { slot: SlotId }) {
   const stackRef = useRef<HTMLDivElement>(null);
   const baseRef = useRef<HTMLCanvasElement>(null);
@@ -192,15 +195,19 @@ export function MatrixPane({ slot }: { slot: SlotId }) {
       sweep.subscribe(() => frame.schedule(paintSets)),
       hover.subscribe(() => frame.schedule(paintHover)),
     ];
-    // Hits land on points; an edge drawn twice answers once.
-    const hit = mapHits(
-      pointHitTester(
-        () => view.pos,
-        () => view.n,
-        () => scene?.radius ?? 2,
+    // Hits land on points; an edge drawn twice answers once. A Nodes-mode
+    // shape takes the columns it crosses instead, in the order picked.
+    const hit = {
+      ...mapHits(
+        pointHitTester(
+          () => view.pos,
+          () => view.n,
+          () => scene?.radius ?? 2,
+        ),
+        () => built!.points.edgeOf,
       ),
-      () => built!.points.edgeOf,
-    );
+      ...columnHits(() => built && { view, pose, order: built.graph.seriations[built.seriation]! }),
+    };
     const gesture = attachSelectGesture({
       el: stack,
       overlay: gestureRef.current!,

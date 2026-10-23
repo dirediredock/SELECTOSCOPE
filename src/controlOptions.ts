@@ -5,8 +5,8 @@ import type { Tool, Upload } from "./state/uiStore";
 
 // Where a lasso or rect writes. In a node pane: the nodes inside it, the
 // edges those nodes share (both endpoints inside), or both. In the matrix:
-// the edges' endpoints, the edges inside it, or both. One setting for the
-// whole app.
+// the nodes whose columns it crosses, the edges inside it, or those edges
+// with their endpoints. One setting for the whole app.
 export const SELECT_MODES = [
   { id: "node", label: "Nodes" },
   { id: "edge", label: "Edges" },
