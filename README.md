@@ -3,7 +3,7 @@
 Selectoscope is a visual tool that lets you explore network structure through linked interpretable views. Select nodes and/or edges from the visual pattern in one pane to examine the same selection set in other panes.
 
 <a href="https://selectoscope.netlify.app/">
-  <img src="figures/teaser_figure.png" width="100%">
+  <img src="figures/teaser.png" width="100%">
 </a>
 
 ## Quick start
