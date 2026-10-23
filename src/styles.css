@@ -43,11 +43,11 @@
 
   --glow: transparent;
 
-  /* Data colours. Never used for UI state. Each keeps its hue in both themes
-     and shifts only in lightness; hover sits darker than the amber, so the two
-     stay apart for red-green colour blindness too. */
-  --node-sel: #007bcc; /* node set: blue */
-  --node-sel-soft: rgba(0, 123, 204, 0.18); /* its tint on list rows */
+  /* Data colours. Never used for UI state. Each theme has its own blue and
+     orange; hover sits darker than the orange, so the two stay apart for
+     red-green colour blindness too. */
+  --node-sel: #0060c1; /* node set: blue */
+  --node-sel-soft: rgba(0, 96, 193, 0.18); /* its tint on list rows */
   --edge-sel: #ef8600; /* edge set: orange */
   --edge-sel-soft: rgba(239, 134, 0, 0.22); /* its tint in the selection count */
   --hover: #d3003d; /* hovered item: red */
@@ -151,8 +151,8 @@
 
   --node-sel: #0097f8;
   --node-sel-soft: rgba(0, 151, 248, 0.24);
-  --edge-sel: #fb9500;
-  --edge-sel-soft: rgba(251, 149, 0, 0.24);
+  --edge-sel: #ffa914;
+  --edge-sel-soft: rgba(255, 169, 20, 0.24);
   --hover: #ed0046;
 
   --refused: var(--hover);
