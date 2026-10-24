@@ -15,6 +15,10 @@ export interface HitTester {
   // The items picked with this one, when a mark stands for several (a
   // Shells pill); hover and click then take them all.
   groupOf?(id: number): readonly number[] | null;
+  // Where a shape in Nodes mode takes nodes some other way than through its
+  // items (the matrix's columns).
+  nodesInPolygon?(poly: number[]): number[];
+  nodesInRect?(x0: number, y0: number, x1: number, y1: number): number[];
 }
 
 // `depth` (larger is nearer) is for 3D: where marks overlap, the one drawn on

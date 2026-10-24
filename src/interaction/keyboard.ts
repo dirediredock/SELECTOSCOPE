@@ -55,7 +55,7 @@ export function attachKeyboardShortcuts(): () => void {
     if (dir !== 0) releaseStep(dir);
   };
   // A button pressed with the pointer (Run, a choice) lets go of focus, as the
-  // slider and the Arrow pill do, so the next arrow steps the band and Space
+  // slider and the Manual pill do, so the next arrow steps the band and Space
   // holds the hand. Enter or Space on it (detail 0) keeps focus.
   const onClick = (e: MouseEvent) => {
     if (e.detail === 0) return;

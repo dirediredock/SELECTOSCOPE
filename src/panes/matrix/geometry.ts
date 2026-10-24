@@ -37,6 +37,51 @@ export function posed(out: Float32Array, square: ArrayLike<number>, pose: number
   return out;
 }
 
+// A layout position back to its square (row, col): the inverse of posed()
+// after toLayout().
+export function unposed(pose: number, x: number, y: number): [number, number] {
+  const k = 1 + pose * pose;
+  return [-(y + pose * x) / k, (x - pose * y) / k];
+}
+
+// The column positions a convex quad crosses, [lo, hi] inclusive, or null
+// when it misses the matrix. The quad is four corners in layout units
+// ([x0, y0, ...]), at a pose; it is clipped to the matrix in (row, col) and,
+// being convex, crosses every column between its extremes.
+export function columnsInQuad(quad: ArrayLike<number>, pose: number, n: number): [number, number] | null {
+  let poly: [number, number][] = [];
+  for (let i = 0; i < quad.length; i += 2) poly.push(unposed(pose, quad[i]!, quad[i + 1]!));
+  // Sutherland–Hodgman against row >= 0, row <= n, col >= 0, col <= n.
+  for (const [axis, bound, keepAbove] of [
+    [0, 0, true],
+    [0, n, false],
+    [1, 0, true],
+    [1, n, false],
+  ] as const) {
+    const inside = (p: [number, number]) => (keepAbove ? p[axis] >= bound : p[axis] <= bound);
+    const out: [number, number][] = [];
+    for (let i = 0; i < poly.length; i++) {
+      const a = poly[(i + poly.length - 1) % poly.length]!, b = poly[i]!;
+      const ina = inside(a), inb = inside(b);
+      if (ina !== inb) {
+        const t = (bound - a[axis]) / (b[axis] - a[axis]);
+        out.push([a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])]);
+      }
+      if (inb) out.push(b);
+    }
+    poly = out;
+    if (!poly.length) return null;
+  }
+  let c0 = Infinity, c1 = -Infinity;
+  for (const [, c] of poly) {
+    c0 = Math.min(c0, c);
+    c1 = Math.max(c1, c);
+  }
+  const lo = Math.min(n - 1, Math.floor(c0));
+  const hi = Math.max(lo, Math.min(n - 1, Math.ceil(c1) - 1));
+  return [lo, hi];
+}
+
 // The whole form's extent, empty corners included: the matrix fits to this,
 // not to the points, so every ordering of a dataset fits the same way.
 export function formBounds(pose: number, n: number): Bounds {
@@ -59,7 +104,9 @@ export function outline(pose: number, n: number): number[] {
 
 // The sweep's two axes, as shares of 2n. Down the diagonal, the edge points
 // by row + col + 1 (the diamond's height, top to bottom), each node lit with
-// an edge of its, as a matrix shape's endpoints are. Sideways, the rows and
+// an edge of its, as a Both-mode shape's endpoints are (a band across the
+// diamond crosses nearly every column, so nodes do not follow the columns a
+// Nodes-mode shape takes). Sideways, the rows and
 // columns in seriation order, each node at 2 row + 1, each edge lit when both
 // its ends are, as in a node pane.
 export function sweepAxis(row: Uint32Array, source: Uint32Array, target: Uint32Array, sideways = false): SweepAxis {

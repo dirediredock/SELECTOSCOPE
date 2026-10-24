@@ -1540,11 +1540,31 @@ textarea {
 .pane-footer {
   flex: none;
   display: flex;
-  align-items: center;
   height: var(--pane-footer-h);
-  /* Clear of the content's rounded corners, and a little above the band's
-     middle, nearer the content. */
+}
+
+/* The whole footer band, a button while the pane's sweep is active: a click
+   switches Wrap. The strip sits clear of the content's rounded corners, and a
+   little above the band's middle, nearer the content. */
+.pane-sweep-hit {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  margin: 0;
   padding: 0 calc(var(--radius-card) - var(--pane-frame-w)) 0.25rem;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.pane-sweep-hit:disabled {
+  cursor: default;
+}
+
+.pane-sweep-hit:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: calc(-1 * var(--focus-offset));
 }
 
 /* The sweep strip: on the sweeping pane alone, the band on a faint rail, in
@@ -1563,6 +1583,11 @@ textarea {
 
 .pane-sweep-strip.is-active {
   opacity: 1;
+}
+
+/* Hovered, the rail thickens, so the band reads as something to click. */
+.pane-sweep-hit:enabled:hover .pane-sweep-strip {
+  height: 0.3333rem; /* 4px */
 }
 
 .pane.is-focused .pane-sweep-strip {

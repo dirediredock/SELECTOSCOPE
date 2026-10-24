@@ -1,5 +1,4 @@
 import { createStore } from "./createStore";
-import { SELECT_MODES } from "../controlOptions";
 import { layout } from "./layout";
 import { selection } from "./selection";
 import type { SelectTarget } from "./selection";
@@ -54,18 +53,6 @@ export interface UiState {
 // (contrastShare). It lasts the session.
 export const CONTRAST = { min: 0, max: 100, opening: 0 } as const;
 
-// Both by default, and remembered across reloads.
-const SELECT_KEY = "selectoscope-select";
-
-function savedSelectMode(): SelectTarget {
-  try {
-    const saved = localStorage.getItem(SELECT_KEY);
-    return SELECT_MODES.find((m) => m.id === saved)?.id ?? "both";
-  } catch {
-    return "both";
-  }
-}
-
 // NodeLink owns the strip until the pointer enters a pane.
 const openingSlot = layout.get().slots.find((s) => s.type === "nodelink")?.slot ?? null;
 
@@ -74,7 +61,8 @@ export const ui = createStore<UiState>({
   passed: null,
   menuOpen: null,
   tool: "lasso",
-  selectMode: savedSelectMode(),
+  // Both on every load.
+  selectMode: "both",
   // Light on every load, as index.html paints it.
   theme: "light",
   contrast: CONTRAST.opening,
@@ -118,11 +106,6 @@ export function setTool(tool: Tool) {
 }
 
 export function setSelectMode(selectMode: SelectTarget) {
-  try {
-    localStorage.setItem(SELECT_KEY, selectMode);
-  } catch {
-    // As for the theme: without storage it lasts the session.
-  }
   ui.set({ selectMode });
 }
 

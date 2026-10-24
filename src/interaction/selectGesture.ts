@@ -17,9 +17,10 @@ import { beginGesture, endGesture, gestureActive, isNavigating } from "./activeG
 //                HitTester.groupOf); empty space does nothing
 //   hover        the item under the cursor turns red in every pane
 // The pane supplies a HitTester in its own screen space; this module knows
-// nothing about how the pane draws. A node pane's shapes write where the
-// Select mode says, the matrix's always to the edge set; hover and click take
-// any item the pane can pick (NodeLink's edge lines too), whatever the mode.
+// nothing about how the pane draws. Shapes write where the Select mode says;
+// in Nodes mode a pane may take nodes its own way (the matrix's columns,
+// HitTester.nodesInRect). Hover and click take any item the pane can pick
+// (NodeLink's edge lines too), whatever the mode.
 
 // Large enough that a shaky click never becomes an empty lasso, which would
 // clear the selection with no undo. Shared with the list band.
@@ -186,10 +187,17 @@ export function attachSelectGesture({ el, overlay, type, hit }: Options): Select
     const h = hit();
     if (h) {
       if (g.dragging) {
-        const ids = g.tool === "rect" ? h.itemsInRect(g.x0, g.y0, g.x, g.y) : h.itemsInPolygon(g.pts);
-        // Nodes and edges alike go where the Select mode says.
-        if (type === "node") selectFromNodes(ui.get().selectMode, ids, g.mode);
-        else selectFromEdges(ui.get().selectMode, ids, g.mode);
+        const target = ui.get().selectMode;
+        if (target === "node" && h.nodesInRect && h.nodesInPolygon) {
+          // The pane's own way to nodes (the matrix's columns).
+          const ids = g.tool === "rect" ? h.nodesInRect(g.x0, g.y0, g.x, g.y) : h.nodesInPolygon(g.pts);
+          selectFromNodes(target, ids, g.mode);
+        } else {
+          const ids = g.tool === "rect" ? h.itemsInRect(g.x0, g.y0, g.x, g.y) : h.itemsInPolygon(g.pts);
+          // Nodes and edges alike go where the Select mode says.
+          if (type === "node") selectFromNodes(target, ids, g.mode);
+          else selectFromEdges(target, ids, g.mode);
+        }
       } else {
         const item = pick(h, g.x0, g.y0);
         if (item?.group) toggleGroup(item.type, item.group);

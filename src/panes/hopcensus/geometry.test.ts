@@ -62,8 +62,12 @@ describe("sweepAxis", () => {
     expect(p[2]).toBeCloseTo(0.5 + (2 / 3) * 0.5);
   });
 
-  it("runs along the lines' places on the circle sideways, every bin at once", () => {
-    expect(fixed(sweepAxis(st, order, true).nodes!)).toEqual([0.3333, 0, 0.6667, 0, 0]);
+  it("runs along the lines' places sideways, every bin at once", () => {
+    expect(fixed(sweepAxis(st, order, true).nodes!)).toEqual([0.5, 0, 1, 0, 0]);
+  });
+
+  it("runs along the places on the circle sideways when the band wraps", () => {
+    expect(fixed(sweepAxis(st, order, true, true).nodes!)).toEqual([0.3333, 0, 0.6667, 0, 0]);
   });
 });
 

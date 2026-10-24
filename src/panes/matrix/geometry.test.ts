@@ -1,5 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { edgePoints, nodeLines, outline, posed, POSE, poseAt, rowsOf, formBounds, toLayout } from "./geometry";
+import {
+  columnsInQuad,
+  edgePoints,
+  formBounds,
+  nodeLines,
+  outline,
+  posed,
+  POSE,
+  poseAt,
+  rowsOf,
+  toLayout,
+  unposed,
+} from "./geometry";
 
 describe("toLayout", () => {
   it("draws the square with row 0 at the top", () => {
@@ -67,5 +79,36 @@ describe("nodeLines", () => {
     const [px, py] = toLayout(POSE.diamond, 2.5, 6.5);
     const cross = (x1! - x0!) * (py - y0!) - (y1! - y0!) * (px - x0!);
     expect(cross).toBeCloseTo(0);
+  });
+});
+
+describe("columns", () => {
+  // A small square of layout units around a point.
+  const around = (x: number, y: number, r = 0.1) => [x - r, y - r, x + r, y - r, x + r, y + r, x - r, y + r];
+
+  it("unpose back to the cell", () => {
+    for (const pose of [POSE.square, poseAt(0.3), POSE.diamond]) {
+      const [x, y] = toLayout(pose, 2.5, 6.5);
+      const [r, c] = unposed(pose, x, y);
+      expect(r).toBeCloseTo(2.5);
+      expect(c).toBeCloseTo(6.5);
+    }
+  });
+
+  it("are the columns a square shape spans", () => {
+    expect(columnsInQuad([2.2, -1, 4.7, -1, 4.7, -3, 2.2, -3], POSE.square, 10)).toEqual([2, 4]);
+  });
+
+  it("follow the diamond's turn", () => {
+    // Above the diagonal the cell's column is its higher position; its
+    // mirror's is the lower.
+    expect(columnsInQuad(around(...toLayout(POSE.diamond, 2.5, 6.5)), POSE.diamond, 10)).toEqual([6, 6]);
+    expect(columnsInQuad(around(...toLayout(POSE.diamond, 6.5, 2.5)), POSE.diamond, 10)).toEqual([2, 2]);
+  });
+
+  it("are clipped to the matrix", () => {
+    expect(columnsInQuad([-3, -1, 1.5, -1, 1.5, -3, -3, -3], POSE.square, 10)).toEqual([0, 1]);
+    expect(columnsInQuad([-3, -1, -1, -1, -1, -3, -3, -3], POSE.square, 10)).toBeNull();
+    expect(columnsInQuad([2, 1, 4, 1, 4, 3, 2, 3], POSE.square, 10)).toBeNull();
   });
 });

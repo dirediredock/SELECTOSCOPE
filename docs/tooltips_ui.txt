@@ -36,9 +36,9 @@ AUTO SWEEP, RUNNING: Click STOP to end the AUTO SWEEP and resume manual selectio
 
 AUTO SWEEP, PAUSED: RESUME carries on a paused sweep.
 
-SWEEP CONTROLS: Turn off VERTICAL to sweep left to right. AREA sets how much of the pane the band covers, and SPEED how fast it travels. ARROW steps the band, by click or with the arrow keys.
+SWEEP CONTROLS: Turn off VERTICAL to sweep left to right. AREA sets how much of the pane the band covers, and SPEED how fast it travels. MANUAL steps the band, by click or with the arrow keys.
 
-SWEEP CONTROLS, LABELS PANE: AREA sets how much of the pane the band covers, SPEED how fast it travels, and ARROW steps it, by click or with the arrow keys.
+SWEEP CONTROLS, LABELS PANE: AREA sets how much of the pane the band covers, SPEED how fast it travels, and MANUAL steps it, by click or with the arrow keys.
 
 SWEEP CONTROLS, IDLE: These controls are available when a sweep is active.
 

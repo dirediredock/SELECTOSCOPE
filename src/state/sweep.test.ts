@@ -6,11 +6,14 @@ import {
   registerSweepAxis,
   releaseStep,
   resumeSweep,
+  bandStart,
   setSweepSideways,
   startSweep,
   stopSweep,
   sweep,
+  sweepSettings,
   SWEEP_STEPS,
+  toggleSweepWrap,
   wrapStep,
 } from "./sweep";
 import { toggleItem } from "./selection";
@@ -30,54 +33,71 @@ const even = { nodes: Float64Array.of(0, 0.2, 0.4, 0.6, 0.8) };
 // The default area: a fifth of the extent.
 const BAND = 1 / 5;
 
-const at = (p: number) => Math.round(p * SWEEP_STEPS); // the step whose band starts at p
+// The step whose band, `w` thick, starts at p or just before it.
+const at = (p: number, w: number) => Math.floor(((p + w) / (1 + w)) * SWEEP_STEPS + 1e-9);
 
 describe("inBand", () => {
   it("takes [t, t + w)", () => {
-    expect(inBand(0.3, 0.3, 0.2)).toBe(true);
-    expect(inBand(0.49, 0.3, 0.2)).toBe(true);
-    expect(inBand(0.5, 0.3, 0.2)).toBe(false);
-    expect(inBand(0.29, 0.3, 0.2)).toBe(false);
+    for (const wrap of [false, true]) {
+      expect(inBand(0.3, 0.3, 0.2, wrap)).toBe(true);
+      expect(inBand(0.49, 0.3, 0.2, wrap)).toBe(true);
+      expect(inBand(0.5, 0.3, 0.2, wrap)).toBe(false);
+      expect(inBand(0.29, 0.3, 0.2, wrap)).toBe(false);
+    }
+  });
+
+  it("runs off past 1", () => {
+    expect(inBand(0.95, 0.9, 0.2, false)).toBe(true);
+    expect(inBand(0.05, 0.9, 0.2, false)).toBe(false);
   });
 
   it("wraps past 1 back to 0", () => {
-    expect(inBand(0.05, 0.9, 0.2)).toBe(true);
-    expect(inBand(0.95, 0.9, 0.2)).toBe(true);
-    expect(inBand(0.11, 0.9, 0.2)).toBe(false);
+    expect(inBand(0.05, 0.9, 0.2, true)).toBe(true);
+    expect(inBand(0.95, 0.9, 0.2, true)).toBe(true);
+    expect(inBand(0.11, 0.9, 0.2, true)).toBe(false);
   });
 });
 
 describe("bandSets in a node pane", () => {
   it("lights the nodes in the band and the edges they share", () => {
     // Band [0.2, 0.5): nodes 1 and 2, sharing edge 1.
-    const { nodes, edges } = bandSets(even, at(0.2), 0.3, "both", source, target);
+    const { nodes, edges } = bandSets(even, at(0.2, 0.3), 0.3, "both", source, target);
     expect([...nodes]).toEqual([1, 2]);
     expect([...edges]).toEqual([1]);
   });
 
   it("leaves an edge with one end outside", () => {
-    const { nodes, edges } = bandSets(even, at(0.2), BAND, "both", source, target);
+    const { nodes, edges } = bandSets(even, at(0.2, BAND), BAND, "both", source, target);
     expect([...nodes]).toEqual([1]);
     expect([...edges]).toEqual([]);
   });
 
   it("empties the set the mode leaves out", () => {
-    expect([...bandSets(even, at(0.2), 0.3, "node", source, target).edges]).toEqual([]);
-    expect([...bandSets(even, at(0.2), 0.3, "edge", source, target).nodes]).toEqual([]);
-    expect([...bandSets(even, at(0.2), 0.3, "edge", source, target).edges]).toEqual([1]);
+    expect([...bandSets(even, at(0.2, 0.3), 0.3, "node", source, target).edges]).toEqual([]);
+    expect([...bandSets(even, at(0.2, 0.3), 0.3, "edge", source, target).nodes]).toEqual([]);
+    expect([...bandSets(even, at(0.2, 0.3), 0.3, "edge", source, target).edges]).toEqual([1]);
   });
 
   it("covers every node equally over a full cycle", () => {
-    // Off the step boundaries, where float sums decide.
+    // Off the step boundaries, where float sums decide. A pass runs 1 + BAND,
+    // so the band holds a node for BAND / (1 + BAND) of it.
     const off = { nodes: Float64Array.of(0.01, 0.21, 0.41, 0.61, 0.81) };
     const hits = new Array(5).fill(0);
     for (let s = 0; s < SWEEP_STEPS; s++) for (const v of bandSets(off, s, BAND, "node", source, target).nodes) hits[v]++;
+    expect(hits).toEqual([10, 10, 10, 10, 10]);
+    // Wrapping, a pass runs 1, so BAND of it.
+    hits.fill(0);
+    for (let s = 0; s < SWEEP_STEPS; s++) for (const v of bandSets(off, s, BAND, "node", source, target, true).nodes) hits[v]++;
     expect(hits).toEqual([12, 12, 12, 12, 12]);
   });
 
+  it("lights nothing at step 0, the band not yet in", () => {
+    expect(bandSets(even, 0, 0.5, "both", source, target).nodes.size).toBe(0);
+  });
+
   it("thickens with the band", () => {
-    expect(bandSets(even, at(0), 0.5, "node", source, target).nodes.size).toBe(3);
-    expect(bandSets(even, at(0), 0.01, "node", source, target).nodes.size).toBe(1);
+    expect(bandSets(even, at(0, 0.5), 0.5, "node", source, target).nodes.size).toBe(3);
+    expect(bandSets(even, at(0.4, 0.01), 0.01, "node", source, target).nodes.size).toBe(1);
   });
 });
 
@@ -95,29 +115,39 @@ describe("bandSets in the matrix", () => {
 
   it("lights edges by their own height down the diagonal, and their endpoints", () => {
     // Band [0.1, 0.25): edge 0 alone, so nodes 0 and 1.
-    const { nodes, edges } = bandSets(diagonal, at(0.1), 0.15, "both", source, target);
+    const { nodes, edges } = bandSets(diagonal, at(0.1, 0.15), 0.15, "both", source, target);
     expect([...edges]).toEqual([0]);
     expect([...nodes]).toEqual([0, 1]);
   });
 
   it("still lights the endpoints under Nodes, and no nodes under Edges", () => {
-    expect([...bandSets(diagonal, at(0.1), 0.15, "node", source, target).nodes]).toEqual([0, 1]);
-    expect([...bandSets(diagonal, at(0.1), 0.15, "node", source, target).edges]).toEqual([]);
-    expect([...bandSets(diagonal, at(0.1), 0.15, "edge", source, target).nodes]).toEqual([]);
+    expect([...bandSets(diagonal, at(0.1, 0.15), 0.15, "node", source, target).nodes]).toEqual([0, 1]);
+    expect([...bandSets(diagonal, at(0.1, 0.15), 0.15, "node", source, target).edges]).toEqual([]);
+    expect([...bandSets(diagonal, at(0.1, 0.15), 0.15, "edge", source, target).nodes]).toEqual([]);
   });
 
   it("lights rows sideways, and the edges between them", () => {
     // Band [0.1, 0.4): nodes 0 and 1, sharing edge 0.
-    const { nodes, edges } = bandSets(sideways, at(0.1), 0.3, "both", source, target);
+    const { nodes, edges } = bandSets(sideways, at(0.1, 0.3), 0.3, "both", source, target);
     expect([...nodes]).toEqual([0, 1]);
     expect([...edges]).toEqual([0]);
   });
 
-  it("wraps past the bottom back to the top", () => {
-    // Band [0.75, 1.05) wraps to [0, 0.05): edge 3 only.
-    const { nodes, edges } = bandSets(diagonal, at(0.75), 0.3, "both", source, target);
+  it("runs off the bottom before coming in at the top", () => {
+    // Band [0.75, 1.05): edge 3 only, none from the top.
+    const { nodes, edges } = bandSets(diagonal, at(0.75, 0.3), 0.3, "both", source, target);
     expect([...edges]).toEqual([3]);
     expect([...nodes]).toEqual([3, 4]);
+    expect([...bandSets(diagonal, SWEEP_STEPS - 1, 0.3, "both", source, target).edges]).toEqual([]);
+  });
+
+  it("wraps past the bottom back to the top", () => {
+    // Band [0.75, 1.05) wraps to [0, 0.05): edge 3 only.
+    const { nodes, edges } = bandSets(diagonal, Math.round(0.75 * SWEEP_STEPS), 0.3, "both", source, target, true);
+    expect([...edges]).toEqual([3]);
+    expect([...nodes]).toEqual([3, 4]);
+    // Band [0.95, 1.25) wraps to [0, 0.25): edge 0, from the top.
+    expect([...bandSets(diagonal, Math.round(0.95 * SWEEP_STEPS), 0.3, "both", source, target, true).edges]).toEqual([0]);
   });
 });
 
@@ -217,10 +247,38 @@ describe("stepping with the arrows", () => {
     pressStep(1);
     releaseStep(1);
     setSweepSideways(true);
-    expect(reader).toHaveBeenLastCalledWith(true);
+    expect(reader).toHaveBeenLastCalledWith(true, false);
     expect(sweep.get()).toMatchObject({ paused: true, step: 1 });
     setSweepSideways(false);
     unregister();
+  });
+
+  it("keeps the band in place when Wrap switches, paused", () => {
+    const w = sweepSettings.get().area / 100;
+    startSweep("s0");
+    for (let i = 0; i < 25; i++) {
+      pressStep(1);
+      releaseStep(1);
+    }
+    const t = bandStart(25, w, false);
+    toggleSweepWrap();
+    const { step, paused } = sweep.get();
+    expect(paused).toBe(true);
+    expect(Math.abs(bandStart(step, w, true) - t)).toBeLessThanOrEqual(0.5 / SWEEP_STEPS + 1e-9);
+    toggleSweepWrap();
+    expect(sweep.get().step).toBe(25);
+  });
+
+  it("carries on from the band's place when Wrap switches, running", () => {
+    const w = sweepSettings.get().area / 100;
+    startSweep("s0");
+    frame(700); // step 10
+    toggleSweepWrap();
+    const at = sweep.get().step;
+    expect(Math.abs(bandStart(at, w, true) - bandStart(10, w, false))).toBeLessThanOrEqual(0.5 / SWEEP_STEPS + 1e-9);
+    frame(700 + 4000 / 60);
+    expect(sweep.get().step).toBe(at + 1);
+    toggleSweepWrap();
   });
 
   it("stops on a selection change while paused", () => {
