@@ -132,10 +132,11 @@ export function censusOrder({ values }: CensusStructure, measure: CensusMeasure,
   const key = values[measure].map((x) => -LEFT[measure] * Math.round(x * 1e12));
   const ranks = classRanks(key);
   const place = scaled(byRank ? Float64Array.from(ranks) : key);
-  // The band wraps, so the circle keeps one class's step after the last
-  // column, or it would light with the first: by rank class c sits at c / C,
-  // so each takes an equal share of the pass; by value the gaps keep their
-  // proportions.
+  // Down the sweep the bins sit end to end, and a wrapping band runs from the
+  // end back to the start, so the circle keeps one class's step after the last
+  // column, or that would light with the first: by rank class c sits at
+  // c / C, so each takes an equal share of the pass; by value the gaps keep
+  // their proportions.
   let classes = 0;
   for (const r of ranks) classes = Math.max(classes, r + 1);
   const turn = (classes - 1) / Math.max(1, classes);
@@ -169,15 +170,16 @@ function scaled(key: Float64Array): Float32Array {
 // its square is; within a bin, along the lines' places on the sweep's circle,
 // its left end first, so each bin reads left to right as Spacing moves it, and
 // its last line never lands on the next bin's start. Sideways it runs along
-// the same places, every bin at once: by rank each step passes a column, by
-// value the gaps pass empty. Both read the place, not the drawn offset, so
+// the lines' places, every bin at once, on the circle if the band wraps: by
+// rank each step passes a column, by value the gaps pass empty. Both read the place, not the drawn offset, so
 // they sweep the same at any Spacing, 0 included.
 export function sweepAxis(
   { n, eccs, binOf }: Pick<CensusStructure, "n" | "eccs" | "binOf">,
-  { sweep }: CensusOrder,
+  { place, sweep }: CensusOrder,
   sideways = false,
+  wrap = false,
 ): SweepAxis {
-  if (sideways) return { nodes: Float64Array.from(sweep) };
+  if (sideways) return { nodes: Float64Array.from(wrap ? sweep : place) };
   const bins = eccs.length;
   const nodes = new Float64Array(n);
   for (let v = 0; v < n; v++) nodes[v] = (binOf[v]! + sweep[v]!) / bins;

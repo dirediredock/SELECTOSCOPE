@@ -156,10 +156,10 @@ export function HopCensusPane({ slot }: { slot: SlotId }) {
     };
 
     // The sweep follows the order picked, even before a glide lands.
-    const axis = (sideways: boolean) => {
+    const axis = (sideways: boolean, wrap: boolean) => {
       const g = data.get().graph;
       if (!g || !structure || structure.graph !== g) return null;
-      return sweepAxis(structure.st, orderOf(g, structure.st), sideways);
+      return sweepAxis(structure.st, orderOf(g, structure.st), sideways, wrap);
     };
 
     const ro = new ResizeObserver(() => frame.schedule(full));

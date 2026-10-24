@@ -457,11 +457,10 @@ export function HelpPane() {
             <p>
               This pane surfaces visual patterns from matrix seriation, or the
               symmetric ordering of nodes along the side of the matrix. For
-              selection, in EDGES mode a drawn area takes the edge points inside
-              it. In NODES mode it takes the nodes whose columns it crosses, so
-              an area over a block of a bipartite graph picks one side of it.
-              In BOTH it takes the edge points inside it and their endpoint
-              nodes.
+              selection, a drawn area takes the edge points inside it: in EDGES
+              mode the edge points directly, in BOTH mode their node endpoints
+              as well. In NODES mode a drawn area only selects matrix
+              gridlines.
             </p>
             <p>
               Layout: The visual idiom is the classic Adjacency Matrix, where
@@ -697,7 +696,10 @@ export function HelpPane() {
             to sweep left to right. The AREA setting sets how much of the pane
             the band covers, while SPEED sets how fast the band travels. The
             band highlights what a drawn area would take with the current
-            SELECTION SET mode.
+            SELECTION SET mode. The animated thin strip in the pane footer
+            reports the progress of the sweep; click to toggle wrap around
+            behavior that restarts as it leaves the end, rather than restarting
+            after a full sweep.
           </p>
           <Replica>
             <Transport
@@ -736,8 +738,9 @@ export function HelpPane() {
           <p>
             While a sweep is active, BRUSH and EXTEND SET are on hold and
             inactive, so the SELECTION COUNT follows the band. At any time press
-            ↓ or → to step forward, or ↑ or ← to step back; and hold to keep it
-            moving. A step pauses the sweep; click RESUME to carry on.
+            ↓ or → for a MANUAL step forward, or ↑ or ← to step back; or hold to
+            keep the band moving. A step pauses the sweep; click RESUME to carry
+            on automatically.
           </p>
           <Replica>
             <Transport
@@ -747,8 +750,8 @@ export function HelpPane() {
               onClick={none}
             />
             <HoldStepper
-              label="Arrow"
-              word="Arrow"
+              label="Manual"
+              word="Manual"
               forwardLabel={TEXT.sweep.stepForward}
               backLabel={TEXT.sweep.stepBack}
               onPress={none}

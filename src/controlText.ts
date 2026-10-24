@@ -120,6 +120,8 @@ export const TEXT = {
     idleTip: tip(STRIP, "SWEEP CONTROLS, IDLE"),
     stepForward: "Forwards step",
     stepBack: "Backwards step",
+    // The footer strip under the sweeping pane.
+    wrap: "Wrap the band around",
   },
 
   // Help's ? buttons, which show only a glyph, and its strip.

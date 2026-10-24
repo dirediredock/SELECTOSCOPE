@@ -3,7 +3,7 @@ import type { CSSProperties, MouseEvent, ReactNode } from "react";
 import { focus, toggleHelp, toggleMenu, ui } from "../state/uiStore";
 import { useStore } from "../state/createStore";
 import { fitView, viewIn, views, zoomLabel } from "../state/views";
-import { SWEEP_STEPS, sweep, sweepSettings } from "../state/sweep";
+import { bandStart, sweep, sweepSettings, toggleSweepWrap } from "../state/sweep";
 import { MAX_AR, paneInfo, slotTitle } from "../state/panes";
 import type { PaneType } from "../state/panes";
 import type { SlotId } from "../state/layout";
@@ -111,24 +111,36 @@ function SweepMark({ running }: { running: boolean }) {
 }
 
 // This pane's sweep is active: the band as a segment Area % of the rail wide,
-// left to right whichever way it travels, wrapping round the ends as the band
-// does. It steps when the panes relight, so it never shows a place they don't.
-// The bottom strip follows the pointer, so this keeps the pane that drives the
-// band in view. It fades out holding its last place. An indicator only: the
-// play glyph names the state.
+// left to right whichever way it travels, running off the ends or wrapping
+// round them as the band does. It steps when the panes relight, so it never
+// shows a place they don't. The bottom strip follows the pointer, so this
+// keeps the pane that drives the band in view. It fades out holding its last
+// place. The play glyph names the state; a click anywhere on the footer band
+// switches Wrap, while the sweep is active.
 function SweepStrip({ slot }: { slot: SlotId }) {
   const step = useStore(sweep, (s) => (s.slot === slot ? s.step : null));
   const area = useStore(sweepSettings, (s) => s.area);
+  const wrap = useStore(sweepSettings, (s) => s.wrap);
   const last = useRef(0);
   if (step !== null) last.current = step;
-  const t = last.current / SWEEP_STEPS;
   const w = area / 100;
+  const t = bandStart(last.current, w, wrap);
   const pct = (x: number) => `${x * 100}%`;
+  // The rail clips what lies past its ends.
   return (
-    <div className={`pane-sweep-strip${step !== null ? " is-active" : ""}`} aria-hidden>
-      <span className="pane-sweep-band" style={{ left: pct(t), width: pct(Math.min(w, 1 - t)) }} />
-      {t + w > 1 && <span className="pane-sweep-band" style={{ left: 0, width: pct(t + w - 1) }} />}
-    </div>
+    <button
+      type="button"
+      className="pane-sweep-hit"
+      aria-label={TEXT.sweep.wrap}
+      aria-pressed={wrap}
+      disabled={step === null}
+      onClick={toggleSweepWrap}
+    >
+      <span className={`pane-sweep-strip${step !== null ? " is-active" : ""}`}>
+        <span className="pane-sweep-band" style={{ left: pct(t), width: pct(w) }} />
+        {wrap && t + w > 1 && <span className="pane-sweep-band" style={{ left: 0, width: pct(t + w - 1) }} />}
+      </span>
+    </button>
   );
 }
 

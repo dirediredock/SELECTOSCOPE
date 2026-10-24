@@ -132,9 +132,9 @@ The RANKING toggle places polyline shapes following an evenly spaced horizontal 
 
 AUTO SWEEP
 
-Click RUN in the bottom control strip to automatically sweep a selection area across the extent of the focused pane. By default the scan runs from the top of the pane to the bottom. Turn off VERTICAL to sweep left to right. The AREA setting sets how much of the pane the band covers, while SPEED sets how fast the band travels. The band highlights what a drawn area would take with the current SELECTION SET mode.
+Click RUN in the bottom control strip to automatically sweep a selection area across the extent of the focused pane. By default the scan runs from the top of the pane to the bottom. Turn off VERTICAL to sweep left to right. The AREA setting sets how much of the pane the band covers, while SPEED sets how fast the band travels. The band highlights what a drawn area would take with the current SELECTION SET mode. The animated thin strip in the pane footer reports the progress of the sweep; click to toggle wrap around behavior that restarts as it leaves the end, rather than restarting after a full sweep.
 
-While a sweep is active, BRUSH and EXTEND SET are on hold and inactive, so the SELECTION COUNT follows the band. At any time press ↓ or → to step forward, or ↑ or ← to step back; and hold to keep it moving. A step pauses the sweep; click RESUME to carry on.
+While a sweep is active, BRUSH and EXTEND SET are on hold and inactive, so the SELECTION COUNT follows the band. At any time press ↓ or → for a MANUAL step forward, or ↑ or ← to step back; or hold to keep the band moving. A step pauses the sweep; click RESUME to carry on automatically.
 
 Click STOP, or change the selection by drawing an area, clicking an item, or loading a dataset, to end the AUTO SWEEP and resume manual selection. General navigation like zooming, panning and rotating within panes does not stop an active sweep.
 

@@ -6,8 +6,11 @@ import { selection } from "./selection";
 import type { SelectionState, SelectTarget } from "./selection";
 import { ui } from "./uiStore";
 
-// Auto Sweep: a band travels along one axis of a pane and wraps around, 60 steps
-// a pass (4 s at 100% speed), and the items inside it light up in every pane. Each pane type
+// Auto Sweep: a band travels along one axis of a pane, coming in at one end and
+// running wholly off the other before it comes in again, or (Wrap, a click on
+// the pane's footer strip) coming back in at the start as it leaves the end,
+// 60 steps a pass (4 s at 100% speed), and the items inside it light up in
+// every pane. Each pane type
 // has two axes, given by the pane itself (registerSweepAxis): top to bottom,
 // or left to right (sideways) while the strip's Vertical switch is off. The matrix's two are its edge points
 // down the diagonal and its rows and columns; Labels has its rows alone.
@@ -36,20 +39,22 @@ export const SWEEP_AREA = { min: 1, max: 50, opening: 20 } as const;
 // How fast the band travels, as a percent of one pass in PERIOD_MS.
 export const SWEEP_SPEED = { min: 25, max: 400, opening: 100 } as const;
 
-// Sideways (the off side of Vertical), area and
-// speed are one value each, shown in every pane's strip,
-// so any pane sweeps as the last one did. They last the session. What the
-// band lights is the top strip's Select mode.
+// Sideways (the off side of Vertical), area,
+// speed and wrap are one value each, shown in every pane's strip (wrap in the
+// footer strip's band), so any pane sweeps as the last one did. They last the
+// session. What the band lights is the top strip's Select mode.
 export interface SweepSettings {
   sideways: boolean;
   area: number;
   speed: number;
+  wrap: boolean;
 }
 
 export const sweepSettings = createStore<SweepSettings>({
   sideways: false,
   area: SWEEP_AREA.opening,
   speed: SWEEP_SPEED.opening,
+  wrap: false,
 });
 
 export function setSweepSideways(sideways: boolean) {
@@ -62,6 +67,10 @@ export function setSweepArea(area: number) {
 
 export function setSweepSpeed(speed: number) {
   sweepSettings.set({ speed });
+}
+
+export function toggleSweepWrap() {
+  sweepSettings.set((s) => ({ wrap: !s.wrap }));
 }
 
 // ---------- State ----------
@@ -97,8 +106,22 @@ export interface SweepAxis {
 // The step `by` steps on from `step`, wrapping at both ends.
 export const wrapStep = (step: number, by: number) => (((step + by) % SWEEP_STEPS) + SWEEP_STEPS) % SWEEP_STEPS;
 
-// Inside [t, t + w), wrapping past 1 back to 0.
-export const inBand = (p: number, t: number, w: number) => (p >= t && p < t + w) || p < t + w - 1;
+// Where the band `w` thick starts at `step`. Running off, from -w, wholly
+// before the axis, at step 0, on towards 1, wholly past it, so step 0 lights
+// nothing; wrapping, from 0 on towards 1. Either way every place is lit for
+// as many steps.
+export const bandStart = (step: number, w: number, wrap: boolean) =>
+  wrap ? step / SWEEP_STEPS : (step / SWEEP_STEPS) * (1 + w) - w;
+
+// Inside [t, t + w), wrapping past 1 back to 0 if `wrap`.
+export const inBand = (p: number, t: number, w: number, wrap: boolean) =>
+  (p >= t && p < t + w) || (wrap && p < t + w - 1);
+
+// The step whose band starts nearest `t`.
+function stepAt(t: number, w: number, wrap: boolean) {
+  const s = Math.round(wrap ? (t < 0 ? t + 1 : t) * SWEEP_STEPS : ((t + w) / (1 + w)) * SWEEP_STEPS);
+  return wrapStep(s, 0);
+}
 
 // The sets the band lights at `step`, `w` thick, with the mode's other set
 // left empty.
@@ -109,27 +132,29 @@ export function bandSets(
   mode: SelectTarget,
   source: Uint32Array,
   target: Uint32Array,
+  wrap = false,
 ): { nodes: Set<number>; edges: Set<number> } {
-  const t = step / SWEEP_STEPS;
+  const t = bandStart(step, w, wrap);
+  const lit = (p: number) => inBand(p, t, w, wrap);
   const nodes = new Set<number>();
   const edges = new Set<number>();
   const { nodes: placed, edges: own } = axis;
   if (placed) {
     const inside = new Uint8Array(placed.length);
     for (let v = 0; v < placed.length; v++) {
-      if (inBand(placed[v]!, t, w)) {
+      if (lit(placed[v]!)) {
         inside[v] = 1;
         nodes.add(v);
       }
     }
     if (mode !== "node") {
       for (let e = 0; e < source.length; e++) {
-        if (own ? inBand(own[e]!, t, w) : inside[source[e]!] && inside[target[e]!]) edges.add(e);
+        if (own ? lit(own[e]!) : inside[source[e]!] && inside[target[e]!]) edges.add(e);
       }
     }
   } else if (own) {
     for (let e = 0; e < source.length; e++) {
-      if (!inBand(own[e]!, t, w)) continue;
+      if (!lit(own[e]!)) continue;
       edges.add(e);
       nodes.add(source[e]!).add(target[e]!);
     }
@@ -139,7 +164,9 @@ export function bandSets(
 
 // ---------- Axes, given by the mounted panes ----------
 
-type AxisReader = (sideways: boolean) => SweepAxis | null;
+// Wrapping, an axis whose far end would light with its start keeps short of
+// it (the hop census sideways).
+type AxisReader = (sideways: boolean, wrap: boolean) => SweepAxis | null;
 
 const axes = new Map<SlotId, AxisReader>();
 
@@ -166,10 +193,10 @@ const stepMs = (speed: number) => PERIOD_MS / SWEEP_STEPS / (speed / 100);
 
 function bandAt(slot: SlotId, step: number): { nodes: ReadonlySet<number>; edges: ReadonlySet<number> } {
   const graph = data.get().graph;
-  const { sideways, area } = sweepSettings.get();
-  const axis = axes.get(slot)?.(sideways) ?? null;
+  const { sideways, area, wrap } = sweepSettings.get();
+  const axis = axes.get(slot)?.(sideways, wrap) ?? null;
   if (!graph || !axis) return { nodes: EMPTY, edges: EMPTY };
-  return bandSets(axis, step, area / 100, ui.get().selectMode, graph.edgeSource, graph.edgeTarget);
+  return bandSets(axis, step, area / 100, ui.get().selectMode, graph.edgeSource, graph.edgeTarget, wrap);
 }
 
 function show(slot: SlotId, step: number) {
@@ -207,6 +234,12 @@ function tick(now: number) {
   raf = requestAnimationFrame(tick);
 }
 
+// Running, step `step` is now, a hair into it, so float error never lands on
+// the one before.
+function anchor(step: number) {
+  t0 = performance.now() - (step + 1e-6) * stepMs(sweepSettings.get().speed);
+}
+
 export function startSweep(slot: SlotId) {
   stopSweep();
   t0 = performance.now();
@@ -218,8 +251,7 @@ export function startSweep(slot: SlotId) {
 export function resumeSweep() {
   const { slot, step, paused } = sweep.get();
   if (slot === null || !paused) return;
-  // A hair into the step, so float error never lands on the one before.
-  t0 = performance.now() - (step + 1e-6) * stepMs(sweepSettings.get().speed);
+  anchor(step);
   sweep.set({ paused: false, held: 0 });
 }
 
@@ -272,7 +304,7 @@ ui.subscribe((s, prev) => {
 
 // A new orientation or area shows at once, at the same step. A new speed carries on
 // from where the band is, so it never jumps (a held arrow takes it from its
-// next step).
+// next step). So does Wrap: the band keeps its place, at the step nearest it.
 sweepSettings.subscribe((s, prev) => {
   const { slot, step, paused } = sweep.get();
   if (slot === null) return;
@@ -280,5 +312,10 @@ sweepSettings.subscribe((s, prev) => {
     const now = performance.now();
     t0 = now - ((now - t0) / stepMs(prev.speed)) * stepMs(s.speed);
   }
-  if (s.area !== prev.area || s.sideways !== prev.sideways) show(slot, step);
+  if (s.wrap !== prev.wrap) {
+    const w = s.area / 100;
+    const next = stepAt(bandStart(step, w, prev.wrap), w, s.wrap);
+    if (!paused) anchor(next);
+    show(slot, next);
+  } else if (s.area !== prev.area || s.sideways !== prev.sideways) show(slot, step);
 });

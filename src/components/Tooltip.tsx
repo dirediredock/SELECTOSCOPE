@@ -147,7 +147,7 @@ export function watchTips(doc: Document, onChange: (el: HTMLElement | null) => v
     pressed = !!current && e.target instanceof Node && current.contains(e.target);
   };
   // Only where the pointer still is over the anchor: a captured drag (a
-  // slider, Arrow) releases on its control wherever the pointer went.
+  // slider, Manual) releases on its control wherever the pointer went.
   const release = (e: PointerEvent) => {
     if (!pressed || !current) return;
     pressed = false;

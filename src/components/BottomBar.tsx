@@ -103,7 +103,7 @@ function ZoomSection({ slot }: { slot: SlotId }) {
 // Run, Stop or Resume (a paused sweep ends with Resume, then Stop). Sweep
 // controls, on a gray tray: Vertical, on by default (down the diagonal in
 // the matrix), off the band runs left to right (Labels' rows run one way, so it has none),
-// the band's area (% of the axis's extent), its speed, and the Arrow pill,
+// the band's area (% of the axis's extent), its speed, and the Manual pill,
 // whose buttons step it as the arrow keys do, drawn ◀ ▶ while the band runs
 // sideways. The switch, area and speed are shared by every pane's strip. The controls live only while a sweep is
 // active; idle their tray fades whole but keeps its place, so nothing in the
@@ -149,8 +149,8 @@ function SweepSection({ slot, type, blocked = false }: { slot: SlotId; type: Pan
           <Slider label="Area" range={SWEEP_AREA} value={area} onChange={setSweepArea} disabled={idle} />
           <Slider label="Speed" range={SWEEP_SPEED} value={speed} onChange={setSweepSpeed} disabled={idle} />
           <HoldStepper
-            label="Arrow"
-            word="Arrow"
+            label="Manual"
+            word="Manual"
             forwardLabel={TEXT.sweep.stepForward}
             backLabel={TEXT.sweep.stepBack}
             onPress={pressStep}
