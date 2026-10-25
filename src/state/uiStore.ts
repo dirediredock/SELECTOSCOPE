@@ -51,7 +51,7 @@ export interface UiState {
 // background, so a selection that is hard to spot stands out: none at 0%, the
 // most at 100%, where a floor keeps the pattern faintly visible
 // (contrastShare). It lasts the session.
-export const CONTRAST = { min: 0, max: 100, opening: 0 } as const;
+export const CONTRAST = { min: 0, max: 100, opening: 20 } as const;
 
 // NodeLink owns the strip until the pointer enters a pane.
 const openingSlot = layout.get().slots.find((s) => s.type === "nodelink")?.slot ?? null;

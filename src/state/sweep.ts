@@ -22,6 +22,10 @@ import { ui } from "./uiStore";
 // rotation or a re-sort as a running one does. Any selection change stops it
 // (a gesture, a list click, a set's Clear), as do Stop, a dataset switch and
 // its slot changing type. Navigating never does.
+//
+// The showcase: the dataset the app opens on lands with the first Matrix
+// sweeping its H1, so the linked views show themselves before anyone acts.
+// Every dataset after it opens still.
 
 export const SWEEP_STEPS = 60;
 const PERIOD_MS = 4000;
@@ -37,7 +41,7 @@ const EMPTY: ReadonlySet<number> = new Set();
 export const SWEEP_AREA = { min: 1, max: 50, opening: 20 } as const;
 
 // How fast the band travels, as a percent of one pass in PERIOD_MS.
-export const SWEEP_SPEED = { min: 25, max: 400, opening: 100 } as const;
+export const SWEEP_SPEED = { min: 25, max: 400, opening: 125 } as const;
 
 // Sideways (the off side of Vertical), area,
 // speed and wrap are one value each, shown in every pane's strip (wrap in the
@@ -285,8 +289,15 @@ export function stopSweep(): boolean {
 
 selection.subscribe(() => stopSweep());
 
+let opened = false;
+
 data.subscribe((s, prev) => {
-  if (s.graph !== prev.graph) stopSweep();
+  if (s.graph === prev.graph) return;
+  stopSweep();
+  if (opened || !s.graph) return;
+  opened = true;
+  const matrix = layout.get().slots.find((x) => x.type === "matrix");
+  if (matrix) startSweep(matrix.slot);
 });
 
 // A slot that changes type, or leaves the line-up, stops its sweep.

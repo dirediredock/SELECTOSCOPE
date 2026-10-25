@@ -8,6 +8,7 @@ import {
   resumeSweep,
   bandStart,
   setSweepSideways,
+  setSweepSpeed,
   startSweep,
   stopSweep,
   sweep,
@@ -176,6 +177,7 @@ describe("stepping with the arrows", () => {
     vi.spyOn(performance, "now").mockImplementation(() => now);
     vi.stubGlobal("requestAnimationFrame", (cb: (t: number) => void) => ((pending = cb), 1));
     vi.stubGlobal("cancelAnimationFrame", () => (pending = null));
+    setSweepSpeed(100); // the steps below are 4000 / 60 ms
   });
 
   afterEach(() => {
