@@ -1,5 +1,5 @@
 import { createStore } from "./createStore";
-import { PANES, SCROLL_OPENING_AR } from "./panes";
+import { PANES, scrollOpeningAr } from "./panes";
 import type { PaneType } from "./panes";
 import { windowRowMode } from "./rowMode";
 import type { RowMode } from "./rowMode";
@@ -35,7 +35,7 @@ export interface LayoutState {
 }
 
 export const layout = createStore<LayoutState>({
-  slots: PANES.map((p, i) => ({ slot: `s${i}`, type: p.id, ar: SCROLL_OPENING_AR })),
+  slots: PANES.map((p, i) => ({ slot: `s${i}`, type: p.id, ar: scrollOpeningAr(p.id) })),
   mode: windowRowMode(null),
   shares: null,
 });
