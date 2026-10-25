@@ -41,7 +41,7 @@ The datasets are listed as the Data pane lists them: by group, numbered in its o
 | 14 | `cylinder_2560` | Synthetic | — | A square grid wrapped into an open tube, 80 × 32 |
 | 15 | `torus_2560` | Synthetic | — | A triangulated torus, 80 × 32 |
 | 16 | `bob` | [Keenan Crane's 3D Model Repository](https://www.cs.cmu.edu/~kmcrane/Projects/ModelRepository/), `bob_isotropic.obj` | K. Crane (license CC0 1.0) | A toy duck mesh; vertex positions as the 3D layout |
-| 17 | `spot` | [Keenan Crane's 3D Model Repository](https://www.cs.cmu.edu/~kmcrane/Projects/ModelRepository/), `spot.zip`, `spot_triangulated.obj` | K. Crane, U. Pinkall and P. Schröder, "Robust fairing via conformal curvature flow", *ACM Trans. Graph.* 32(4) (2013) (license CC0 1.0) | A toy cow mesh; vertex positions as the 3D layout |
+| 17 | `spot` | [Keenan Crane's 3D Model Repository](https://www.cs.cmu.edu/~kmcrane/Projects/ModelRepository/), `spot.zip`, `spot_triangulated.obj` | K. Crane, U. Pinkall and P. Schröder, "Robust fairing via conformal curvature flow", *ACM Trans. Graph.* 32(4) (2013) (license CC0 1.0) | A toy cow mesh; vertex positions as the 3D layout, turned to face left, toward the viewer, in the opening view |
 | 18 | `stanford_bunny` | [Stanford 3D Scanning Repository](https://graphics.stanford.edu/data/3Dscanrep/), `bun_zipper_res3` mesh | Stanford Computer Graphics Laboratory | A mesh; vertex positions as the 3D layout |
 
 ## Fractal
