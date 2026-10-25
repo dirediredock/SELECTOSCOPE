@@ -128,7 +128,32 @@ export function cancelLoad(): number {
   return ++latest;
 }
 
-// The app opens on a random curated dataset, so no one graph becomes the
+// The datasets the app may open on: those whose Matrix sweep (sweep.ts's
+// showcase) lights every pane most strikingly. The Data list shows them all.
+const SHOWCASE = new Set([
+  "fullerene_structures_C3840",
+  "icosphere_6252",
+  "lattice_monotiles_5992",
+  "lattice_penrose_5981",
+  "fibonacci_sunflower",
+  "spot",
+  "stanford_bunny",
+  "sierpinski_triangle_3282",
+  "indo_european",
+  "word_ladder",
+  "wiki_science",
+  "thinkers",
+  "mathematicians",
+  "programming_languages",
+  "music_genres",
+  "jazz_musicians",
+  "human_connectome",
+  "groel_ring",
+  "celegans_male_gap_junction",
+  "celegans_hermaphrodite_gap_junction",
+]);
+
+// The app opens on a random showcase dataset, so no one graph becomes the
 // habitual view; unless the user picked something first.
 export async function initData(stop: () => void) {
   const token = latest;
@@ -139,7 +164,9 @@ export async function initData(stop: () => void) {
     const { datasets } = (await res.json()) as { datasets: DatasetEntry[] };
     data.set({ index: datasets, loading: false });
     if (token !== latest) return;
-    await loadDataset(datasets[Math.floor(Math.random() * datasets.length)].name, stop);
+    const shown = datasets.filter((d) => SHOWCASE.has(d.name));
+    const pool = shown.length ? shown : datasets;
+    await loadDataset(pool[Math.floor(Math.random() * pool.length)].name, stop);
   } catch (e) {
     data.set({ loading: false, loadError: String(e) });
   }

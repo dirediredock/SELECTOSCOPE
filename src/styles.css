@@ -151,8 +151,8 @@
 
   --node-sel: #0097f8;
   --node-sel-soft: rgba(0, 151, 248, 0.24);
-  --edge-sel: #ffa914;
-  --edge-sel-soft: rgba(255, 169, 20, 0.24);
+  --edge-sel: #ff9a1a;
+  --edge-sel-soft: rgba(255, 154, 26, 0.24);
   --hover: #ed0046;
 
   --refused: var(--hover);
