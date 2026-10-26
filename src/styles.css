@@ -2416,7 +2416,6 @@ textarea {
   color: var(--text);
   font-size: var(--fs-control);
   line-height: 1.45;
-  text-wrap: pretty;
 }
 
 .list-row.is-dataset:focus-visible {
@@ -2455,7 +2454,6 @@ textarea {
   color: var(--text);
   font-size: var(--fs-control);
   line-height: 1.45;
-  text-wrap: pretty;
 }
 
 .help-body p,
@@ -2516,22 +2514,24 @@ textarea {
    copy to its right. */
 .help-steps {
   counter-reset: step;
-  display: grid;
-  /* One column no wider than the sheet: by default a grid track grows to its
-     widest copy, and the text would wrap against that rather than the pane. */
-  grid-template-columns: minmax(0, 1fr);
-  gap: 1.2rem;
   margin: 1.2rem 0 1.6rem;
   padding: 0 0.8rem;
   list-style: none;
 }
 
+/* Plain blocks, not a grid. **Why:** Safari keeps a grid row's height from
+   an earlier, narrower sheet after the pane widens, leaving a gap under each
+   step. Each step is its own flow root, so a copy's margin stays inside it. */
 .help-steps li {
   position: relative;
-  min-width: 0;
+  display: flow-root;
   counter-increment: step;
   min-height: 1.8333rem;
   padding-left: 2.8333rem; /* the badge, and air after it */
+}
+
+.help-steps li + li {
+  margin-top: 1.2rem;
 }
 
 .help-steps li::before {
@@ -2611,7 +2611,7 @@ textarea {
   padding: 0 0.8rem;
 }
 
-/* An inert copy of a control, at 80% (HelpPane's Replica sets the zoom),
+/* An inert copy of a control, at 80% (HelpPane's Replica sets the scale),
    centred in its row (by flex, so the copy's own text keeps its alignment),
    which is the room it may take, with air above and below
    so it reads as a figure set apart from the text. A run of copies stacks
@@ -2626,10 +2626,18 @@ textarea {
   margin-top: -1.7rem;
 }
 
+/* The scaled copy's room: Replica sizes it to the copy's scaled size. The
+   copy keeps its full size inside, scaled from the top left. */
+.help-replica-box {
+  flex: none;
+  display: flex;
+  align-items: flex-start;
+}
+
 .help-replica {
-  /* Its natural width, so Replica can measure it and zoom it to fit. */
   flex: none;
   display: inline-flex;
+  transform-origin: 0 0;
   align-items: center;
   gap: 0.5rem;
   white-space: nowrap;
@@ -2642,5 +2650,12 @@ textarea {
 
 .help-replica .set-count {
   margin: 0;
+}
+
+/* The header menu's copy: the card in place, not floating over a pane, at a
+   width its rows read at. */
+.help-replica .pane-menu {
+  position: static;
+  width: 15rem; /* 180px */
 }
 

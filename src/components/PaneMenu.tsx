@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import type { CSSProperties } from "react";
+import type { CSSProperties, Ref } from "react";
 import { closeMenu, setHelp, ui } from "../state/uiStore";
 import { DATASET_VIEWS, FIT_SHAPES, MAX_AR, SCROLL_SHAPES, SWAPPABLE } from "../state/panes";
 import type { PaneType } from "../state/panes";
@@ -25,7 +25,7 @@ const MIN_TOLERANCE_PX = scaled(2);
 
 // One tile: `ar` null is the row's minimum width; `glyph` is the shape the
 // tile draws.
-interface Tile {
+export interface Tile {
   ar: number | null;
   glyph: number;
   label: string;
@@ -73,46 +73,70 @@ export function PaneMenu({ slot, type, ar }: PaneMenuProps) {
     return () => window.removeEventListener("pointerdown", onDown, true);
   }, [slot]);
 
+  const rows =
+    type === "dataset"
+      ? DATASET_VIEWS.map((v) => ({ id: v.id, title: v.title, current: (v.id === "help") === help }))
+      : SWAPPABLE.map((p) => ({ id: p.id, title: p.title, current: p.id === type }));
+
+  return (
+    <PaneMenuView
+      ref={ref}
+      rows={rows}
+      tiles={tiles.map((t) => ({ ...t, current: isCurrent(t) }))}
+      onPickRow={(id) => {
+        // Data's rows close the menu through setHelp.
+        if (type === "dataset") setHelp(id === "help");
+        else {
+          setSlotType(slot, id as PaneType);
+          closeMenu();
+        }
+      }}
+      onPickTile={(t) => {
+        setSlotShape(slot, t.ar);
+        fitView(slot);
+        closeMenu();
+      }}
+    />
+  );
+}
+
+interface MenuRow {
+  id: string;
+  title: string;
+  current: boolean;
+}
+
+// The card itself, with no state of its own, so Help can draw an inert copy
+// of it.
+export function PaneMenuView({
+  ref,
+  rows,
+  tiles,
+  onPickRow,
+  onPickTile,
+}: {
+  ref?: Ref<HTMLDivElement>;
+  rows: readonly MenuRow[];
+  tiles: readonly (Tile & { current: boolean })[];
+  onPickRow: (id: string) => void;
+  onPickTile: (tile: Tile) => void;
+}) {
   return (
     <div ref={ref} className="pane-menu" role="menu" aria-label={TEXT.pane.menu}>
-      {type === "dataset" ? (
-        <div className="menu-types" role="group" aria-label={TEXT.pane.menuTypes}>
-          {DATASET_VIEWS.map((v) => {
-            const current = (v.id === "help") === help;
-            return (
-              <button
-                key={v.id}
-                type="button"
-                role="menuitemradio"
-                aria-checked={current}
-                className={`list-row is-menu${current ? " is-current" : ""}`}
-                // Closes the menu too.
-                onClick={() => setHelp(v.id === "help")}
-              >
-                <span className="list-text">{v.title}</span>
-              </button>
-            );
-          })}
-        </div>
-      ) : (
-        <div className="menu-types" role="group" aria-label={TEXT.pane.menuTypes}>
-          {SWAPPABLE.map((p) => (
-            <button
-              key={p.id}
-              type="button"
-              role="menuitemradio"
-              aria-checked={p.id === type}
-              className={`list-row is-menu${p.id === type ? " is-current" : ""}`}
-              onClick={() => {
-                setSlotType(slot, p.id);
-                closeMenu();
-              }}
-            >
-              <span className="list-text">{p.title}</span>
-            </button>
-          ))}
-        </div>
-      )}
+      <div className="menu-types" role="group" aria-label={TEXT.pane.menuTypes}>
+        {rows.map((r) => (
+          <button
+            key={r.id}
+            type="button"
+            role="menuitemradio"
+            aria-checked={r.current}
+            className={`list-row is-menu${r.current ? " is-current" : ""}`}
+            onClick={() => onPickRow(r.id)}
+          >
+            <span className="list-text">{r.title}</span>
+          </button>
+        ))}
+      </div>
       <div
         className="menu-ratios"
         role="group"
@@ -124,14 +148,10 @@ export function PaneMenu({ slot, type, ar }: PaneMenuProps) {
             key={t.label}
             type="button"
             role="menuitemradio"
-            aria-checked={isCurrent(t)}
-            className={`menu-ratio${isCurrent(t) ? " is-current" : ""}`}
+            aria-checked={t.current}
+            className={`menu-ratio${t.current ? " is-current" : ""}`}
             aria-label={t.label}
-            onClick={() => {
-              setSlotShape(slot, t.ar);
-              fitView(slot);
-              closeMenu();
-            }}
+            onClick={() => onPickTile(t)}
           >
             <RatioGlyph ar={t.glyph} />
           </button>

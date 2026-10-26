@@ -51,6 +51,8 @@ import {
 import { TEXT } from "../../controlText";
 import { glideScroll } from "../../components/glideScroll";
 import { attachListPan } from "../../interaction/listPan";
+import { PaneMenuView } from "../../components/PaneMenu";
+import { FIT_SHAPES, SWAPPABLE } from "../../state/panes";
 import { HELP_SECTIONS, helpNav, sectionAt, topTarget } from "./helpNav";
 import {
   ExtendHops,
@@ -314,9 +316,12 @@ export function HelpPane() {
             />
           </Replica>
           <p>
-            Click a pane's title or header to change pane type or pane aspect
-            ratio.
+            Click a pane's header to change its pane type or aspect ratio (pane
+            width). Multiple copies of the same pane type are allowed.
           </p>
+          <Replica>
+            <MenuCopy />
+          </Replica>
           <p>
             Drag the border between two panes to resize them. Double-click it to
             make panes on each side of the border have equal pane width. When
@@ -896,6 +901,19 @@ function ExtendStepper() {
   );
 }
 
+// The header menu's copy, as a NodeLink pane opens it in a landscape window:
+// its type ringed, the Fit row's shapes, square its shape.
+function MenuCopy() {
+  return (
+    <PaneMenuView
+      rows={SWAPPABLE.map((p) => ({ id: p.id, title: p.title, current: p.id === "nodelink" }))}
+      tiles={FIT_SHAPES.map((t) => ({ ...t, current: t.ar === 1 }))}
+      onPickRow={none}
+      onPickTile={none}
+    />
+  );
+}
+
 const none = () => {};
 
 // Where a section sits at the top of the view: its heading as far from the
@@ -903,7 +921,7 @@ const none = () => {};
 const sectionTop = (sec: HTMLElement) => sec.offsetTop - LIST_ROWS.top;
 
 // The largest a copy of a control is drawn, as a share of its strip size.
-const REPLICA_ZOOM = 0.8;
+const REPLICA_SCALE = 0.8;
 
 // An inert copy of a real control, so the reader matches it by its look: no
 // tab stop, click, hover or tooltip. Drawn at 80%, and smaller still only
@@ -914,6 +932,9 @@ function Replica(props: { tray?: boolean; children: ReactNode }) {
   return figures ? <ReplicaRow {...props} /> : null;
 }
 
+// The copy is laid out at full size and scaled by a transform, inside a box
+// sized to the scaled copy. **Why:** Safari's `zoom` leaves some lengths (rem
+// widths among them) unscaled, so a zoomed copy keeps its full width there.
 function ReplicaRow({
   tray,
   children,
@@ -923,37 +944,45 @@ function ReplicaRow({
 }) {
   const rowRef = useRef<HTMLDivElement>(null);
   const ref = useRef<HTMLDivElement>(null);
-  const [zoom, setZoom] = useState(REPLICA_ZOOM);
+  const [fit, setFit] = useState<{ scale: number; w: number; h: number }>();
   useLayoutEffect(() => {
     const row = rowRef.current!;
     const el = ref.current!;
-    const fit = () => {
+    const measure = () => {
       const style = getComputedStyle(row);
       const room =
         row.clientWidth -
         parseFloat(style.paddingLeft) -
         parseFloat(style.paddingRight);
-      const natural =
-        el.getBoundingClientRect().width /
-        (Number(el.style.zoom) || REPLICA_ZOOM);
-      if (natural > 0 && room > 0)
-        setZoom(Math.min(REPLICA_ZOOM, room / natural));
+      // Layout sizes, which a transform never changes.
+      const w = el.offsetWidth;
+      const h = el.offsetHeight;
+      if (w > 0 && room > 0) {
+        const scale = Math.min(REPLICA_SCALE, room / w);
+        setFit({ scale, w: w * scale, h: h * scale });
+      }
     };
-    fit();
-    const ro = new ResizeObserver(fit);
+    measure();
+    const ro = new ResizeObserver(measure);
     ro.observe(row);
+    ro.observe(el);
     return () => ro.disconnect();
   }, []);
   return (
     <div ref={rowRef} className="help-replica-row">
       <div
-        ref={ref}
-        className={`help-replica${tray ? " control is-live" : ""}`}
-        inert
-        aria-hidden="true"
-        style={{ zoom }}
+        className="help-replica-box"
+        style={fit && { width: fit.w, height: fit.h }}
       >
-        {children}
+        <div
+          ref={ref}
+          className={`help-replica${tray ? " control is-live" : ""}`}
+          inert
+          aria-hidden="true"
+          style={{ transform: `scale(${fit?.scale ?? REPLICA_SCALE})` }}
+        >
+          {children}
+        </div>
       </div>
     </div>
   );
