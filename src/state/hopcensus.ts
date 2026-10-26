@@ -13,7 +13,7 @@ export type CensusMeasure = (typeof CENSUS_MEASURES)[number]["id"];
 
 // How far right the shape order moves a line at its far end, in multiples
 // of a bin's side (panes/hopcensus/geometry.ts); 0 lines every line up at hop 0.
-export const SLIDE = { max: 50, opening: 1 } as const;
+export const SLIDE = { max: 50, opening: 2 } as const;
 
 // The slider's rail runs squared: the multiple is max · t², t along the rail.
 // Why: lines still read as lines at about 0–2×, which a linear rail would
