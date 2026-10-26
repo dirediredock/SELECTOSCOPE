@@ -62,7 +62,7 @@ export function attachNodeDrag({ el, view, hit, sim }: Options): () => void {
   };
 
   const onDown = (e: PointerEvent) => {
-    if (e.button !== 0 || e.altKey || ui.get().spaceHeld || held || gestureActive()) return;
+    if (e.button !== 0 || !e.isPrimary || e.altKey || ui.get().spaceHeld || held || gestureActive()) return;
     const s = sim();
     const [x, y] = local(e);
     const v = nodeAt(x, y);
@@ -84,7 +84,7 @@ export function attachNodeDrag({ el, view, hit, sim }: Options): () => void {
     };
     setHover("node", v);
     setNavigating(true);
-    beginGesture();
+    beginGesture(end); // a second finger: the node is let go where it is
   };
 
   const onMove = (e: PointerEvent) => {

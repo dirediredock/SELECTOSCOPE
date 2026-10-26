@@ -140,7 +140,8 @@ export function attachSelectGesture({ el, overlay, type, hit }: Options): Select
   };
 
   const onDown = (e: PointerEvent) => {
-    if (e.button !== 0 || gestureActive()) return;
+    // A second finger is navigation, never a lasso of its own (navigate.ts).
+    if (e.button !== 0 || !e.isPrimary || gestureActive()) return;
     if (ui.get().spaceHeld) return; // navigation (navigate.ts)
     if (!hit()) return;
     const [x, y] = local(e);
@@ -159,7 +160,7 @@ export function attachSelectGesture({ el, overlay, type, hit }: Options): Select
       dragging: false,
       end,
     };
-    beginGesture();
+    beginGesture(end); // aborted, it selects nothing
   };
 
   const onMove = (e: PointerEvent) => {

@@ -4,13 +4,17 @@ import { setView, viewOf, zoomAt } from "../state/views";
 import type { SlotId } from "../state/layout";
 import { clearHover } from "../state/selection";
 import { wheelAction } from "./wheel";
-import { setNavigating } from "./activeGesture";
+import { abortGesture, setNavigating } from "./activeGesture";
+import { touchFrame } from "./touchFrame";
+import type { TouchFrame } from "./touchFrame";
 
 // Navigation in every canvas pane. A plain drag selects (selectGesture.ts),
 // so navigating takes the trackpad or the held Space (Figma):
 //   Space + drag                 pan, 3D included: the hand moves the picture
 //   two-finger scroll / wheel    pan, or rotate in 3D
 //   pinch                        zoom at the cursor (Safari's gesture events too)
+//   two fingers (touch)          move pans, or rotates in 3D; spread zooms. The
+//                                second finger drops the first's lasso unmade
 //   (the zoom percents fit to content)
 // Shift+wheel is left to the browser, which scrolls the pane row.
 
@@ -34,6 +38,9 @@ export interface Rotator {
 export function attachNavigate(el: HTMLElement, slot: SlotId, rotator?: Rotator): () => void {
   let pan: { pointerId: number; x: number; y: number } | null = null;
   let gestureScale = 1;
+  // The fingers on the pane, by pointer; two or more navigate, until all lift.
+  const touches = new Map<number, { x: number; y: number }>();
+  let frame: TouchFrame | null = null; // while the fingers navigate
 
   const zoomBy = (factor: number, clientX: number, clientY: number) => {
     const r = el.getBoundingClientRect();
@@ -46,6 +53,11 @@ export function attachNavigate(el: HTMLElement, slot: SlotId, rotator?: Rotator)
   const panBy = (dx: number, dy: number) => {
     const t = viewOf(slot);
     setView(slot, { k: t.k, tx: t.tx + dx / UI_SCALE, ty: t.ty + dy / UI_SCALE });
+  };
+
+  const move = (dx: number, dy: number) => {
+    if (rotator?.active()) rotator.by(dx, dy);
+    else panBy(dx, dy);
   };
 
   const onWheel = (e: WheelEvent) => {
@@ -61,9 +73,7 @@ export function attachNavigate(el: HTMLElement, slot: SlotId, rotator?: Rotator)
       return;
     }
     // The content follows the fingers, as a scrolled page does.
-    const dx = -e.deltaX * unit, dy = -e.deltaY * unit;
-    if (rotator?.active()) rotator.by(dx, dy);
-    else panBy(dx, dy);
+    move(-e.deltaX * unit, -e.deltaY * unit);
   };
 
   const onGestureStart = (e: Event) => {
@@ -76,7 +86,8 @@ export function attachNavigate(el: HTMLElement, slot: SlotId, rotator?: Rotator)
     const g = e as GestureLike;
     const factor = g.scale / gestureScale;
     gestureScale = g.scale;
-    if (e.timeStamp - lastPinchWheel < 200) return;
+    // iOS sends these for fingers on the screen too, which zoom below.
+    if (e.timeStamp - lastPinchWheel < 200 || touches.size) return;
     zoomBy(factor, g.clientX, g.clientY);
   };
 
@@ -106,6 +117,44 @@ export function attachNavigate(el: HTMLElement, slot: SlotId, rotator?: Rotator)
     setNavigating(false);
   };
 
+  // Capture phase, as a node drag (nodeDrag.ts) keeps the first finger's
+  // press from the bubbling listeners.
+  const onTouchDown = (e: PointerEvent) => {
+    if (e.pointerType !== "touch") return;
+    touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (touches.size < 2) return;
+    if (!frame) {
+      if (!abortGesture()) return; // a pane resize keeps its finger
+      clearHover();
+      setNavigating(true);
+    }
+    for (const id of touches.keys()) if (!el.hasPointerCapture(id)) el.setPointerCapture(id);
+    frame = touchFrame(touches.values());
+  };
+
+  const onTouchMove = (e: PointerEvent) => {
+    const p = touches.get(e.pointerId);
+    if (!p) return;
+    p.x = e.clientX;
+    p.y = e.clientY;
+    if (!frame) return;
+    const next = touchFrame(touches.values());
+    move(next.x - frame.x, next.y - frame.y);
+    if (frame.spread > 0 && next.spread > 0) zoomBy(next.spread / frame.spread, next.x, next.y);
+    frame = next;
+  };
+
+  // A finger left behind goes on moving the view alone, never a lasso.
+  const onTouchUp = (e: PointerEvent) => {
+    if (!touches.delete(e.pointerId) || !frame) return;
+    if (touches.size) {
+      frame = touchFrame(touches.values());
+      return;
+    }
+    frame = null;
+    setNavigating(false);
+  };
+
   el.addEventListener("wheel", onWheel, { passive: false });
   el.addEventListener("gesturestart", onGestureStart);
   el.addEventListener("gesturechange", onGestureChange);
@@ -113,8 +162,12 @@ export function attachNavigate(el: HTMLElement, slot: SlotId, rotator?: Rotator)
   el.addEventListener("pointermove", onMove);
   el.addEventListener("pointerup", onUp);
   el.addEventListener("pointercancel", onUp);
+  el.addEventListener("pointerdown", onTouchDown, true);
+  el.addEventListener("pointermove", onTouchMove);
+  el.addEventListener("pointerup", onTouchUp);
+  el.addEventListener("pointercancel", onTouchUp);
   return () => {
-    if (pan) setNavigating(false);
+    if (pan || frame) setNavigating(false);
     el.removeEventListener("wheel", onWheel);
     el.removeEventListener("gesturestart", onGestureStart);
     el.removeEventListener("gesturechange", onGestureChange);
@@ -122,6 +175,10 @@ export function attachNavigate(el: HTMLElement, slot: SlotId, rotator?: Rotator)
     el.removeEventListener("pointermove", onMove);
     el.removeEventListener("pointerup", onUp);
     el.removeEventListener("pointercancel", onUp);
+    el.removeEventListener("pointerdown", onTouchDown, true);
+    el.removeEventListener("pointermove", onTouchMove);
+    el.removeEventListener("pointerup", onTouchUp);
+    el.removeEventListener("pointercancel", onTouchUp);
   };
 }
 
