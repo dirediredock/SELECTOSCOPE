@@ -63,4 +63,13 @@ describe("Help", () => {
     expect(inert).toBeGreaterThan(10);
     expect(live).toBe(0);
   });
+
+  it("copies the header menu as a NodeLink pane opens it", () => {
+    const menu = html.match(/<div class="pane-menu".*?<\/div><\/div><\/div>/)?.[0] ?? "";
+    const rows = [...menu.matchAll(/class="list-row is-menu( is-current)?"[^>]*><span class="list-text">([^<]+)/g)];
+    expect(rows.map((r) => r[2])).toEqual(["Labels", "NodeLink", "Matrix", "Shells", "Hops"]);
+    expect(rows.filter((r) => r[1]).map((r) => r[2])).toEqual(["NodeLink"]);
+    expect([...menu.matchAll(/class="menu-ratio( is-current)?"/g)]).toHaveLength(3);
+    expect(menu).toContain('class="menu-ratio is-current" aria-label="Square"');
+  });
 });

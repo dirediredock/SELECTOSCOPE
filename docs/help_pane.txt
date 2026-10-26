@@ -40,7 +40,7 @@ Two-finger pinch to zoom at the pointer in any pane.
 Two-finger scroll or scroll wheel to pan in any pane. Special cases are NODELINK in a 3D layout, where it rotates, and the DATA, HELP, and LABELS panes, where it scrolls the list vertically.
 Hold Space and drag to pan.
 Click a pane's zoom % at the respective pane header (or bottom control strip) to fit the visual pattern into the pane.
-Click a pane's title or header to change pane type or pane aspect ratio.
+Click a pane's header to change its pane type or aspect ratio (pane width). Multiple copies of the same pane type are allowed.
 Drag the border between two panes to resize them. Double-click it to make panes on each side of the border have equal pane width.
 When the browser window is taller than it is wide, panes keep their shapes at full height and scroll sideways instead.
 Slide CONTRAST in the top control strip to fade everything but the selection set, and turn on DARK to make selections stand out more, in some cases.

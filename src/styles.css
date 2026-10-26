@@ -1255,65 +1255,6 @@ textarea {
     0 0 0.9rem 0.15rem color-mix(in srgb, var(--text) 28%, transparent);
 }
 
-/* A build's phase names share one cell, so the track keeps its width. */
-.progress-label {
-  display: inline-grid;
-}
-
-.progress-label > span {
-  grid-area: 1 / 1;
-}
-
-.progress-label > .is-hidden {
-  visibility: hidden;
-}
-
-/* Progress: a slider's track with no knob, filled by the share received.
-   With no size known, a segment glides along it: the one motion that is not
-   lasting state, since a process is running. */
-.dataset-status {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--gap-control);
-}
-
-.progress-field {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0 0.9rem;
-  color: var(--text);
-}
-
-.progress {
-  position: relative;
-  width: 6.5rem;
-  height: 0.3333rem; /* 4px */
-  overflow: hidden;
-  background: var(--panel-3);
-  border-radius: var(--radius-pill);
-  box-shadow: inset 0 0 0 1px var(--edge-hair);
-}
-
-.progress-fill {
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: var(--p, 0%);
-  background: var(--muted);
-  border-radius: inherit;
-  transition: width 120ms linear;
-}
-
-.progress.is-indeterminate .progress-fill {
-  width: 30%;
-  animation: progress-glide 1.2s ease-in-out infinite;
-}
-
-@keyframes progress-glide {
-  from { transform: translateX(-100%); }
-  to { transform: translateX(333%); }
-}
-
 /* Selection count: a set's size out of the graph's, on the white live tray,
    over a thin share bar filled from the left in the set's colour. The pill
    does nothing itself, so it never fills on hover. The size is in the set's
@@ -1459,14 +1400,6 @@ textarea {
     transform: none;
   }
 
-  .progress-fill {
-    transition: none;
-  }
-
-  /* With no size known, the segment rests at the start. */
-  .progress.is-indeterminate .progress-fill {
-    animation: none;
-  }
 }
 
 /* ---------- Pane row (after E3 .panes / .pane) ---------- */
@@ -1608,13 +1541,13 @@ textarea {
   }
 }
 
-/* A curated row's download, in place of its counts: a rail as the sweep
-   strip's, filled to its share (--p), or a segment gliding while the share
-   is unknown. */
-.list-rail {
+/* Rail: how far along, as the sweep strip's rail, filled to its share (--p),
+   or a segment gliding while the share is unknown: the one motion that is
+   not lasting state, since a process is running. In a curated row's counts
+   it takes the row's colour; in a pane's centre, the message's muted one. */
+.rail {
   position: relative;
   display: inline-block;
-  width: 3rem;
   height: 0.1667rem; /* 2px */
   overflow: hidden;
   vertical-align: middle;
@@ -1622,7 +1555,16 @@ textarea {
   border-radius: var(--radius-pill);
 }
 
-.list-rail-fill {
+.list-meta .rail {
+  width: 3rem;
+}
+
+/* A third of the pane, never shorter than a row's, nor a long bar. */
+.pane-message .rail {
+  width: clamp(3rem, 33%, 16rem);
+}
+
+.rail-fill {
   position: absolute;
   inset: 0 auto 0 0;
   width: var(--p, 0%);
@@ -1630,13 +1572,19 @@ textarea {
   border-radius: inherit;
 }
 
-.list-rail.is-indeterminate .list-rail-fill {
+.rail.is-indeterminate .rail-fill {
   width: 30%;
-  animation: progress-glide 1.2s ease-in-out infinite;
+  animation: rail-glide 1.2s ease-in-out infinite;
 }
 
+@keyframes rail-glide {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(333%); }
+}
+
+/* With no share known, the segment rests at the start. */
 @media (prefers-reduced-motion: reduce) {
-  .list-rail.is-indeterminate .list-rail-fill {
+  .rail.is-indeterminate .rail-fill {
     animation: none;
   }
 }
@@ -2468,7 +2416,6 @@ textarea {
   color: var(--text);
   font-size: var(--fs-control);
   line-height: 1.45;
-  text-wrap: pretty;
 }
 
 .list-row.is-dataset:focus-visible {
@@ -2507,7 +2454,6 @@ textarea {
   color: var(--text);
   font-size: var(--fs-control);
   line-height: 1.45;
-  text-wrap: pretty;
 }
 
 .help-body p,
@@ -2568,22 +2514,24 @@ textarea {
    copy to its right. */
 .help-steps {
   counter-reset: step;
-  display: grid;
-  /* One column no wider than the sheet: by default a grid track grows to its
-     widest copy, and the text would wrap against that rather than the pane. */
-  grid-template-columns: minmax(0, 1fr);
-  gap: 1.2rem;
   margin: 1.2rem 0 1.6rem;
   padding: 0 0.8rem;
   list-style: none;
 }
 
+/* Plain blocks, not a grid. **Why:** Safari keeps a grid row's height from
+   an earlier, narrower sheet after the pane widens, leaving a gap under each
+   step. Each step is its own flow root, so a copy's margin stays inside it. */
 .help-steps li {
   position: relative;
-  min-width: 0;
+  display: flow-root;
   counter-increment: step;
   min-height: 1.8333rem;
   padding-left: 2.8333rem; /* the badge, and air after it */
+}
+
+.help-steps li + li {
+  margin-top: 1.2rem;
 }
 
 .help-steps li::before {
@@ -2663,7 +2611,7 @@ textarea {
   padding: 0 0.8rem;
 }
 
-/* An inert copy of a control, at 80% (HelpPane's Replica sets the zoom),
+/* An inert copy of a control, at 80% (HelpPane's Replica sets the scale),
    centred in its row (by flex, so the copy's own text keeps its alignment),
    which is the room it may take, with air above and below
    so it reads as a figure set apart from the text. A run of copies stacks
@@ -2678,10 +2626,18 @@ textarea {
   margin-top: -1.7rem;
 }
 
+/* The scaled copy's room: Replica sizes it to the copy's scaled size. The
+   copy keeps its full size inside, scaled from the top left. */
+.help-replica-box {
+  flex: none;
+  display: flex;
+  align-items: flex-start;
+}
+
 .help-replica {
-  /* Its natural width, so Replica can measure it and zoom it to fit. */
   flex: none;
   display: inline-flex;
+  transform-origin: 0 0;
   align-items: center;
   gap: 0.5rem;
   white-space: nowrap;
@@ -2694,5 +2650,12 @@ textarea {
 
 .help-replica .set-count {
   margin: 0;
+}
+
+/* The header menu's copy: the card in place, not floating over a pane, at a
+   width its rows read at. */
+.help-replica .pane-menu {
+  position: static;
+  width: 15rem; /* 180px */
 }
 

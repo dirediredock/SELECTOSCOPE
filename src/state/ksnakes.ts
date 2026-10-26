@@ -30,8 +30,8 @@ export interface KSnakesSettings {
 }
 
 const OPENING: KSnakesSettings = {
-  ordering: "topdown",
-  group: false,
+  ordering: "packed",
+  group: true,
   gridlines: false,
   spacing: BIN_SPACING.opening,
 };

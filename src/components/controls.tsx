@@ -253,40 +253,23 @@ export function Slider(props: {
   );
 }
 
-// How far along: a slider's track with no knob, named by what is happening and
-// filled by the share done, with its percent. With no share known, a segment
-// glides along it and there is no percent. `reserve` holds every name it may
-// show, so the track keeps one width as the name changes.
-export function Progress(props: { label: string; share: number | null; reserve?: readonly string[] }) {
-  const labelId = useId();
-  const known = props.share !== null;
-  const percent = Math.round((props.share ?? 0) * 100);
+// How far along: a thin rail filled by the share done, or a segment gliding
+// along it while the share is unknown. Bare, with no name or percent: a Data
+// row's download in place of its counts, and a pane's wait in its centre,
+// whose subtitle names the stage.
+export function Rail({ share }: { share: number | null }) {
+  const known = share !== null;
   return (
-    <span className="track progress-field">
-      <span id={labelId} className="control-text progress-label">
-        <span>{props.label}</span>
-        {props.reserve?.map((r) => (
-          <span key={r} className="is-hidden" aria-hidden="true">
-            {r}
-          </span>
-        ))}
-      </span>
-      <span
-        className={`progress${known ? "" : " is-indeterminate"}`}
-        role="progressbar"
-        aria-labelledby={labelId}
-        aria-valuemin={known ? 0 : undefined}
-        aria-valuemax={known ? 100 : undefined}
-        aria-valuenow={known ? percent : undefined}
-        style={known ? ({ "--p": `${percent}%` } as CSSProperties) : undefined}
-      >
-        <span className="progress-fill" />
-      </span>
-      {known && (
-        <span className="control-text slider-readout" aria-hidden="true">
-          {percent} %
-        </span>
-      )}
+    <span
+      className={`rail${known ? "" : " is-indeterminate"}`}
+      role="progressbar"
+      aria-label="Loading"
+      aria-valuemin={known ? 0 : undefined}
+      aria-valuemax={known ? 100 : undefined}
+      aria-valuenow={known ? Math.round(share * 100) : undefined}
+      style={known ? ({ "--p": `${share * 100}%` } as CSSProperties) : undefined}
+    >
+      <span className="rail-fill" />
     </span>
   );
 }
