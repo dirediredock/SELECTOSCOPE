@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import type { CSSProperties } from "react";
 import { data, initData, loadDataset } from "../data/dataStore";
 import type { DatasetEntry } from "../data/dataStore";
 import { exportable } from "../data/format";
@@ -10,7 +9,7 @@ import { openNew, setUpload, ui } from "../state/uiStore";
 import { datasetAlert, pickRow, userData } from "../state/userData";
 import type { UserDataset } from "../state/userData";
 import { LIST_ROWS, VirtualList } from "../components/VirtualList";
-import { Action, AlertDot } from "../components/controls";
+import { Action, AlertDot, Rail } from "../components/controls";
 import { attachListPan } from "../interaction/listPan";
 import { DatasetTile } from "./dataset/DatasetTile";
 import { CURATED_INTRO, INTRO } from "./dataset/intros";
@@ -272,7 +271,7 @@ export function DatasetPane({ slot }: { slot: SlotId }) {
                   row.entry.name !== requested ? (
                     `${row.entry.nodes} / ${row.entry.edges}`
                   ) : downloading ? (
-                    <ListRail share={received} />
+                    <Rail share={received} />
                   ) : loadFailed ? (
                     "failed"
                   ) : (
@@ -306,24 +305,5 @@ export function DatasetPane({ slot }: { slot: SlotId }) {
         );
       }}
     />
-  );
-}
-
-// A curated row's download, in place of its counts: a thin rail filled by the
-// share received, or a segment gliding while its size is unknown.
-function ListRail({ share }: { share: number | null }) {
-  const known = share !== null;
-  return (
-    <span
-      className={`list-rail${known ? "" : " is-indeterminate"}`}
-      role="progressbar"
-      aria-label="Loading"
-      aria-valuemin={known ? 0 : undefined}
-      aria-valuemax={known ? 100 : undefined}
-      aria-valuenow={known ? Math.round(share * 100) : undefined}
-      style={known ? ({ "--p": `${share * 100}%` } as CSSProperties) : undefined}
-    >
-      <span className="list-rail-fill" />
-    </span>
   );
 }

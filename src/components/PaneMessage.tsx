@@ -1,11 +1,11 @@
 import type { ReactNode } from "react";
-import { Action, Progress } from "./controls";
+import { Action, Rail } from "./controls";
 import { STAGE_NAMES, data, stageShare, waitStage } from "../data/dataStore";
 import type { Stage } from "../data/dataStore";
 import { useStore } from "../state/createStore";
 
 // A pane's content in place of its pattern: a note on what is missing, or,
-// while the engine computes what the pane draws, that stage's progress. It
+// while the engine computes what the pane draws, that stage's rail. It
 // sits outside the drawn pattern, so Contrast never fades it. `children`,
 // under the note, are the way to fill the gap (an uploaded row's file pill),
 // taking clicks though the message layer doesn't.
@@ -30,20 +30,29 @@ export function PaneAction({ text, onClick }: { text: string; onClick: () => voi
   );
 }
 
-export function StageProgress({ label, share }: { label: string; share: number | null }) {
+// How far along, as the Data row's rail, in the pane's centre.
+function PaneRail({ share }: { share: number | null }) {
   return (
     <div className="pane-message" role="status">
-      <Progress label={label} share={share} />
+      <Rail share={share} />
     </div>
   );
 }
 
-// The first of `stages` not yet done, as StageProgress, or a note if it
-// failed; nothing once all are done or before there is a graph.
+// The first of `stages` not yet done, as its rail, or a note if it failed;
+// nothing once all are done or before there is a graph.
 export function WaitingOn({ stages }: { stages: readonly Stage[] }) {
   const stage = useStore(data, (s) => (s.graph ? waitStage(s, stages) : null));
   const share = useStore(data, (s) => stageShare(s, stage));
   const failed = useStore(data, (s) => stage !== null && s.stages[stage].status === "failed");
   if (!stage) return null;
-  return failed ? <PaneMessage text={`${STAGE_NAMES[stage]} failed.`} /> : <StageProgress label={STAGE_NAMES[stage]} share={share} />;
+  return failed ? <PaneMessage text={`${STAGE_NAMES[stage]} failed.`} /> : <PaneRail share={share} />;
+}
+
+// A picked curated dataset downloading, as its Data row's rail, in every
+// other pane while there is no graph yet. The list's own fetch shows none.
+export function DownloadRail() {
+  const downloading = useStore(data, (s) => s.loading && s.requested !== null);
+  const share = useStore(data, (s) => s.progress);
+  return downloading ? <PaneRail share={share} /> : null;
 }

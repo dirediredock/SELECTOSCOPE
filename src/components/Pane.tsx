@@ -8,6 +8,7 @@ import { MAX_AR, paneInfo, slotTitle } from "../state/panes";
 import type { PaneType } from "../state/panes";
 import type { SlotId } from "../state/layout";
 import { PaneMenu } from "./PaneMenu";
+import { DownloadRail } from "./PaneMessage";
 import { usePaneSubtitle } from "./paneSubtitle";
 import { PlayGlyph, trayTip } from "./controls";
 import { TEXT } from "../controlText";
@@ -92,6 +93,7 @@ export function Pane({ slot, type, ar, share, children }: PaneProps) {
       </div>
       <div className="pane-body">
         {children}
+        {type !== "dataset" && <DownloadRail />}
         {menuOpen && <PaneMenu slot={slot} type={type} ar={ar} />}
       </div>
       <div className="pane-footer">{type !== "dataset" && <SweepStrip slot={slot} />}</div>
