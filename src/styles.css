@@ -32,7 +32,8 @@
   --grid: #dde0e5;
   --edge-w: 1px;
   --ring-w: 0.1667rem; /* 2px, a row's ring: the hovered node's red, the current item's gray */
-  --menu-shadow: 0 6px 20px rgba(14, 18, 28, 0.14), 0 1px 3px rgba(14, 18, 28, 0.08);
+  --menu-shadow:
+    0 6px 20px rgba(14, 18, 28, 0.14), 0 1px 3px rgba(14, 18, 28, 0.08);
   /* A tooltip's lift: faint enough that Dark needs no value of its own. */
   --tip-shadow: 0 2px 8px rgba(14, 18, 28, 0.08);
 
@@ -49,7 +50,12 @@
   --node-sel: #0060c1; /* node set: blue */
   --node-sel-soft: rgba(0, 96, 193, 0.18); /* its tint on list rows */
   --edge-sel: #ef8600; /* edge set: orange */
-  --edge-sel-soft: rgba(239, 134, 0, 0.22); /* its tint in the selection count */
+  --edge-sel-soft: rgba(
+    239,
+    134,
+    0,
+    0.22
+  ); /* its tint in the selection count */
   --hover: #d3003d; /* hovered item: red */
 
   /* Red has a second job: whatever stopped data loading, a refused file, a
@@ -82,10 +88,17 @@
   --focus-offset: 0.1333rem;
 
   --control-h: 2.5rem;
-  /* Both control strips: one height, their controls centred in it. */
-  --strip-h: 6.5rem;
-  /* The bottom strip's extra room under its controls, off the window's edge. */
-  --strip-foot: 0.6rem;
+  /* A strip section's tray: its controls, and this much around them. */
+  --tray-pad: 0.3333rem; /* 4px */
+  --tray-h: calc(var(--control-h) + 2 * var(--tray-pad));
+  /* The one clearance above and below every tray: window edge to tray, and
+     tray to pane row. Both strips are this, a tray, and this again; the panes
+     take what is left. */
+  --strip-clear: 3.25rem; /* 39px */
+  --strip-h: calc(var(--tray-h) + 2 * var(--strip-clear));
+  /* Taken off the top strip's clearance above its trays only, at the
+     window's edge; the clearance down to the panes stays. */
+  --strip-top-trim: 0.5rem; /* 6px */
   /* Controls: each strip section is a gray tray; on it a track is raised and
      the chosen option pressed in, slate. A live tray (Selection set, Selection
      count, Auto Sweep) is white, and its tracks recessed. */
@@ -94,16 +107,19 @@
   --tray-live: var(--panel);
   --tray-live-shadow: 0 0 0 1px var(--edge), 0 2px 8px rgba(14, 18, 28, 0.08);
   --track-raised: var(--panel);
-  --track-raised-ring: 0 0 0 1px rgba(14, 18, 28, 0.08), 0 1px 2px rgba(14, 18, 28, 0.07);
+  --track-raised-ring:
+    0 0 0 1px rgba(14, 18, 28, 0.08), 0 1px 2px rgba(14, 18, 28, 0.07);
   --pick: #2b313c;
   --pick-text: #ffffff;
   --pick-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.35);
   --unpicked-text: var(--text);
   --run-bg: var(--panel);
-  --run-ring: 0 0 0 1px rgba(14, 18, 28, 0.35), 0 1px 2px rgba(14, 18, 28, 0.08);
+  --run-ring:
+    0 0 0 1px rgba(14, 18, 28, 0.35), 0 1px 2px rgba(14, 18, 28, 0.08);
   --gauge-track: var(--panel-3);
   --thumb: #ffffff;
-  --thumb-shadow: 0 1px 2px rgba(14, 18, 28, 0.18), 0 0 0 1px rgba(14, 18, 28, 0.07);
+  --thumb-shadow:
+    0 1px 2px rgba(14, 18, 28, 0.18), 0 0 0 1px rgba(14, 18, 28, 0.07);
   --knob-shadow: 0 1px 2px rgba(14, 18, 28, 0.18);
   --switch-off: #cdd2da;
   --ease-thumb: cubic-bezier(0.3, 0.7, 0.2, 1);
@@ -120,9 +136,12 @@
   --gap-control: 0.6rem;
   --gap-strip: 1.5rem;
 
-  /* Pane placement. --pane-inset is the clearance above and below the row; it
-     is also what sizes a pane (height = row − 2×inset). */
-  --pane-inset: 2.25rem;
+  /* Pane placement. The strips hold the air above and below the row; the
+     Scroll row adds --scroll-room to each, for its horizontal scrollbar, and
+     drops that scrollbar by --scroll-drop, taken from the bottom strip's air
+     above its trays, so it sits about midway between panes and trays. */
+  --scroll-room: 1rem; /* 12px */
+  --scroll-drop: 1.6667rem; /* 20px */
   --pane-gap: 2.25rem;
   --pane-edge: 4.5rem;
   --stage-h-min: 24rem;
@@ -173,7 +192,8 @@
   --tray-live: #232a36;
   --tray-live-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
   --track-raised: var(--panel-2);
-  --track-raised-ring: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 1px 2px rgba(0, 0, 0, 0.4);
+  --track-raised-ring:
+    0 0 0 1px rgba(255, 255, 255, 0.06), 0 1px 2px rgba(0, 0, 0, 0.4);
   --pick: #dfe4ec;
   --pick-text: #0b0e14;
   --pick-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
@@ -183,7 +203,8 @@
 
   /* The panel is darker than the track here, so the thumb takes a lighter step. */
   --thumb: #232a36;
-  --thumb-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.07);
+  --thumb-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.07);
   --knob-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
   --switch-off: #434b5a;
   /* The live tray is panel-3 here, so the empty share bar takes a lighter step. */
@@ -249,10 +270,18 @@ textarea {
   padding: 0 3rem;
 }
 
-/* The focused pane's title at the left, its controls centred (as in .topbar). */
-.bottombar {
-  min-height: calc(var(--strip-h) + var(--strip-foot));
-  padding-bottom: var(--strip-foot);
+/* Shorter by the trim, which sits under the trays, so only the gap above
+   them shrinks. */
+.topbar {
+  min-height: calc(var(--strip-h) - var(--strip-top-trim));
+  padding-bottom: var(--strip-top-trim);
+}
+
+/* Over the Scroll row, shorter by the drop, which sits under the trays, so
+   only the gap above them shrinks: the row's scrollbar takes it. */
+.app:has(.panes:not(.is-fit)) .bottombar {
+  min-height: calc(var(--strip-h) - var(--scroll-drop));
+  padding-bottom: var(--scroll-drop);
 }
 
 .topbar-left {
@@ -339,7 +368,9 @@ textarea {
   border-radius: 0.7407rem; /* 8px */
   background: var(--panel);
   color: var(--text);
-  box-shadow: 0 0 0 1px var(--edge), var(--tip-shadow);
+  box-shadow:
+    0 0 0 1px var(--edge),
+    var(--tip-shadow);
   font-size: 1.2037rem; /* 13px */
   font-weight: 400;
   line-height: 1.42;
@@ -547,7 +578,7 @@ textarea {
   display: flex;
   align-items: center;
   gap: 0.5rem; /* 6px */
-  padding: 0.3333rem 0.3333rem 0.3333rem 1.1667rem; /* 4px 4px 4px 14px */
+  padding: var(--tray-pad) var(--tray-pad) var(--tray-pad) 1.1667rem; /* 14px */
   background: var(--tray);
   box-shadow: var(--tray-ring);
   border-radius: var(--radius-pill);
@@ -736,7 +767,7 @@ textarea {
    track, and on, a pressed-in slate thumb filling it, as a Choice's does. */
 .help-toggle {
   display: flex;
-  padding: 0.3333rem; /* 4px */
+  padding: var(--tray-pad);
   background: var(--tray);
   box-shadow: var(--tray-ring);
   border-radius: 50%;
@@ -1018,13 +1049,21 @@ textarea {
 .slider::-webkit-slider-runnable-track {
   height: 0.3333rem; /* 4px */
   border-radius: var(--radius-pill);
-  background: linear-gradient(to right, var(--muted) var(--p, 0%), var(--panel-3) var(--p, 0%));
+  background: linear-gradient(
+    to right,
+    var(--muted) var(--p, 0%),
+    var(--panel-3) var(--p, 0%)
+  );
 }
 
 .slider::-moz-range-track {
   height: 0.3333rem; /* 4px */
   border-radius: var(--radius-pill);
-  background: linear-gradient(to right, var(--muted) var(--p, 0%), var(--panel-3) var(--p, 0%));
+  background: linear-gradient(
+    to right,
+    var(--muted) var(--p, 0%),
+    var(--panel-3) var(--p, 0%)
+  );
 }
 
 .slider::-webkit-slider-thumb {
@@ -1121,7 +1160,9 @@ textarea {
 
 :is(.control.is-idle, .veil.is-idle) .hold-stepper.is-disabled .stepper-word,
 :is(.control.is-idle, .veil.is-idle) .hold-stepper .stepper-step:disabled,
-:is(.control.is-idle, .veil.is-idle) .stepper.is-disabled .stepper-step:disabled:not(.is-dim) {
+:is(.control.is-idle, .veil.is-idle)
+  .stepper.is-disabled
+  .stepper-step:disabled:not(.is-dim) {
   color: var(--text);
 }
 
@@ -1187,7 +1228,8 @@ textarea {
   opacity: 1;
 }
 
-.file-pill:has(.file-remove:hover:not(:disabled), .file-remove:focus-visible) .file-word {
+.file-pill:has(.file-remove:hover:not(:disabled), .file-remove:focus-visible)
+  .file-word {
   visibility: hidden;
 }
 
@@ -1266,7 +1308,7 @@ textarea {
   justify-content: space-between;
   gap: 0.5rem;
   width: 18rem;
-  height: 2.6667rem; /* 32px */
+  height: var(--control-h);
   padding: 0 0.6667rem 0.3333rem; /* 0 8px 4px */
   overflow: hidden;
   background: transparent;
@@ -1399,7 +1441,6 @@ textarea {
   .stepper-step.is-pressed:not(:disabled) {
     transform: none;
   }
-
 }
 
 /* ---------- Pane row (after E3 .panes / .pane) ---------- */
@@ -1415,14 +1456,15 @@ textarea {
   flex: 1;
   container-type: size;
 
-  /* Every pane is the row's height minus the insets, floored so a short window
-     scrolls rather than shrinking panes past use. */
-  --stage-h: max(var(--stage-h-min), calc(100cqh - 2 * var(--pane-inset)));
+  /* Every pane is the row's height inside its padding (cqh is the content
+     box), floored so a short window scrolls rather than shrinking panes past
+     use. */
+  --stage-h: max(var(--stage-h-min), 100cqh);
 
   display: flex;
   align-items: safe center;
   gap: var(--pane-gap);
-  padding: var(--pane-inset) 0;
+  padding: var(--scroll-room) 0;
 
   overflow-x: auto;
   overflow-y: auto;
@@ -1578,8 +1620,12 @@ textarea {
 }
 
 @keyframes rail-glide {
-  from { transform: translateX(-100%); }
-  to { transform: translateX(333%); }
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(333%);
+  }
 }
 
 /* With no share known, the segment rests at the start. */
@@ -1621,6 +1667,12 @@ textarea {
   margin-inline-end: max(var(--pane-edge), calc(50cqw - var(--pane-w) / 2));
 }
 
+/* The scrollbar lower by the drop; cqh is the content box, so the panes keep
+   their height. */
+.panes:not(.is-fit) {
+  padding-bottom: calc(var(--scroll-room) + var(--scroll-drop));
+}
+
 /* A pane at the menu's Minimum: the Fit row's narrowest, whatever its height. */
 .panes:not(.is-fit) .pane[data-narrow] {
   --pane-w: var(--pane-min);
@@ -1629,12 +1681,12 @@ textarea {
 /* ---------- Fit row ----------
    The panes share the window's width, each by its --share of what the gaps
    leave (floored at --pane-min, past which the row scrolls after all), and
-   fill its height but for one gap above and below. The 1px spares a rounding
-   overflow its scrollbar. No snapping: there is nothing to scroll. */
+   fill its height: the strips' clearance is the air above and below. The 1px
+   spares a rounding overflow its scrollbar. No snapping: there is nothing to
+   scroll. */
 .panes.is-fit {
-  --stage-h: max(var(--stage-h-min), calc(100cqh - 2 * var(--fit-gap)));
   gap: 0;
-  padding: var(--fit-gap) 0;
+  padding: 0;
   scroll-snap-type: none;
 }
 
@@ -1680,7 +1732,9 @@ textarea {
   border-radius: 50%;
   background: var(--pane-focused);
   /* The dots above and below, 6px apart. */
-  box-shadow: 0 -0.5rem 0 var(--pane-focused), 0 0.5rem 0 var(--pane-focused);
+  box-shadow:
+    0 -0.5rem 0 var(--pane-focused),
+    0 0.5rem 0 var(--pane-focused);
   opacity: 0;
   transform: translate(-50%, -50%);
   transition: opacity 0.12s;
@@ -1984,7 +2038,6 @@ textarea {
   pointer-events: none;
 }
 
-
 /* One long side for every tile in the row, so the shapes compare. */
 .ratio-glyph {
   --long: min(1.8333rem, 100cqi - 1rem); /* min(22px, 100cqi - 12px) */
@@ -1996,7 +2049,8 @@ textarea {
 }
 
 /* A narrow pane: a closer card and tiles, so the glyphs have room. */
-@container pane-body (width < 13.3333rem) { /* 160px */
+@container pane-body (width < 13.3333rem) {
+  /* 160px */
   .pane-menu {
     inset: 0.5rem 0.5rem auto 0.5rem; /* 6px 6px auto 6px */
     padding: 0.6667rem; /* 8px */
@@ -2234,11 +2288,19 @@ textarea {
 /* Contrast fades an unselected row's text toward the panel; the hovered row
    and the dots stay full. */
 .labels-list .list-row:not(.is-selected):not(.is-hover) {
-  color: color-mix(in srgb, var(--text) calc(var(--contrast) * 100%), var(--panel));
+  color: color-mix(
+    in srgb,
+    var(--text) calc(var(--contrast) * 100%),
+    var(--panel)
+  );
 }
 
 .labels-list .list-row:not(.is-selected):not(.is-hover) .list-num {
-  color: color-mix(in srgb, var(--muted) calc(var(--contrast) * 100%), var(--panel));
+  color: color-mix(
+    in srgb,
+    var(--muted) calc(var(--contrast) * 100%),
+    var(--panel)
+  );
 }
 
 .list-row.is-hover::before {
@@ -2425,7 +2487,8 @@ textarea {
 
 /* Data at its narrowest: the rows drop their counts, so the titles have
    the room. */
-@container pane-body (width < 13.3333rem) { /* 160px */
+@container pane-body (width < 13.3333rem) {
+  /* 160px */
   .list-row.is-dataset,
   .tile-caption {
     grid-template-columns: minmax(0, 1fr);
@@ -2645,7 +2708,7 @@ textarea {
 
 /* The count pills on their live tray, with no caps label before them. */
 .help-replica.control {
-  padding: 0.3333rem;
+  padding: var(--tray-pad);
 }
 
 .help-replica .set-count {
@@ -2658,4 +2721,3 @@ textarea {
   position: static;
   width: 15rem; /* 180px */
 }
-
