@@ -22,7 +22,6 @@ export const LABEL_SORTS = [
   { id: "alpha", label: "Labels (A–Z)" },
   { id: "degree", label: "Degree" },
   { id: "onion", label: "Onion" },
-  { id: "eigenvector", label: "Eigenvector" },
 ] as const;
 
 // NodeLink's layouts. 2D and 3D are the force-directed ones, computed from the

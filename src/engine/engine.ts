@@ -1,8 +1,8 @@
 // The engine: runs a build across workers and fills the graph on screen as
 // each result arrives (data/graph.ts).
 //
-//   core worker      ingest, then cores, onion and the Shells orderings,
-//                    then centrality
+//   ingest worker    reads and cleans the files, posts the graph, exits
+//   shells worker    cores, onion and the Shells orderings
 //   hops workers     the stub census, in chunks of sources, over a pool
 //   spectral worker  the harmonics, then the principal components
 //   layout worker    FD 2D from the harmonics, posting frames as it settles
@@ -16,7 +16,16 @@ import { STAGE_NAMES, cancelLoad, data, idleStages, landed, setStage } from "../
 import type { Stage } from "../data/dataStore";
 import { censusFromRows } from "../data/graph";
 import type { Graph, OpeningView } from "../data/graph";
-import type { CoreMessage, CoreRequest, HopsMessage, HopsRequest, LayoutMessage, LayoutRequest, SpectralMessage } from "./protocol";
+import type {
+  HopsMessage,
+  HopsRequest,
+  IngestMessage,
+  IngestRequest,
+  LayoutMessage,
+  LayoutRequest,
+  ShellsMessage,
+  SpectralMessage,
+} from "./protocol";
 
 let workers: Worker[] = [];
 
@@ -136,13 +145,8 @@ export function startBuild(texts: DatasetTexts, opts: BuildOptions) {
   const { stages: shown, error: shownError } = data.get();
   data.set({ stages: idleStages(), error: null, running: true });
   setStage("ingest", { status: "running" });
-  let graph: Graph | null = null;
-  const core = track(new Worker(new URL("./core.worker.ts", import.meta.url), { type: "module" }), [
-    "ingest",
-    "basics",
-    "centrality",
-  ]);
-  core.onmessage = (e: MessageEvent<CoreMessage>) => {
+  const w = track(new Worker(new URL("./ingest.worker.ts", import.meta.url), { type: "module" }), ["ingest"]);
+  w.onmessage = (e: MessageEvent<IngestMessage>) => {
     const msg = e.data;
     if (msg.type === "error") {
       halt();
@@ -151,31 +155,31 @@ export function startBuild(texts: DatasetTexts, opts: BuildOptions) {
       ended(null);
       return;
     }
-    if (msg.type === "ingested") {
-      const csr = msg.graph;
-      graph = assemble(msg, opts.name, opts.title, opts.view ?? null);
-      data.set({ graph, current: opts.current ?? opts.name });
-      opts.onIngested?.(graph);
-      setStage("ingest", { status: "done" });
-      setStage("basics", { status: "running" });
-      runHops(graph, csr);
-      runSpectral(graph, csr);
-      return;
-    }
-    if (msg.type === "cores") {
-      graph!.cores = msg.cores;
-      graph!.ksnakes = { core: msg.cores.core, onion: msg.cores.onion, ...msg.ksnakes };
-      setStage("basics", { status: "done" });
-      setStage("centrality", { status: "running" });
-    } else {
-      graph!.centrality = { eigenvector: msg.centrality };
-      setStage("centrality", { status: "done" });
-      core.terminate();
-    }
+    const csr = msg.graph;
+    const graph = assemble(msg, opts.name, opts.title, opts.view ?? null);
+    data.set({ graph, current: opts.current ?? opts.name });
+    opts.onIngested?.(graph);
+    setStage("ingest", { status: "done" });
+    runShells(graph, csr);
+    runHops(graph, csr);
+    runSpectral(graph, csr);
+  };
+  w.postMessage({ type: "build", texts } satisfies IngestRequest);
+}
+
+function runShells(graph: Graph, csr: Csr) {
+  setStage("shells", { status: "running" });
+  const w = track(new Worker(new URL("./shells.worker.ts", import.meta.url), { type: "module" }), ["shells"]);
+  w.onmessage = (e: MessageEvent<ShellsMessage>) => {
+    const msg = e.data;
+    graph.cores = msg.cores;
+    graph.ksnakes = { core: msg.cores.core, onion: msg.cores.onion, ...msg.ksnakes };
+    setStage("shells", { status: "done" });
+    w.terminate();
     landed();
     finishIfDone();
   };
-  core.postMessage({ type: "build", texts } satisfies CoreRequest);
+  w.postMessage({ graph: csr });
 }
 
 function runHops(graph: Graph, csr: Csr) {
@@ -220,8 +224,8 @@ function runHops(graph: Graph, csr: Csr) {
   }
 }
 
-// The harmonics, then the components; FD starts as soon as the harmonics
-// land, unless the dataset brought its own FD.
+// The harmonics, then the components; FD 2D starts as soon as the harmonics
+// land.
 function runSpectral(graph: Graph, csr: Csr) {
   setStage("harmonics", { status: "running" });
   setStage("components", { status: "running" });

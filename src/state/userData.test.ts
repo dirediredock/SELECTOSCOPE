@@ -50,7 +50,6 @@ function graph(finished: boolean, refused: Graph["refused"] = []): Graph {
     layoutFd: done(new Float32Array(6)),
     cores: done({}),
     ksnakes: done({}),
-    centrality: done({}),
     hopCensus: done({}),
     seriations: finished ? { harm1: new Uint32Array(3), pc1: new Uint32Array(3) } : {},
   } as unknown as Graph;

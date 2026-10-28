@@ -24,14 +24,15 @@ export const sentence = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 // What loading a dataset refused and changed, one group per file: the
 // refused files first, then the rest in file order. What the cleaning
-// changed is the edge list's.
-export function describeReport(g: { report: CleanReport; refused: Refusal[]; warnings: Warning[] }): ReportGroup[] {
+// changed is the edge list's; a graph loaded from a build file has no record
+// of it, and no edge list pill to show it on.
+export function describeReport(g: { report: CleanReport | null; refused: Refusal[]; warnings: Warning[] }): ReportGroup[] {
   const r = g.report;
   const notes = new Map<FileKind, string[]>();
   const note = (kind: FileKind, line: string) => notes.set(kind, [...(notes.get(kind) ?? []), line]);
-  if (r.selfLoops) note("edgelist", `${plural(r.selfLoops, "self-loop")} dropped`);
-  if (r.repeated) note("edgelist", `${plural(r.repeated, "repeated edge")} merged`);
-  if (r.components > 1) {
+  if (r?.selfLoops) note("edgelist", `${plural(r.selfLoops, "self-loop")} dropped`);
+  if (r?.repeated) note("edgelist", `${plural(r.repeated, "repeated edge")} merged`);
+  if (r && r.components > 1) {
     note(
       "edgelist",
       `kept the largest of ${r.components} components (${plural(r.droppedNodes, "node")}, ${plural(r.droppedEdges, "edge")} dropped)`,
@@ -51,7 +52,7 @@ export function describeReport(g: { report: CleanReport; refused: Refusal[]; war
 // one built from the files as they stand, or null.
 export function fileLines(
   kind: FileKind,
-  graph: { report: CleanReport; refused: Refusal[]; warnings: Warning[] } | null,
+  graph: { report: CleanReport | null; refused: Refusal[]; warnings: Warning[] } | null,
   refusal: string | null = null,
 ): { refused: string[]; notes: string[] } {
   const groups = graph ? describeReport(graph).filter((g) => g.kind === kind) : [];

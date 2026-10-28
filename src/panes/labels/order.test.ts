@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { bandRows, fourChars, labelOrder, rowAt, sameOrder, sortRank, sortValue } from "./order";
+import { bandRows, labelOrder, rowAt, sameOrder, sortRank, sortValue } from "./order";
 
 const ids = (a: Uint32Array) => Array.from(a);
 
@@ -29,7 +29,6 @@ describe("sortRank", () => {
     labels: ["beta", "", "Alpha", "item 10", "item 9", "alpha"],
     degree: [1, 3, 3, 2, 5, 1],
     onion: [1, 4, 4, 2, 4, 1],
-    eigenvector: [0.1, 0.4, 0.4, 0.2, 0.3, 0.1],
   };
 
   it("sorts alphabetically by case and number, empty labels last, ties by node_id", () => {
@@ -38,10 +37,6 @@ describe("sortRank", () => {
 
   it("sorts by degree, most first, ties by node_id", () => {
     expect(ids(sortRank("degree", keys))).toEqual([4, 1, 2, 3, 0, 5]);
-  });
-
-  it("sorts by eigenvector, largest first, ties by node_id", () => {
-    expect(ids(sortRank("eigenvector", keys))).toEqual([1, 2, 4, 3, 0, 5]);
   });
 
   it("sorts by onion, deepest first, then degree, then node_id", () => {
@@ -94,29 +89,11 @@ describe("bandRows", () => {
   });
 });
 
-describe("fourChars", () => {
-  it("drops the leading zero and keeps four characters", () => {
-    expect(fourChars(0.37336)).toBe(".373");
-    expect(fourChars(0.0296)).toBe(".030");
-  });
-
-  it("reads .000 below .0005, zero included", () => {
-    expect(fourChars(0)).toBe(".000");
-    expect(fourChars(0.0004)).toBe(".000");
-  });
-
-  it("reads 1.00 from .9995 up", () => {
-    expect(fourChars(0.9996)).toBe("1.00");
-    expect(fourChars(1)).toBe("1.00");
-  });
-});
-
 describe("sortValue", () => {
   const keys = {
     labels: ["a", "b", "c"],
     degree: [3, 12, 7],
     onion: [1, 2, 2],
-    eigenvector: [0.5, 0.0001, 1],
   };
 
   it("shows nothing under Labels (A–Z)", () => {
@@ -127,9 +104,5 @@ describe("sortValue", () => {
     const v = sortValue("degree", keys)!;
     expect([0, 1, 2].map(v)).toEqual(["\u20073", "12", "\u20077"]);
     expect(sortValue("onion", keys)!(0)).toBe("1");
-  });
-
-  it("gives each centrality four characters", () => {
-    expect([0, 1, 2].map(sortValue("eigenvector", keys)!)).toEqual([".500", ".000", "1.00"]);
   });
 });

@@ -51,8 +51,8 @@ if (isMain) {
     console.log(`${row.name}: ${(json.length / 1e6).toFixed(2)} MB, ${((performance.now() - t0) / 1000).toFixed(1)} s`);
   }
   const index = rows.map((r) => {
-    const meta = JSON.parse(readFileSync(join(BUILDS, `${r.name}.json`), "utf8")).meta;
-    return { name: r.name, title: r.title, group: r.group, view: r.view, nodes: meta.nodes, edges: meta.edges, has_labels: meta.has_labels };
+    const { meta, nodes } = JSON.parse(readFileSync(join(BUILDS, `${r.name}.json`), "utf8"));
+    return { name: r.name, title: r.title, group: r.group, view: r.view, nodes: meta.nodes, edges: meta.edges, has_labels: !!nodes.label };
   });
   writeFileSync(join(BUILDS, "index.json"), JSON.stringify({ datasets: index }));
 }

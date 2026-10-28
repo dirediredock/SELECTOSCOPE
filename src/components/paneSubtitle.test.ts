@@ -4,7 +4,7 @@ import { hopcensusSubtitle, ksnakesSubtitle, labelsSubtitle, matrixSubtitle, nod
 describe("pane subtitles", () => {
   it("names the Labels sort", () => {
     expect(labelsSubtitle("degree")).toBe("Degree");
-    expect(labelsSubtitle("eigenvector")).toBe("Eigenvector");
+    expect(labelsSubtitle("onion")).toBe("Onion");
     expect(labelsSubtitle("alpha")).toBe("Labels (A–Z)");
   });
 

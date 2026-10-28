@@ -66,13 +66,11 @@ Sort the vertical order of rows by:
 
 LABELS (A–Z) for an alphabetical sort, ignoring case, with numbers in numeric order, and unlabeled nodes last.
 
-DEGREE for a sort based on degree centrality, or how many neighbors each node has, the most first. Degree is also the tie-breaker in the other numeric sorts.
+DEGREE for a sort based on degree centrality, or how many neighbors each node has, the most first. Degree is also the tie-breaker in the ONION sort.
 
 ONION for a sort based on the onion decomposition, or how deep a node sits in the graph's density gradient: the later a peeling of the least-connected nodes removes the node at hand, the higher its onion value.
 
-EIGENVECTOR for a sort based on eigenvector centrality directly from the Adjacency matrix, or how well connected a node's neighbors are, the highest first.
-
-Every sort but LABELS (A–Z) shows each node's value in a column between its number and its label: whole numbers for DEGREE and ONION, three decimals for EIGENVECTOR. When the pane is narrow, the node number hides first, so the value and the label keep the room.
+Every sort but LABELS (A–Z) shows each node's value, a whole number, in a column between its number and its label. When the pane is narrow, the node number hides first, so the value and the label keep the room.
 
 NODELINK PANE
 

@@ -80,7 +80,7 @@ function stagesOf(type: PaneType, slot: SlotId): Stage[] {
   switch (type) {
     case "labels": {
       const sort = labelSortOf(slot);
-      return sort === "onion" ? ["basics"] : sort === "eigenvector" ? ["centrality"] : [];
+      return sort === "onion" ? ["shells"] : [];
     }
     case "nodelink": {
       const { layout, live } = nodelinkOf(slot);
@@ -89,7 +89,7 @@ function stagesOf(type: PaneType, slot: SlotId): Stage[] {
     case "matrix":
       return [matrixOf(slot).seriation.startsWith("pc") ? "components" : "harmonics"];
     case "ksnakes":
-      return ["basics"];
+      return ["shells"];
     case "hopcensus":
       return ["hops"];
     case "dataset":

@@ -259,7 +259,7 @@ export function KSnakesPane({ slot }: { slot: SlotId }) {
     const unsubs = [
       registerSweepAxis(slot, axis),
       data.subscribe((s, prev) => {
-        if (s.graph !== prev.graph || (s.stages.basics.status === "done" && prev.stages.basics.status !== "done")) {
+        if (s.graph !== prev.graph || (s.stages.shells.status === "done" && prev.stages.shells.status !== "done")) {
           frame.schedule(full);
         }
       }),
@@ -324,7 +324,7 @@ export function KSnakesPane({ slot }: { slot: SlotId }) {
   }, [slot]);
 
   const graph = useStore(data, (st) => st.graph);
-  const fade = useFadeIn(graph, useStore(data, (st) => st.stages.basics.status === "done"));
+  const fade = useFadeIn(graph, useStore(data, (st) => st.stages.shells.status === "done"));
   return (
     <>
       <div ref={stackRef} className={"pane-stack" + fade}>
@@ -334,7 +334,7 @@ export function KSnakesPane({ slot }: { slot: SlotId }) {
         <canvas ref={hoverRef} />
         <canvas ref={gestureRef} />
       </div>
-      <WaitingOn stages={["basics"]} />
+      <WaitingOn stages={["shells"]} />
     </>
   );
 }

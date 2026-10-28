@@ -402,7 +402,7 @@ export function HelpPane() {
             <p>
               DEGREE for a sort based on degree centrality, or how many
               neighbors each node has, the most first. Degree is also the
-              tie-breaker in the other numeric sorts.
+              tie-breaker in the ONION sort.
             </p>
             <p>
               ONION for a sort based on the onion decomposition, or how deep a
@@ -411,16 +411,10 @@ export function HelpPane() {
               onion value.
             </p>
             <p>
-              EIGENVECTOR for a sort based on eigenvector centrality directly
-              from the Adjacency matrix, or how well connected a node's
-              neighbors are, the highest first.
-            </p>
-            <p>
-              Every sort but LABELS (A–Z) shows each node's value in a column
-              between its number and its label: whole numbers for DEGREE and
-              ONION, three decimals for EIGENVECTOR. When the pane is narrow,
-              the node number hides first, so the value and the label keep the
-              room.
+              Every sort but LABELS (A–Z) shows each node's value, a whole
+              number, in a column between its number and its label. When the
+              pane is narrow, the node number hides first, so the value and the
+              label keep the room.
             </p>
           </PaneBlock>
           <PaneBlock title="NodeLink">

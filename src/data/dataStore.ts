@@ -9,14 +9,13 @@ import type { BuildJson } from "./format";
 import type { Graph, OpeningView } from "./graph";
 import { zip } from "./zip";
 
-export const STAGES = ["ingest", "basics", "centrality", "hops", "harmonics", "components", "fd2d", "fd3d"] as const;
+export const STAGES = ["ingest", "shells", "hops", "harmonics", "components", "fd2d", "fd3d"] as const;
 export type Stage = (typeof STAGES)[number];
 
 // What each stage is called while it runs: a pane's subtitle and progress.
 export const STAGE_NAMES: Record<Stage, string> = {
   ingest: "Reading",
-  basics: "Shells",
-  centrality: "Centrality",
+  shells: "Shells",
   hops: "Hops",
   harmonics: "Harmonics",
   components: "Components",

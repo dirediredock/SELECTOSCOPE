@@ -19,15 +19,13 @@ import { TEXT } from "../../controlText";
 
 const EMPTY: Uint32Array = new Uint32Array(0);
 
-// Onion reads the Shells stage's results, Eigenvector the Centrality stage's.
-const sortReady = (g: Graph, sort: LabelSort) =>
-  sort === "onion" ? !!g.cores : sort === "eigenvector" ? !!g.centrality : true;
+// Onion reads the Shells stage's results.
+const sortReady = (g: Graph, sort: LabelSort) => sort !== "onion" || !!g.cores;
 const NONE = new Uint32Array(0);
 const sortKeys = (g: Graph): SortKeys => ({
   labels: g.labels,
   degree: g.degree,
   onion: g.cores?.onion ?? NONE,
-  eigenvector: g.centrality?.eigenvector ?? NONE,
 });
 
 // One row per node, as a pill row: node_id + 1 (zero-padded) | the sort's value
@@ -55,8 +53,8 @@ export function LabelsPane({ slot }: { slot: SlotId }) {
   );
   const sort = useStore(labelsSettings, (s) => labelSortIn(s, slot));
   const [order, setOrder] = useState(EMPTY);
-  // Onion and Eigenvector arrive with the Shells stage; until then those sorts
-  // wait, and Degree and Labels (A–Z) work at once.
+  // Onion arrives with the Shells stage; until then it waits, and Degree and
+  // Labels (A–Z) work at once.
   const keysReady = useStore(data, (s) => !!s.graph && sortReady(s.graph, sort));
   const fade = useFadeIn(graph, keysReady && !labelsMissing(graph, sort));
   const value = useMemo(() => graph && keysReady && sortValue(sort, sortKeys(graph)), [graph, sort, keysReady]);
@@ -122,12 +120,7 @@ export function LabelsPane({ slot }: { slot: SlotId }) {
     const unsubs = [
       data.subscribe((s, prev) => {
         if (s.graph !== prev.graph) resort(true);
-        else if (
-          (s.stages.basics.status === "done" && prev.stages.basics.status !== "done") ||
-          (s.stages.centrality.status === "done" && prev.stages.centrality.status !== "done")
-        ) {
-          resort(true);
-        }
+        else if (s.stages.shells.status === "done" && prev.stages.shells.status !== "done") resort(true);
       }),
       selection.subscribe((s, prev) => {
         if (s.nodes !== prev.nodes && !overRef.current) resort(false);
@@ -206,7 +199,7 @@ export function LabelsPane({ slot }: { slot: SlotId }) {
       {labelsMissing(graph, sort) && (
         <PaneMessage text={TEXT.labels.missing}><MissingFilePill kind="labels" /></PaneMessage>
       )}
-      {graph && !keysReady && <WaitingOn stages={sort === "onion" ? ["basics"] : ["centrality"]} />}
+      {graph && !keysReady && <WaitingOn stages={["shells"]} />}
     </>
   );
 }

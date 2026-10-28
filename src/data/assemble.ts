@@ -2,7 +2,6 @@
 // still empty; and the whole build in one call, for Node (scripts/bake.ts)
 // and tests. The engine fills the same fields stage by stage in workers.
 
-import { eigenvectorCentrality } from "../pipeline/centrality";
 import { cores } from "../pipeline/cores";
 import { degrees } from "../pipeline/graph";
 import { hopCensus } from "../pipeline/hopcensus";
@@ -10,7 +9,6 @@ import { ingest } from "../pipeline/ingest";
 import type { Attached, DatasetTexts, FileKind, Ingested } from "../pipeline/ingest";
 import { ksnakes } from "../pipeline/ksnakes";
 import { forceDirected2d, forceDirected3d, ownLayouts } from "../pipeline/layouts";
-import { SEED } from "../pipeline/randomize";
 import { componentVectors, harmonicVectors, seriate } from "../pipeline/seriations";
 import type { Graph, OpeningView } from "./graph";
 
@@ -24,7 +22,6 @@ export function assemble(ing: Omit<Ingested, "graph"> & { graph: Ingested["graph
     title,
     n: csr.n,
     m: csr.m,
-    seed: SEED,
     nodeId: csr.nodeId,
     edgeRow: csr.edgeRow,
     csr,
@@ -48,7 +45,6 @@ export function assemble(ing: Omit<Ingested, "graph"> & { graph: Ingested["graph
     seriations: {},
     cores: null,
     ksnakes: null,
-    centrality: null,
     hopRows: null,
     hopCensus: null,
   };
@@ -96,7 +92,6 @@ export function buildNow(texts: DatasetTexts, name: string, title: string, view:
   const c = cores(g.csr);
   g.cores = c;
   g.ksnakes = { ...c, ...ksnakes(g.csr, c) };
-  g.centrality = { eigenvector: eigenvectorCentrality(g.csr) };
   const hc = hopCensus(g.csr);
   const offset = new Uint32Array(g.n + 1);
   for (let v = 0; v < g.n; v++) offset[v + 1] = offset[v] + hc.ecc[v] + 1;

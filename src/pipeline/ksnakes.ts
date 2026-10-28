@@ -58,7 +58,6 @@ const quantized = (x: number) => (Number.isNaN(x) ? Infinity : Math.round(x / RO
 
 export interface SnakeOrders {
   row: Record<Ordering, Uint32Array>;
-  crossings: Record<Ordering, number>;
 }
 
 export interface KSnakes {
@@ -162,16 +161,12 @@ class Bins {
   shell: Int32Array;
   of: Int32Array;
   rows: number[][];
-  loc: Int32Array;
   tie: Int32Array;
   top: Float64Array;
   total: Float64Array;
   size: Float64Array;
-  W: Adj;
   up: Adj;
   down: Adj;
-  // Dense weights between each pair of rows with edges, in each row's own index.
-  blocks: { r: number; q: number; M: Float64Array[] }[];
 
   constructor(sh: Shells, aggregate: boolean) {
     this.sh = sh;
@@ -192,8 +187,6 @@ class Bins {
     members.forEach((m, b) => m.forEach((v) => (this.of[v] = b)));
     this.rows = Array.from({ length: sh.count }, () => [] as number[]);
     for (let b = 0; b < B; b++) this.rows[this.shell[b]].push(b);
-    this.loc = new Int32Array(B);
-    for (const g of this.rows) g.forEach((b, i) => (this.loc[b] = i));
 
     const sorted = (xs: number[]) => [...xs].sort((a, b) => a - b);
     const keys = members.map((m) => [
@@ -214,7 +207,6 @@ class Bins {
     this.total = Float64Array.from(members, (m) => m.reduce((s, v) => s + sh.onion[v], 0));
     this.size = Float64Array.from(members, (m) => m.length);
 
-    this.W = adjacency(B);
     this.up = adjacency(B);
     this.down = adjacency(B);
     for (let e = 0; e < sh.source.length; e++) {
@@ -223,29 +215,11 @@ class Bins {
       if (sh.shell[s] === sh.shell[t]) continue;
       const a = this.of[s];
       const b = this.of[t];
-      addWeight(this.W, a, b);
-      addWeight(this.W, b, a);
-      // The pull: an edge d rows away weighs 1/d. Crossings keep W's counts.
+      // The pull: an edge d rows away weighs 1/d.
       const w = 1 / Math.abs(this.shell[a] - this.shell[b]);
       addWeight(this.shell[b] > this.shell[a] ? this.up : this.down, a, b, w);
       addWeight(this.shell[a] > this.shell[b] ? this.up : this.down, b, a, w);
     }
-    const blocks = new Map<string, { r: number; q: number; M: Float64Array[] }>();
-    for (let a = 0; a < B; a++) {
-      for (const [b, w] of this.W[a]) {
-        const r = this.shell[a];
-        const q = this.shell[b];
-        if (r >= q) continue;
-        const key = `${r},${q}`;
-        let block = blocks.get(key);
-        if (!block) {
-          block = { r, q, M: this.rows[r].map(() => new Float64Array(this.rows[q].length)) };
-          blocks.set(key, block);
-        }
-        block.M[this.loc[a]][this.loc[b]] = w;
-      }
-    }
-    this.blocks = [...blocks.values()].sort((x, y) => x.r - y.r || x.q - y.q);
   }
 
   positions(orders: number[][]): Float64Array {
@@ -257,16 +231,6 @@ class Bins {
   // Row k by its bins' wants (none last), then the tie keys.
   arrange(k: number, want: Float64Array): number[] {
     return [...this.rows[k]].sort((a, b) => quantized(want[a]) - quantized(want[b]) || this.tie[a] - this.tie[b]);
-  }
-
-  crossings(orders: number[][]): number {
-    let total = 0;
-    for (const { r, q, M } of this.blocks) {
-      const pr = orders[r].map((b) => this.loc[b]);
-      const pq = orders[q].map((b) => this.loc[b]);
-      total += pairCrossings(pr.map((i) => pq.map((j) => M[i][j])));
-    }
-    return total;
   }
 
   packed(): number[][] {
@@ -324,30 +288,6 @@ class Bins {
   }
 }
 
-// Crossings between the edges of a weighted block, rows and columns in
-// left-to-right order: pairs (a, x), (b, y) with a left of b and y left of x,
-// each counted weight times weight.
-export function pairCrossings(M: number[][]): number {
-  const R = M.length;
-  if (R === 0) return 0;
-  const C = M[0].length;
-  // below[x] = the weight in rows below the current one at columns < x.
-  const below = new Float64Array(C + 1);
-  let total = 0;
-  for (let a = R - 1; a >= 0; a--) {
-    for (let x = 0; x < C; x++) total += M[a][x] * below[x];
-    // Fold row a in: prefix sums over columns.
-    let run = 0;
-    const next = new Float64Array(C + 1);
-    for (let x = 0; x < C; x++) {
-      run += M[a][x];
-      next[x + 1] = below[x + 1] + run;
-    }
-    below.set(next);
-  }
-  return total;
-}
-
 // Each node's rank among its island's layer: by want (none last), degree and
 // node_idx, except in a tree island, where children follow parents.
 function innerRanks(sh: Shells, want: Float64Array): Int32Array {
@@ -403,10 +343,7 @@ export function ksnakes(g: Graph, c: Cores): KSnakes {
     const bins = new Bins(sh, mode === "aggregate");
     const placed: Record<Ordering, number[][]> = { packed: bins.packed(), topdown: bins.topdown() };
     if (!inner) inner = innerRanks(sh, bins.want(placed.topdown));
-    orders[mode] = {
-      row: { packed: bins.row(placed.packed, inner), topdown: bins.row(placed.topdown, inner) },
-      crossings: { packed: bins.crossings(placed.packed), topdown: bins.crossings(placed.topdown) },
-    };
+    orders[mode] = { row: { packed: bins.row(placed.packed, inner), topdown: bins.row(placed.topdown, inner) } };
     if (mode === "separate") {
       const packedRank = new Int32Array(sh.members.length);
       let k = 0;

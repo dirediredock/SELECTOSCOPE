@@ -32,4 +32,16 @@ describe("builds", () => {
     const text = readFileSync(join(BUILDS, `${name}.json`), "utf8");
     expect(stringify(fromJson(JSON.parse(text))) === text).toBe(true);
   });
+
+  // Exports made before these keys were retired must still open.
+  it("reads an older build's retired keys and writes it out without them", () => {
+    const text = readFileSync(join(BUILDS, "karate_club.json"), "utf8");
+    const old = JSON.parse(text);
+    old.meta.seed = 1736;
+    old.meta.has_labels = !!old.nodes.label;
+    old.meta.report = { rows: 78, self_loops: 0, repeated: 0, components: 1, dropped_nodes: 0, dropped_edges: 0 };
+    old.centrality = { eigenvector: old.nodes.node_id.map(() => 0.1) };
+    for (const mode of Object.values(old.ksnakes.orders) as { crossings?: object }[]) mode.crossings = { packed: 0, topdown: 0 };
+    expect(stringify(fromJson(old)) === text).toBe(true);
+  });
 });
