@@ -1,8 +1,9 @@
 import { localPoint, sizeCanvas } from "../canvas/sizeCanvas";
 import { clearHover, selectFromEdges, selectFromNodes, setHover, toggleGroup, toggleItem } from "../state/selection";
 import type { HoverItem, ItemType, Mode } from "../state/selection";
-import { ui } from "../state/uiStore";
-import type { Tool } from "../state/uiStore";
+import { controlsStore } from "../state/controls";
+import { interfaceStore } from "../state/interface";
+import type { Tool } from "../state/controls";
 import type { HitTester } from "./pointHits";
 import { lassoMask, OUTSIDE } from "./lassoMask";
 import { beginGesture, endGesture, gestureActive, isNavigating } from "./activeGesture";
@@ -118,7 +119,7 @@ export function attachSelectGesture({ el, overlay, type, hit }: Options): Select
     const css = getComputedStyle(overlay);
     const blue = css.getPropertyValue("--node-sel").trim();
     const orange = css.getPropertyValue("--edge-sel").trim();
-    const mode = ui.get().selectMode;
+    const mode = controlsStore.get().selectMode;
     const [line, fill] =
       mode === "node" ? [blue, blue] : mode === "edge" ? [orange, orange] : g.swap ? [orange, blue] : [blue, orange];
     ctx.globalAlpha = 0.14;
@@ -142,14 +143,14 @@ export function attachSelectGesture({ el, overlay, type, hit }: Options): Select
   const onDown = (e: PointerEvent) => {
     // A second finger is navigation, never a lasso of its own (navigate.ts).
     if (e.button !== 0 || !e.isPrimary || gestureActive()) return;
-    if (ui.get().spaceHeld) return; // navigation (navigate.ts)
+    if (interfaceStore.get().spaceHeld) return; // navigation (navigate.ts)
     if (!hit()) return;
     const [x, y] = local(e);
     el.setPointerCapture(e.pointerId);
     clearHover();
     active = {
       pointerId: e.pointerId,
-      tool: ui.get().tool,
+      tool: controlsStore.get().tool,
       mode: e.shiftKey ? "add" : e.altKey ? "subtract" : "replace",
       swap: nextShapeSwap(),
       x0: x,
@@ -188,7 +189,7 @@ export function attachSelectGesture({ el, overlay, type, hit }: Options): Select
     const h = hit();
     if (h) {
       if (g.dragging) {
-        const target = ui.get().selectMode;
+        const target = controlsStore.get().selectMode;
         if (target === "node" && h.nodesInRect && h.nodesInPolygon) {
           // The pane's own way to nodes (the matrix's columns).
           const ids = g.tool === "rect" ? h.nodesInRect(g.x0, g.y0, g.x, g.y) : h.nodesInPolygon(g.pts);

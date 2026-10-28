@@ -1,18 +1,18 @@
 import { CENSUS_MEASURES } from "../controlOptions";
 import { createStore } from "./createStore";
-import { data } from "../data/dataStore";
-import { fitView } from "./views";
-import { layout, retyped } from "./layout";
-import type { SlotId } from "./layout";
+import { datasetStore } from "../data/datasetStore";
+import { fitView } from "./paneViews";
+import { paneRowStore, retyped } from "./paneRow";
+import type { SlotId } from "./paneRow";
 
 // Hops' settings, chosen in the bottom strip. Each Hops slot has its
 // own, and a dataset switch is a fresh start.
 
-// What orders the lines sideways: the shape order (panes/hopcensus/geometry.ts).
+// What orders the lines sideways: the shape order (panes/hops/geometry.ts).
 export type CensusMeasure = (typeof CENSUS_MEASURES)[number]["id"];
 
 // How far right the shape order moves a line at its far end, in multiples
-// of a bin's side (panes/hopcensus/geometry.ts); 0 lines every line up at hop 0.
+// of a bin's side (panes/hops/geometry.ts); 0 lines every line up at hop 0.
 export const SLIDE = { max: 50, opening: 2 } as const;
 
 // The slider's rail runs squared: the multiple is max · t², t along the rail.
@@ -30,23 +30,23 @@ export const railOfSlide = (s: number) => Math.round(SLIDE_RAIL.max * Math.sqrt(
 // One decimal under 10×, whole multiples from there.
 export const slideText = (s: number) => `${s < 10 ? +s.toFixed(1) : Math.round(s)}×`;
 
-export interface HopCensusSettings {
+export interface HopsSettings {
   measure: CensusMeasure; // what orders the lines sideways
   rank: boolean; // lines spaced by their rank along the order, else by the measure's value
   slide: number; // multiples of the side
 }
 
-const OPENING: HopCensusSettings = { measure: "reach", rank: false, slide: SLIDE.opening };
+const OPENING: HopsSettings = { measure: "reach", rank: false, slide: SLIDE.opening };
 
-type BySlot = Partial<Record<SlotId, HopCensusSettings>>;
+type BySlot = Partial<Record<SlotId, HopsSettings>>;
 
-export const hopcensusSettings = createStore<{ bySlot: BySlot }>({ bySlot: {} });
+export const hopsStore = createStore<{ bySlot: BySlot }>({ bySlot: {} });
 
-export const hopcensusIn = (s: { bySlot: BySlot }, slot: SlotId) => s.bySlot[slot] ?? OPENING;
-export const hopcensusOf = (slot: SlotId) => hopcensusIn(hopcensusSettings.get(), slot);
+export const hopsIn = (s: { bySlot: BySlot }, slot: SlotId) => s.bySlot[slot] ?? OPENING;
+export const hopsOf = (slot: SlotId) => hopsIn(hopsStore.get(), slot);
 
-function update(slot: SlotId, patch: Partial<HopCensusSettings>) {
-  hopcensusSettings.set((s) => ({ bySlot: { ...s.bySlot, [slot]: { ...hopcensusIn(s, slot), ...patch } } }));
+function update(slot: SlotId, patch: Partial<HopsSettings>) {
+  hopsStore.set((s) => ({ bySlot: { ...s.bySlot, [slot]: { ...hopsIn(s, slot), ...patch } } }));
 }
 
 // A new order keeps the zoom and pan: the fit leaves room for every line's
@@ -57,7 +57,7 @@ export function setMeasure(slot: SlotId, measure: CensusMeasure) {
 }
 
 export function toggleRank(slot: SlotId) {
-  update(slot, { rank: !hopcensusOf(slot).rank });
+  update(slot, { rank: !hopsOf(slot).rank });
 }
 
 // The fit covers every slid line, so the view refits and the new pattern
@@ -67,15 +67,15 @@ export function setSlide(slot: SlotId, slide: number) {
   fitView(slot);
 }
 
-data.subscribe((s, prev) => {
-  if (s.graph !== prev.graph) hopcensusSettings.set({ bySlot: {} });
+datasetStore.subscribe((s, prev) => {
+  if (s.graph !== prev.graph) hopsStore.set({ bySlot: {} });
 });
 
 // A slot that becomes Hops starts from the defaults.
-layout.subscribe((s, prev) => {
+paneRowStore.subscribe((s, prev) => {
   const fresh = retyped(s.slots, prev.slots);
-  if (!fresh.some((slot) => hopcensusSettings.get().bySlot[slot])) return;
-  const bySlot = { ...hopcensusSettings.get().bySlot };
+  if (!fresh.some((slot) => hopsStore.get().bySlot[slot])) return;
+  const bySlot = { ...hopsStore.get().bySlot };
   fresh.forEach((slot) => delete bySlot[slot]);
-  hopcensusSettings.set({ bySlot });
+  hopsStore.set({ bySlot });
 });

@@ -1,6 +1,6 @@
 import type { KSnakes } from "../../data/graph";
 import { ORDERINGS } from "../../controlOptions";
-import type { Ordering, PipelineMode } from "../../state/ksnakes";
+import type { Ordering, PipelineMode } from "../../state/shells";
 import type { SweepAxis } from "../../state/sweep";
 
 // Shells placement, in px at 100% zoom with y up: the pipeline gives each

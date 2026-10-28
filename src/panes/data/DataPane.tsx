@@ -1,20 +1,21 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { data, initData, loadDataset } from "../data/dataStore";
-import type { DatasetEntry } from "../data/dataStore";
-import { exportable } from "../data/format";
-import { stopBuild } from "../engine/engine";
-import { useStore } from "../state/createStore";
-import type { SlotId } from "../state/layout";
-import { openNew, setUpload, ui } from "../state/uiStore";
-import { datasetAlert, pickRow, userData } from "../state/userData";
-import type { UserDataset } from "../state/userData";
-import { LIST_ROWS, VirtualList } from "../components/VirtualList";
-import { Action, AlertDot, Rail } from "../components/controls";
-import { attachListPan } from "../interaction/listPan";
-import { DatasetTile } from "./dataset/DatasetTile";
-import { CURATED_INTRO, INTRO } from "./dataset/intros";
-import { scaled } from "../uiScale";
-import { DATA_TOOLTIPS } from "../controlText";
+import { datasetStore, initData, loadDataset } from "../../data/datasetStore";
+import type { DatasetEntry } from "../../data/datasetStore";
+import { exportable } from "../../data/format";
+import { stopBuild } from "../../engine/engine";
+import { useStore } from "../../state/createStore";
+import type { SlotId } from "../../state/paneRow";
+import { controlsStore } from "../../state/controls";
+import { interfaceStore, openNew, setUpload } from "../../state/interface";
+import { datasetAlert, pickRow, userDatasetsStore } from "../../state/userDatasets";
+import type { UserDataset } from "../../state/userDatasets";
+import { LIST_ROWS, VirtualList } from "../../components/VirtualList";
+import { Action, AlertDot, Rail } from "../../components/controls";
+import { attachListPan } from "../../interaction/listPan";
+import { DatasetTile } from "./DatasetTile";
+import { CURATED_INTRO, INTRO } from "./intros";
+import { scaled } from "../../uiScale";
+import { DATA_TOOLTIPS } from "../../controlText";
 
 type Row =
   | { group: string; spaced?: boolean }
@@ -104,26 +105,26 @@ function Intro({ text, onHeight }: { text: string; onHeight: (text: string, h: n
 // the top with that row hovered, and leaving glides back to the ringed row.
 // When another pane takes focus the list glides the ringed row to its middle.
 // A resize keeps whatever is at the list's middle there, focused or not.
-export function DatasetPane({ slot }: { slot: SlotId }) {
-  const focused = useStore(ui, (s) => s.focused === slot);
-  const index = useStore(data, (s) => s.index);
+export function DataPane({ slot }: { slot: SlotId }) {
+  const focused = useStore(interfaceStore, (s) => s.focused === slot);
+  const index = useStore(datasetStore, (s) => s.index);
   // Ringed: the dataset on screen, curated or the user's.
-  const shown = useStore(data, (s) => s.current);
+  const shown = useStore(datasetStore, (s) => s.current);
   // + New holds the ring while the strip serves it, and the dataset on
   // screen holds it otherwise.
-  const uploading = useStore(ui, (s) => s.upload !== null);
+  const uploading = useStore(interfaceStore, (s) => s.upload !== null);
   const current = uploading ? null : shown;
-  const datasets = useStore(userData, (s) => s.datasets);
-  const building = useStore(userData, (s) => s.building);
-  const thumbnails = useStore(ui, (s) => s.thumbnails);
-  const newHover = useStore(ui, (s) => s.newHover);
+  const datasets = useStore(userDatasetsStore, (s) => s.datasets);
+  const building = useStore(userDatasetsStore, (s) => s.building);
+  const thumbnails = useStore(controlsStore, (s) => s.thumbnails);
+  const newHover = useStore(interfaceStore, (s) => s.newHover);
   // The curated build downloading or failed, its share received, and
   // whether the dataset list itself failed.
-  const requested = useStore(data, (s) => s.requested);
-  const downloading = useStore(data, (s) => s.loading);
-  const received = useStore(data, (s) => s.progress);
-  const loadFailed = useStore(data, (s) => s.loadError !== null);
-  const listFailed = useStore(data, (s) => s.loadError !== null && s.index === null);
+  const requested = useStore(datasetStore, (s) => s.requested);
+  const downloading = useStore(datasetStore, (s) => s.loading);
+  const received = useStore(datasetStore, (s) => s.progress);
+  const loadFailed = useStore(datasetStore, (s) => s.loadError !== null);
+  const listFailed = useStore(datasetStore, (s) => s.loadError !== null && s.index === null);
   const scrollerRef = useRef<HTMLDivElement>(null);
   // The list's inner width, which sets a tile's size.
   const [width, setWidth] = useState(0);

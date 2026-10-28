@@ -11,8 +11,8 @@ import {
   setSweepSpeed,
   startSweep,
   stopSweep,
-  sweep,
-  sweepSettings,
+  sweepRunStore,
+  sweepSettingsStore,
   SWEEP_STEPS,
   toggleSweepWrap,
   wrapStep,
@@ -21,9 +21,9 @@ import { toggleItem } from "./selection";
 import { sweepAxis } from "../panes/matrix/geometry";
 
 // The band reads the Select mode; the real store reads the page at load.
-vi.mock("./uiStore", async () => {
+vi.mock("./controls", async () => {
   const { createStore } = await import("./createStore");
-  return { ui: createStore({ selectMode: "both" }) };
+  return { controlsStore: createStore({ selectMode: "both" }) };
 });
 
 // A path on 5 nodes: edge e joins e and e + 1.
@@ -188,37 +188,37 @@ describe("stepping with the arrows", () => {
 
   it("does nothing with no sweep", () => {
     expect(pressStep(1)).toBe(false);
-    expect(sweep.get().slot).toBe(null);
+    expect(sweepRunStore.get().slot).toBe(null);
   });
 
   it("pauses a running sweep and steps it", () => {
     startSweep("s0");
     frame(700); // at 100%, a step is 4000 / 60 ms
-    const at = sweep.get().step;
+    const at = sweepRunStore.get().step;
     expect(at).toBe(10);
     expect(pressStep(1)).toBe(true);
     releaseStep(1);
-    expect(sweep.get()).toMatchObject({ paused: true, step: 11 });
+    expect(sweepRunStore.get()).toMatchObject({ paused: true, step: 11 });
     frame(5000);
-    expect(sweep.get().step).toBe(11);
+    expect(sweepRunStore.get().step).toBe(11);
     pressStep(-1);
     releaseStep(-1);
     pressStep(-1);
     releaseStep(-1);
-    expect(sweep.get().step).toBe(9);
+    expect(sweepRunStore.get().step).toBe(9);
   });
 
   it("moves at the Speed rate while held, past the hold delay", () => {
     startSweep("s0");
     pressStep(1);
-    expect(sweep.get().step).toBe(1);
+    expect(sweepRunStore.get().step).toBe(1);
     frame(200);
-    expect(sweep.get().step).toBe(1);
+    expect(sweepRunStore.get().step).toBe(1);
     frame(250 + 3.5 * (4000 / 60));
-    expect(sweep.get().step).toBe(5);
+    expect(sweepRunStore.get().step).toBe(5);
     releaseStep(1);
     frame(5000);
-    expect(sweep.get().step).toBe(5);
+    expect(sweepRunStore.get().step).toBe(5);
   });
 
   it("lets the last arrow pressed win", () => {
@@ -227,7 +227,7 @@ describe("stepping with the arrows", () => {
     pressStep(-1);
     releaseStep(1);
     frame(250);
-    expect(sweep.get().step).toBe(SWEEP_STEPS - 1);
+    expect(sweepRunStore.get().step).toBe(SWEEP_STEPS - 1);
   });
 
   it("resumes from the paused step", () => {
@@ -237,9 +237,9 @@ describe("stepping with the arrows", () => {
     now = 10_000;
     resumeSweep();
     frame(10_001);
-    expect(sweep.get()).toMatchObject({ paused: false, step: SWEEP_STEPS - 1 });
+    expect(sweepRunStore.get()).toMatchObject({ paused: false, step: SWEEP_STEPS - 1 });
     frame(10_000 + 4000 / 60 + 1);
-    expect(sweep.get().step).toBe(0);
+    expect(sweepRunStore.get().step).toBe(0);
   });
 
   it("reads the other axis at the same step when Sideways flips", () => {
@@ -250,13 +250,13 @@ describe("stepping with the arrows", () => {
     releaseStep(1);
     setSweepSideways(true);
     expect(reader).toHaveBeenLastCalledWith(true, false);
-    expect(sweep.get()).toMatchObject({ paused: true, step: 1 });
+    expect(sweepRunStore.get()).toMatchObject({ paused: true, step: 1 });
     setSweepSideways(false);
     unregister();
   });
 
   it("keeps the band in place when Wrap switches, paused", () => {
-    const w = sweepSettings.get().area / 100;
+    const w = sweepSettingsStore.get().area / 100;
     startSweep("s0");
     for (let i = 0; i < 25; i++) {
       pressStep(1);
@@ -264,22 +264,22 @@ describe("stepping with the arrows", () => {
     }
     const t = bandStart(25, w, false);
     toggleSweepWrap();
-    const { step, paused } = sweep.get();
+    const { step, paused } = sweepRunStore.get();
     expect(paused).toBe(true);
     expect(Math.abs(bandStart(step, w, true) - t)).toBeLessThanOrEqual(0.5 / SWEEP_STEPS + 1e-9);
     toggleSweepWrap();
-    expect(sweep.get().step).toBe(25);
+    expect(sweepRunStore.get().step).toBe(25);
   });
 
   it("carries on from the band's place when Wrap switches, running", () => {
-    const w = sweepSettings.get().area / 100;
+    const w = sweepSettingsStore.get().area / 100;
     startSweep("s0");
     frame(700); // step 10
     toggleSweepWrap();
-    const at = sweep.get().step;
+    const at = sweepRunStore.get().step;
     expect(Math.abs(bandStart(at, w, true) - bandStart(10, w, false))).toBeLessThanOrEqual(0.5 / SWEEP_STEPS + 1e-9);
     frame(700 + 4000 / 60);
-    expect(sweep.get().step).toBe(at + 1);
+    expect(sweepRunStore.get().step).toBe(at + 1);
     toggleSweepWrap();
   });
 
@@ -287,6 +287,6 @@ describe("stepping with the arrows", () => {
     startSweep("s0");
     pressStep(1);
     toggleItem("node", 0);
-    expect(sweep.get()).toMatchObject({ slot: null, paused: false });
+    expect(sweepRunStore.get()).toMatchObject({ slot: null, paused: false });
   });
 });

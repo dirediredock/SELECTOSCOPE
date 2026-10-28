@@ -1,6 +1,7 @@
 import { clearHover, selectFromNodes, setHover, toggleItem } from "../../state/selection";
 import type { Mode } from "../../state/selection";
-import { ui } from "../../state/uiStore";
+import { controlsStore } from "../../state/controls";
+import { interfaceStore } from "../../state/interface";
 import { beginGesture, endGesture, gestureActive, isNavigating } from "../../interaction/activeGesture";
 import { DRAG_START_PX, nextShapeSwap } from "../../interaction/selectGesture";
 import { attachListPan } from "../../interaction/listPan";
@@ -68,7 +69,7 @@ export function attachListGesture({ el, band, geometry, order }: Options): ListG
     const h = rows ? (rows[1] - rows[0] + 1) * pitch : Math.abs(yb - ya);
     // Its colours, as for a lasso, picked once as it appears.
     if (band.style.display !== "block") {
-      band.dataset.mode = ui.get().selectMode;
+      band.dataset.mode = controlsStore.get().selectMode;
       band.dataset.swap = nextShapeSwap() ? "1" : "0";
     }
     band.style.display = "block";
@@ -102,7 +103,7 @@ export function attachListGesture({ el, band, geometry, order }: Options): ListG
 
   const onDown = (e: PointerEvent) => {
     if (e.button !== 0 || press || gestureActive()) return;
-    if (ui.get().spaceHeld) return; // scrolling (listPan.ts)
+    if (interfaceStore.get().spaceHeld) return; // scrolling (listPan.ts)
     // A classic scrollbar belongs to the browser.
     if (e.clientX - el.getBoundingClientRect().left >= el.clientWidth) return;
     el.setPointerCapture(e.pointerId);
@@ -139,7 +140,7 @@ export function attachListGesture({ el, band, geometry, order }: Options): ListG
     const o = order();
     if (p.dragging) {
       const rows = bandRows(p.y0, contentY(e.clientY), pitch, top, o.length);
-      selectFromNodes(ui.get().selectMode, rows ? Array.from(o.subarray(rows[0], rows[1] + 1)) : [], p.bandMode);
+      selectFromNodes(controlsStore.get().selectMode, rows ? Array.from(o.subarray(rows[0], rows[1] + 1)) : [], p.bandMode);
     } else {
       const row = rowAt(p.y0, pitch, top, o.length);
       if (row !== null) toggleItem("node", o[row]!);

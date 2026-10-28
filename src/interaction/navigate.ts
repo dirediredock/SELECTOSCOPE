@@ -1,7 +1,7 @@
-import { ui } from "../state/uiStore";
+import { interfaceStore } from "../state/interface";
 import { UI_SCALE } from "../uiScale";
-import { setView, viewOf, zoomAt } from "../state/views";
-import type { SlotId } from "../state/layout";
+import { setView, viewOf, zoomAt } from "../state/paneViews";
+import type { SlotId } from "../state/paneRow";
 import { clearHover } from "../state/selection";
 import { wheelAction } from "./wheel";
 import { abortGesture, setNavigating } from "./activeGesture";
@@ -93,7 +93,7 @@ export function attachNavigate(el: HTMLElement, slot: SlotId, rotator?: Rotator)
 
   const onDown = (e: PointerEvent) => {
     if (e.button !== 0 || pan) return;
-    if (!ui.get().spaceHeld) return; // a selection (selectGesture.ts)
+    if (!interfaceStore.get().spaceHeld) return; // a selection (selectGesture.ts)
     el.setPointerCapture(e.pointerId);
     el.style.cursor = "grabbing";
     clearHover();

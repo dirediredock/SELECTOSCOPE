@@ -25,7 +25,7 @@ export interface Slot {
   ar: number | null;
 }
 
-export interface LayoutState {
+export interface PaneRowState {
   slots: readonly Slot[];
   mode: RowMode;
   // Each slot's share of the Fit row, summing to 1. Null until the first
@@ -34,35 +34,35 @@ export interface LayoutState {
   shares: Readonly<Record<SlotId, number>> | null;
 }
 
-export const layout = createStore<LayoutState>({
+export const paneRowStore = createStore<PaneRowState>({
   slots: PANES.map((p, i) => ({ slot: `s${i}`, type: p.id, ar: scrollOpeningAr(p.id) })),
   mode: windowRowMode(null),
   shares: null,
 });
 
-export const slotOf = (slot: SlotId) => layout.get().slots.find((s) => s.slot === slot)!;
+export const slotOf = (slot: SlotId) => paneRowStore.get().slots.find((s) => s.slot === slot)!;
 export const typeOf = (slot: SlotId) => slotOf(slot).type;
 
 function update(slot: SlotId, patch: Partial<Slot>) {
-  layout.set((s) => ({ slots: s.slots.map((x) => (x.slot === slot ? { ...x, ...patch } : x)) }));
+  paneRowStore.set((s) => ({ slots: s.slots.map((x) => (x.slot === slot ? { ...x, ...patch } : x)) }));
 }
 
-// A new type starts from its home view and default settings (views.ts,
+// A new type starts from its home view and default settings (paneViews.ts,
 // nodelink.ts and matrix.ts listen here).
 export function setSlotType(slot: SlotId, type: PaneType) {
   if (typeOf(slot) !== type) update(slot, { type });
 }
 
-// A new Scroll ratio refits the pane, as Fit all does (views.ts).
+// A new Scroll ratio refits the pane, as Fit all does (paneViews.ts).
 export function setSlotAr(slot: SlotId, ar: number | null) {
   if (slotOf(slot).ar !== ar) update(slot, { ar });
 }
 
-// Follow the window's shape. A new mode refits every canvas pane (views.ts).
+// Follow the window's shape. A new mode refits every canvas pane (paneViews.ts).
 export function watchRowMode() {
   const onResize = () => {
-    const mode = windowRowMode(layout.get().mode);
-    if (mode !== layout.get().mode) layout.set({ mode });
+    const mode = windowRowMode(paneRowStore.get().mode);
+    if (mode !== paneRowStore.get().mode) paneRowStore.set({ mode });
   };
   window.addEventListener("resize", onResize);
   return () => window.removeEventListener("resize", onResize);
@@ -70,7 +70,7 @@ export function watchRowMode() {
 
 // The Fit row's shares, one per slot in line-up order.
 export function setShares(shares: readonly number[]) {
-  layout.set((s) => ({ shares: Object.fromEntries(s.slots.map((x, i) => [x.slot, shares[i]])) }));
+  paneRowStore.set((s) => ({ shares: Object.fromEntries(s.slots.map((x, i) => [x.slot, shares[i]])) }));
 }
 
 // Slots whose type changed between two line-ups.

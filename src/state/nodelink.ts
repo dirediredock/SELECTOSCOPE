@@ -1,9 +1,9 @@
 import { createStore } from "./createStore";
 import { LAYOUTS } from "../controlOptions";
-import { fitView } from "./views";
-import { layout, retyped } from "./layout";
-import type { SlotId } from "./layout";
-import { data } from "../data/dataStore";
+import { fitView } from "./paneViews";
+import { paneRowStore, retyped } from "./paneRow";
+import type { SlotId } from "./paneRow";
+import { datasetStore } from "../data/datasetStore";
 import type { Graph } from "../data/graph";
 import { identity, rotateBy, startRotation } from "../panes/nodelink/rotation";
 import type { Mat3 } from "../panes/nodelink/rotation";
@@ -83,13 +83,13 @@ export function openingSettings(g: Graph | null): Pick<NodeLinkSettings, "layout
 
 type BySlot = Partial<Record<SlotId, NodeLinkSettings>>;
 
-export const nodelinkSettings = createStore<{ bySlot: BySlot }>({ bySlot: {} });
+export const nodelinkStore = createStore<{ bySlot: BySlot }>({ bySlot: {} });
 
 export const nodelinkIn = (s: { bySlot: BySlot }, slot: SlotId) => s.bySlot[slot] ?? opening;
-export const nodelinkOf = (slot: SlotId) => nodelinkIn(nodelinkSettings.get(), slot);
+export const nodelinkOf = (slot: SlotId) => nodelinkIn(nodelinkStore.get(), slot);
 
 function update(slot: SlotId, patch: (s: NodeLinkSettings) => Partial<NodeLinkSettings>) {
-  nodelinkSettings.set((s) => {
+  nodelinkStore.set((s) => {
     const cur = nodelinkIn(s, slot);
     return { bySlot: { ...s.bySlot, [slot]: { ...cur, ...patch(cur) } } };
   });
@@ -109,7 +109,7 @@ export function setNodeLinkLayout(slot: SlotId, layout: NodeLinkLayout) {
 // With no layout shown there is nothing to start from.
 export function setNodeLinkLive(slot: SlotId, live: boolean) {
   const cur = nodelinkOf(slot);
-  const g = data.get().graph;
+  const g = datasetStore.get().graph;
   if (live === cur.live || (live && !(liveAllowed(g) && hasLayout(g, cur.layout)))) return;
   update(slot, (s) => ({ live, liveRun: live ? s.liveRun + 1 : s.liveRun }));
   fitView(slot);
@@ -121,23 +121,23 @@ export function rotateView(slot: SlotId, dx: number, dy: number) {
 
 // A new dataset opens as openingSettings says, with 3D at its starting
 // orientation.
-data.subscribe((s, prev) => {
+datasetStore.subscribe((s, prev) => {
   if (s.graph === prev.graph || !s.graph) return;
   const rotation = startRotation(s.graph.layoutOwn3d ?? s.graph.layoutFd3d, s.graph.n);
   const open = openingSettings(s.graph);
   opening = { ...opening, ...open, rotation };
   const bySlot: BySlot = {};
-  for (const [slot, cur] of Object.entries(nodelinkSettings.get().bySlot)) {
+  for (const [slot, cur] of Object.entries(nodelinkStore.get().bySlot)) {
     if (cur) bySlot[slot] = { ...cur, ...open, rotation };
   }
-  nodelinkSettings.set({ bySlot });
+  nodelinkStore.set({ bySlot });
 });
 
 // A slot that becomes NodeLink starts from the opening settings.
-layout.subscribe((s, prev) => {
+paneRowStore.subscribe((s, prev) => {
   const fresh = retyped(s.slots, prev.slots);
-  if (!fresh.some((slot) => nodelinkSettings.get().bySlot[slot])) return;
-  const bySlot = { ...nodelinkSettings.get().bySlot };
+  if (!fresh.some((slot) => nodelinkStore.get().bySlot[slot])) return;
+  const bySlot = { ...nodelinkStore.get().bySlot };
   fresh.forEach((slot) => delete bySlot[slot]);
-  nodelinkSettings.set({ bySlot });
+  nodelinkStore.set({ bySlot });
 });

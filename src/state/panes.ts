@@ -5,12 +5,12 @@ import { TEXT } from "../controlText";
 // the default width / height (styles.css `--ar`). Data's gives it 70% of the
 // share a 1 / 3 would in Fit's opening row, so the room goes to the plots.
 export const PANES = [
-  { id: "dataset", title: "Data", native: null, list: true, ar: 0.224 },
+  { id: "data", title: "Data", native: null, list: true, ar: 0.224 },
   { id: "labels", title: "Labels", native: "node", list: true, ar: 1 / 3 },
   { id: "nodelink", title: "NodeLink", native: "node", list: false, ar: 1 },
   { id: "matrix", title: "Matrix", native: "edge", list: false, ar: 1 / 3 },
-  { id: "ksnakes", title: "Shells", native: "node", list: false, ar: 1 / 3 },
-  { id: "hopcensus", title: "Hops", native: "node", list: false, ar: 1 / 3 },
+  { id: "shells", title: "Shells", native: "node", list: false, ar: 1 / 3 },
+  { id: "hops", title: "Hops", native: "node", list: false, ar: 1 / 3 },
 ] as const;
 
 export type PaneType = (typeof PANES)[number]["id"];
@@ -21,22 +21,22 @@ export const paneTitle = (type: PaneType) => paneInfo(type).title;
 // The widest a pane may be, as width / height. Data's rows read at portrait
 // golden, and a wider list only adds empty room: the menu offers no wider
 // shape, and in Fit its width stops there and the other panes take the rest.
-export const MAX_AR: Partial<Record<PaneType, number>> = { dataset: 0.618 };
+export const MAX_AR: Partial<Record<PaneType, number>> = { data: 0.618 };
 
 // What the header menu offers. Data is fixed at the far left: it is never
 // offered, and it can only become Help (DATASET_VIEWS).
-export const SWAPPABLE = PANES.filter((p) => p.id !== "dataset");
+export const SWAPPABLE = PANES.filter((p) => p.id !== "data");
 
 // What the Data slot's menu offers in place of the types: its list, or the
 // Help in the same slot.
-export const DATASET_VIEWS = [
+export const DATA_VIEWS = [
   { id: "list", title: "Data" },
   { id: "help", title: "Help" },
 ] as const;
 
 // A slot's title: the Data slot's names what it shows.
 export const slotTitle = (type: PaneType, help: boolean) =>
-  type === "dataset" && help ? DATASET_VIEWS[1].title : paneTitle(type);
+  type === "data" && help ? DATA_VIEWS[1].title : paneTitle(type);
 
 // The shapes the header menu offers, as width / height. `ar` null is the
 // narrowest a pane gets: the row's minimum width, whatever the height.

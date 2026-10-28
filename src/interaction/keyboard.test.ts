@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { attachKeyboardShortcuts } from "./keyboard";
-import { pressSpace, releaseSpace } from "../state/uiStore";
-import { pressStep, releaseStep, sweep } from "../state/sweep";
+import { pressSpace, releaseSpace } from "../state/interface";
+import { pressStep, releaseStep, sweepRunStore } from "../state/sweep";
 
-vi.mock("../state/uiStore", () => ({ pressSpace: vi.fn(), releaseSpace: vi.fn() }));
+vi.mock("../state/interface", () => ({ pressSpace: vi.fn(), releaseSpace: vi.fn() }));
 vi.mock("../state/sweep", () => ({
-  pressStep: vi.fn(), releaseStep: vi.fn(), sweep: { get: vi.fn() },
+  pressStep: vi.fn(), releaseStep: vi.fn(), sweepRunStore: { get: vi.fn() },
 }));
 
 let detach: () => void;
@@ -28,7 +28,7 @@ beforeEach(() => {
   events = new EventTarget();
   vi.stubGlobal("window", events);
   vi.mocked(pressStep).mockReturnValue(true);
-  vi.mocked(sweep.get).mockReturnValue({ slot: "active" } as ReturnType<typeof sweep.get>);
+  vi.mocked(sweepRunStore.get).mockReturnValue({ slot: "active" } as ReturnType<typeof sweepRunStore.get>);
   detach = attachKeyboardShortcuts();
 });
 afterEach(() => { detach(); vi.unstubAllGlobals(); });

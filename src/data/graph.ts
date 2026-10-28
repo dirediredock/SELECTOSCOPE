@@ -4,7 +4,7 @@
 // One Graph object stands for one dataset for as long as it is shown: its
 // identity changing means a new dataset (a fresh start for every pane). The
 // engine fills its stage fields in place as each result lands, and bumps
-// the data store's revision, so the panes redraw with what is there. A
+// the dataset store's revision, so the panes redraw with what is there. A
 // field still null is a stage still running.
 
 import type { Cores } from "../pipeline/cores";

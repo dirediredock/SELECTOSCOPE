@@ -3,9 +3,9 @@ import type { PointView } from "../../canvas/pointView";
 import type { HitTester } from "../../interaction/pointHits";
 import { DRAG_START_PX } from "../../interaction/selectGesture";
 import { beginGesture, endGesture, gestureActive, isNavigating, setNavigating } from "../../interaction/activeGesture";
-import { selection, setHover, toggleItem } from "../../state/selection";
-import { sweep } from "../../state/sweep";
-import { ui } from "../../state/uiStore";
+import { selectionStore, setHover, toggleItem } from "../../state/selection";
+import { sweepRunStore } from "../../state/sweep";
+import { interfaceStore } from "../../state/interface";
 import type { LiveSim } from "./live";
 
 // Dragging a node in the Interactive view (Figma: a drag on an object moves it; a
@@ -62,13 +62,13 @@ export function attachNodeDrag({ el, view, hit, sim }: Options): () => void {
   };
 
   const onDown = (e: PointerEvent) => {
-    if (e.button !== 0 || !e.isPrimary || e.altKey || ui.get().spaceHeld || held || gestureActive()) return;
+    if (e.button !== 0 || !e.isPrimary || e.altKey || interfaceStore.get().spaceHeld || held || gestureActive()) return;
     const s = sim();
     const [x, y] = local(e);
     const v = nodeAt(x, y);
     if (!s || v === null) return;
-    const set = selection.get().nodes;
-    if (e.shiftKey && (!set.has(v) || sweep.get().slot !== null)) return;
+    const set = selectionStore.get().nodes;
+    if (e.shiftKey && (!set.has(v) || sweepRunStore.get().slot !== null)) return;
     e.stopPropagation(); // the press is ours, not a pan or a lasso
     el.setPointerCapture(e.pointerId);
     held = {

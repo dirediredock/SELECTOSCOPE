@@ -1,22 +1,22 @@
 import { useEffect, useRef } from "react";
 import { useStore } from "../../state/createStore";
-import { data } from "../../data/dataStore";
+import { datasetStore } from "../../data/datasetStore";
 import type { Graph } from "../../data/graph";
-import { hover, selection } from "../../state/selection";
-import { registerSweepAxis, shownSets, sweep } from "../../state/sweep";
-import { inkChanged, ui } from "../../state/uiStore";
-import { fitRequests, viewOf, views } from "../../state/views";
+import { hoverStore, selectionStore } from "../../state/selection";
+import { registerSweepAxis, shownSets, sweepRunStore } from "../../state/sweep";
+import { controlsStore, inkChanged } from "../../state/controls";
+import { fitRequestsStore, viewOf, paneViewsStore } from "../../state/paneViews";
 import {
   isSpatial,
   layoutMissing,
   layoutPositions,
   nodelinkIn,
   nodelinkOf,
-  nodelinkSettings,
+  nodelinkStore,
   rotateView,
   shownView,
 } from "../../state/nodelink";
-import type { SlotId } from "../../state/layout";
+import type { SlotId } from "../../state/paneRow";
 import type { NodeLinkView } from "../../state/nodelink";
 import { canvasBox, sizeCanvas } from "../../canvas/sizeCanvas";
 import { readInk } from "../../canvas/ink";
@@ -103,7 +103,7 @@ export function NodeLinkPane({ slot }: { slot: SlotId }) {
       const picked = shownView(nodelinkOf(slot));
       // Interactive starts from FD once it has settled; until then the pane
       // shows FD's frames as they land, which is the same run at rest.
-      const fdSettling = data.get().stages.fd2d.status !== "done";
+      const fdSettling = datasetStore.get().stages.fd2d.status !== "done";
       const mode = picked === "live" && fdSettling ? "fd" : picked;
       if (mode !== "live") stopLive();
       if (mode !== "live") {
@@ -129,12 +129,12 @@ export function NodeLinkPane({ slot }: { slot: SlotId }) {
     };
 
     const current = () => {
-      const g = data.get().graph;
+      const g = datasetStore.get().graph;
       return g && shown?.graph === g && shown.view === shownView(nodelinkOf(slot)) ? shown : null;
     };
 
     const layout = () => {
-      const g = data.get().graph;
+      const g = datasetStore.get().graph;
       if (!g) return;
       const bounds = place(g);
       if (!bounds) return;
@@ -163,7 +163,7 @@ export function NodeLinkPane({ slot }: { slot: SlotId }) {
     const paintHover = () => {
       const { ctx } = sizeCanvas(hoverRef.current!);
       const s = current();
-      if (s) drawHover(ctx, s.graph, view.pos, radius, readInk(stack), hover.get().item);
+      if (s) drawHover(ctx, s.graph, view.pos, radius, readInk(stack), hoverStore.get().item);
     };
 
     const full = () => {
@@ -191,8 +191,8 @@ export function NodeLinkPane({ slot }: { slot: SlotId }) {
     ro.observe(stack);
     const unsubs = [
       registerSweepAxis(slot, axis),
-      // A new dataset opens fitted: state/views.ts resets every pane's view.
-      data.subscribe((s, prev) => {
+      // A new dataset opens fitted: state/paneViews.ts resets every pane's view.
+      datasetStore.subscribe((s, prev) => {
         if (s.graph !== prev.graph) frame.schedule(full);
         // A layout frame, or FD settling (Interactive then takes over).
         else if (
@@ -204,23 +204,23 @@ export function NodeLinkPane({ slot }: { slot: SlotId }) {
           frame.schedule(full);
         }
       }),
-      views.subscribe((s, prev) => s[slot] !== prev[slot] && frame.schedule(transformed)),
-      nodelinkSettings.subscribe((next, before) => {
+      paneViewsStore.subscribe((s, prev) => s[slot] !== prev[slot] && frame.schedule(transformed)),
+      nodelinkStore.subscribe((next, before) => {
         const s = nodelinkIn(next, slot), prev = nodelinkIn(before, slot);
         if (shownView(s) !== shownView(prev) || s.rotation !== prev.rotation || s.liveRun !== prev.liveRun) {
           frame.schedule(full);
         }
       }),
-      ui.subscribe((s, prev) => inkChanged(s, prev) && frame.schedule(full)),
+      controlsStore.subscribe((s, prev) => inkChanged(s, prev) && frame.schedule(full)),
       // Fit all in the Interactive view fits the positions now, not everywhere they've been.
-      fitRequests.subscribe((s, prev) => {
+      fitRequestsStore.subscribe((s, prev) => {
         if (s[slot] === prev[slot] || !live) return;
         live.sim.fitToCurrent();
         frame.schedule(full);
       }),
-      selection.subscribe(() => frame.schedule(paintScene)),
-      sweep.subscribe(() => frame.schedule(paintScene)),
-      hover.subscribe(() => frame.schedule(paintHover)),
+      selectionStore.subscribe(() => frame.schedule(paintScene)),
+      sweepRunStore.subscribe(() => frame.schedule(paintScene)),
+      hoverStore.subscribe(() => frame.schedule(paintHover)),
     ];
     const hit = withEdgePicks(
       pointHitTester(
@@ -261,17 +261,17 @@ export function NodeLinkPane({ slot }: { slot: SlotId }) {
     };
   }, [slot]);
 
-  const g = useStore(data, (s) => s.graph);
-  const s = useStore(nodelinkSettings, (st) => nodelinkIn(st, slot));
+  const g = useStore(datasetStore, (s) => s.graph);
+  const s = useStore(nodelinkStore, (st) => nodelinkIn(st, slot));
   // FD (and Interactive, which starts from it) waits on its stages; an own
   // layout the dataset lacks is a message.
   const computed = s.live || s.layout === "fd";
-  const hasFd = useStore(data, (st) => !!st.graph?.layoutFd);
-  const hasFd3d = useStore(data, (st) => !!st.graph?.layoutFd3d);
-  const fd3dOff = useStore(data, (st) => st.stages.fd3d.status === "off");
+  const hasFd = useStore(datasetStore, (st) => !!st.graph?.layoutFd);
+  const hasFd3d = useStore(datasetStore, (st) => !!st.graph?.layoutFd3d);
+  const fd3dOff = useStore(datasetStore, (st) => st.stages.fd3d.status === "off");
   const wants3d = !s.live && s.layout === "fd3d" && !!g && !hasFd3d;
   // FD's frames draw once the harmonics seed it, so they fade in then.
-  const seeded = useStore(data, (st) => st.stages.harmonics.status === "done");
+  const seeded = useStore(datasetStore, (st) => st.stages.harmonics.status === "done");
   const fade = useFadeIn(g, !!g && (computed ? seeded || hasFd : s.layout === "fd3d" ? hasFd3d : !layoutMissing(g, s)));
   return (
     <div ref={stackRef} className={"pane-stack" + fade}>

@@ -12,12 +12,12 @@
 import { startBuild as runEngine, stopBuild as stopEngine } from "../engine/engine";
 import { attach } from "../pipeline/ingest";
 import type { DatasetTexts, OptionalTexts } from "../pipeline/ingest";
-import { BuildFileError, cancelLoad, data, readBuildFile, showGraph } from "../data/dataStore";
+import { BuildFileError, cancelLoad, datasetStore, readBuildFile, showGraph } from "../data/datasetStore";
 import { withFiles } from "../data/assemble";
 import { exportable } from "../data/format";
 import type { Graph } from "../data/graph";
 import { createStore } from "./createStore";
-import { setUpload, ui } from "./uiStore";
+import { interfaceStore, setUpload } from "./interface";
 
 export type FileKind = "edgelist" | "labels" | "layout3d" | "layout2d";
 
@@ -30,7 +30,7 @@ export interface UserFile {
 }
 
 export interface UserDataset {
-  // What the data store calls it while it is shown (data.current).
+  // What the dataset store calls it while it is shown (datasetStore.current).
   id: string;
   // Its title. It follows the edge list's file name until the user edits it.
   name: string;
@@ -61,7 +61,7 @@ export interface JsonDraft {
   graph: Graph;
 }
 
-export interface UserDataState {
+export interface UserDatasetsState {
   // Newest first, the draft among them, unlisted until it has a graph.
   datasets: UserDataset[];
   draft: string;
@@ -97,7 +97,7 @@ const fresh = (origin: UserDataset["origin"]): UserDataset => ({
 
 const firstDraft = fresh("csv");
 
-export const userData = createStore<UserDataState>({
+export const userDatasetsStore = createStore<UserDatasetsState>({
   datasets: [firstDraft],
   draft: firstDraft.id,
   building: null,
@@ -107,10 +107,10 @@ export const userData = createStore<UserDataState>({
   jsonNameEdited: false,
 });
 
-export const datasetOf = (s: UserDataState, id: string | null): UserDataset | null =>
+export const datasetOf = (s: UserDatasetsState, id: string | null): UserDataset | null =>
   s.datasets.find((d) => d.id === id) ?? null;
 
-export const draftOf = (s: UserDataState): UserDataset => datasetOf(s, s.draft)!;
+export const draftOf = (s: UserDatasetsState): UserDataset => datasetOf(s, s.draft)!;
 
 // A file the dataset brought and its graph refused.
 export const fileRefused = (d: UserDataset, kind: FileKind) =>
@@ -123,12 +123,12 @@ export const datasetAlert = (d: UserDataset) =>
   d.failedVersion === d.version || !!d.failure || !!d.graph?.refused.length;
 
 function update(id: string, patch: Partial<UserDataset>) {
-  userData.set((s) => ({ datasets: s.datasets.map((d) => (d.id === id ? { ...d, ...patch } : d)) }));
+  userDatasetsStore.set((s) => ({ datasets: s.datasets.map((d) => (d.id === id ? { ...d, ...patch } : d)) }));
 }
 
 // The newest row lists first.
 function toFront(id: string) {
-  userData.set((s) => {
+  userDatasetsStore.set((s) => {
     const d = datasetOf(s, id)!;
     return { datasets: [d, ...s.datasets.filter((x) => x !== d)] };
   });
@@ -136,7 +136,7 @@ function toFront(id: string) {
 
 function startDraft() {
   const d = fresh("csv");
-  userData.set((s) => ({ datasets: [d, ...s.datasets], draft: d.id }));
+  userDatasetsStore.set((s) => ({ datasets: [d, ...s.datasets], draft: d.id }));
 }
 
 const baseName = (fileName: string) => fileName.replace(/\.(csv|json)$/i, "");
@@ -145,7 +145,7 @@ const baseName = (fileName: string) => fileName.replace(/\.(csv|json)$/i, "");
 // which builds the row again at once; the draft waits for Build.
 async function setFile(id: string, kind: FileKind, file: File | null, rebuild: boolean) {
   const text = file ? await file.text() : "";
-  const d = datasetOf(userData.get(), id);
+  const d = datasetOf(userDatasetsStore.get(), id);
   if (!d) return; // removed while the file was read
   update(id, {
     files: { ...d.files, [kind]: file ? { fileName: file.name, text } : null },
@@ -165,7 +165,7 @@ export const removeFile = (id: string, kind: Exclude<FileKind, "edgelist">, rebu
 // dataset, and a new one would read as a new dataset.
 function rename(id: string, name: string, nameEdited: boolean) {
   update(id, { name, nameEdited });
-  const g = datasetOf(userData.get(), id)?.graph;
+  const g = datasetOf(userDatasetsStore.get(), id)?.graph;
   if (g) g.title = name;
 }
 
@@ -175,7 +175,7 @@ export function setName(id: string, name: string) {
 
 // An emptied name is no name: it goes back to the edge list's file name.
 export function commitName(id: string) {
-  const d = datasetOf(userData.get(), id);
+  const d = datasetOf(userDatasetsStore.get(), id);
   if (!d || d.name.trim() !== "") return;
   rename(id, d.files.edgelist ? baseName(d.files.edgelist.fileName) : "", false);
 }
@@ -215,7 +215,7 @@ function textsOf(d: UserDataset): DatasetTexts | null {
 // A json row's files laid over its base graph, at once and on screen: no
 // engine run, since every stage it has stays as it was.
 function layFiles(id: string) {
-  const d = datasetOf(userData.get(), id);
+  const d = datasetOf(userDatasetsStore.get(), id);
   if (!d?.base) return;
   const texts = optionalTexts(d);
   const graph = withFiles(d.base, attach(d.base.nodeId, texts), Object.keys(texts) as OptionalKind[]);
@@ -231,10 +231,10 @@ function layFiles(id: string) {
 // the curated graph with the file, under the same title; the curated
 // dataset stays as it is.
 export async function copyCurated(kind: OptionalKind, file: File) {
-  const { graph, current } = data.get();
-  if (!graph || datasetOf(userData.get(), current)) return;
+  const { graph, current } = datasetStore.get();
+  if (!graph || datasetOf(userDatasetsStore.get(), current)) return;
   const text = await file.text();
-  if (data.get().graph !== graph) return; // another dataset picked while the file was read
+  if (datasetStore.get().graph !== graph) return; // another dataset picked while the file was read
   const d: UserDataset = {
     ...fresh("json"),
     name: graph.title,
@@ -242,14 +242,14 @@ export async function copyCurated(kind: OptionalKind, file: File) {
     files: { ...NO_FILES, [kind]: { fileName: file.name, text } },
     version: 1,
   };
-  userData.set((s) => ({ datasets: [d, ...s.datasets] }));
+  userDatasetsStore.set((s) => ({ datasets: [d, ...s.datasets] }));
   layFiles(d.id);
 }
 
 // Builds the dataset from its files, on screen. It lists once its edge list
 // is read; a refused edge list leaves the graph on screen as it was.
 export function buildDataset(id: string) {
-  const d = datasetOf(userData.get(), id);
+  const d = datasetOf(userDatasetsStore.get(), id);
   const texts = d && textsOf(d);
   if (!d || !texts) return;
   const version = d.version;
@@ -261,22 +261,22 @@ export function buildDataset(id: string) {
     onRefused: (reason) => update(id, { failedVersion: version, refusal: reason }),
     onIngested: (graph) => {
       ingested = true;
-      const before = datasetOf(userData.get(), id);
+      const before = datasetOf(userDatasetsStore.get(), id);
       if (!before) return;
       // Renamed while its files were read.
       graph.title = before.name;
       update(id, { graph, builtVersion: version, refusal: null, failure: null });
       if (!before.graph) toFront(id);
-      if (id === userData.get().draft) handOver();
+      if (id === userDatasetsStore.get().draft) handOver();
     },
     onEnd: (failure) => ended(id, ingested, failure),
   });
   // After the engine has ended the build before it.
-  userData.set({ building: id });
+  userDatasetsStore.set({ building: id });
 }
 
 export function buildDraft() {
-  buildDataset(userData.get().draft);
+  buildDataset(userDatasetsStore.get().draft);
 }
 
 // The draft's edge list is read: it is a row now, + New starts afresh, and
@@ -285,23 +285,23 @@ export function buildDraft() {
 // draft, with its reason, to change and add again.
 function handOver() {
   startDraft();
-  if (ui.get().upload === "csv") setUpload(null);
+  if (interfaceStore.get().upload === "csv") setUpload(null);
 }
 
 function ended(id: string, ingested: boolean, failure: string | null) {
-  if (userData.get().building === id) userData.set({ building: null });
-  if (ingested && datasetOf(userData.get(), id)) update(id, { failure });
+  if (userDatasetsStore.get().building === id) userDatasetsStore.set({ building: null });
+  if (ingested && datasetOf(userDatasetsStore.get(), id)) update(id, { failure });
 }
 
 // An Uploaded row clicked: its graph again, as it was; or, if its build was
 // cut short, built again from its files.
 export function pickRow(id: string) {
   setUpload(null);
-  const s = userData.get();
+  const s = userDatasetsStore.get();
   const d = datasetOf(s, id);
   if (!d?.graph || s.building === id) return;
   if (!exportable(d.graph)) return buildDataset(id);
-  if (data.get().current === id) return;
+  if (datasetStore.get().current === id) return;
   stopEngine();
   cancelLoad();
   showGraph(d.graph, id);
@@ -315,11 +315,11 @@ export async function pickJson(file: File) {
   try {
     graph = await readBuildFile(file);
   } catch (e) {
-    userData.set({ jsonDraft: null, jsonRefusal: { fileName: file.name, reason: e instanceof BuildFileError ? e.message : String(e) } });
+    userDatasetsStore.set({ jsonDraft: null, jsonRefusal: { fileName: file.name, reason: e instanceof BuildFileError ? e.message : String(e) } });
     return;
   }
-  const s = userData.get();
-  userData.set({
+  const s = userDatasetsStore.get();
+  userDatasetsStore.set({
     jsonDraft: { fileName: file.name, graph },
     jsonRefusal: null,
     jsonName: s.jsonNameEdited ? s.jsonName : graph.title || baseName(file.name),
@@ -327,32 +327,32 @@ export async function pickJson(file: File) {
 }
 
 export function setJsonName(name: string) {
-  userData.set({ jsonName: name, jsonNameEdited: true });
+  userDatasetsStore.set({ jsonName: name, jsonNameEdited: true });
 }
 
 // An emptied name is no name: it goes back to the build's own.
 export function commitJsonName() {
-  const s = userData.get();
+  const s = userDatasetsStore.get();
   if (s.jsonName.trim() !== "") return;
   const g = s.jsonDraft;
-  userData.set({ jsonName: g ? g.graph.title || baseName(g.fileName) : "", jsonNameEdited: false });
+  userDatasetsStore.set({ jsonName: g ? g.graph.title || baseName(g.fileName) : "", jsonNameEdited: false });
 }
 
 export function restoreJsonName(name: string, nameEdited: boolean) {
-  userData.set({ jsonName: name, jsonNameEdited: nameEdited });
+  userDatasetsStore.set({ jsonName: name, jsonNameEdited: nameEdited });
 }
 
 // Add: the picked build file, opened as a new row with no engine run, and
 // + New starts afresh.
 export function addJson() {
-  const s = userData.get();
+  const s = userDatasetsStore.get();
   if (!s.jsonDraft) return;
   const { graph, fileName } = s.jsonDraft;
   graph.title = s.jsonName.trim() || graph.title || baseName(fileName);
   stopEngine();
   cancelLoad();
   const d: UserDataset = { ...fresh("json"), name: graph.title, base: graph, graph };
-  userData.set((st) => ({
+  userDatasetsStore.set((st) => ({
     datasets: [d, ...st.datasets],
     jsonDraft: null,
     jsonRefusal: null,
@@ -365,11 +365,11 @@ export function addJson() {
 
 // Off the list. Its graph stays on screen until another pick.
 export function removeRow(id: string) {
-  if (userData.get().building === id) stopEngine();
-  userData.set((s) => ({ datasets: s.datasets.filter((d) => d.id !== id) }));
-  if (id === userData.get().draft) startDraft();
+  if (userDatasetsStore.get().building === id) stopEngine();
+  userDatasetsStore.set((s) => ({ datasets: s.datasets.filter((d) => d.id !== id) }));
+  if (id === userDatasetsStore.get().draft) startDraft();
 }
 
 export function stopBuild() {
-  if (data.get().running) stopEngine();
+  if (datasetStore.get().running) stopEngine();
 }

@@ -10,7 +10,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { buildNow } from "../src/data/assemble";
 import { stringify } from "../src/data/format";
-import { bakeThumb } from "../src/panes/dataset/thumb";
+import { bakeThumb } from "../src/panes/data/thumb";
 import type { OpeningView } from "../src/data/graph";
 import { column, parseCsv } from "../src/pipeline/csv";
 import { readFileSync } from "node:fs";

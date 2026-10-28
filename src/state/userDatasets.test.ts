@@ -5,7 +5,7 @@ import type { BuildOptions } from "../engine/engine";
 import type { Graph } from "../data/graph";
 import type { DatasetTexts } from "../pipeline/ingest";
 
-// uiStore reads the saved theme and settings on import.
+// The interface store reads the saved theme and settings on import.
 vi.hoisted(() => {
   Object.assign(globalThis, {
     document: { documentElement: { dataset: {}, style: { setProperty() {} } } },
@@ -61,19 +61,19 @@ const last = () => engine.runs[engine.runs.length - 1]!.opts;
 
 async function load() {
   vi.resetModules();
-  const ud = await import("./userData");
-  const { ui, setUpload } = await import("./uiStore");
-  const { data } = await import("../data/dataStore");
+  const ud = await import("./userDatasets");
+  const { interfaceStore, setUpload } = await import("./interface");
+  const { datasetStore } = await import("../data/datasetStore");
   // The build's end, as the engine signals it: finished, or stopped.
   const { stopBuild: end } = await import("../engine/engine");
-  const listed = () => ud.userData.get().datasets.filter((d) => d.graph !== null);
-  const draft = () => ud.draftOf(ud.userData.get());
-  return { ...ud, ui, setUpload, data, end, listed, draft };
+  const listed = () => ud.userDatasetsStore.get().datasets.filter((d) => d.graph !== null);
+  const draft = () => ud.draftOf(ud.userDatasetsStore.get());
+  return { ...ud, interfaceStore, setUpload, datasetStore, end, listed, draft };
 }
 
 // A finished row built from CSVs, its id.
 async function builtRow(m: Awaited<ReturnType<typeof load>>, files: Record<string, File> = {}) {
-  const id = m.userData.get().draft;
+  const id = m.userDatasetsStore.get().draft;
   await m.addFile(id, "edgelist", csv("roads.csv"), false);
   for (const [kind, f] of Object.entries(files)) await m.addFile(id, kind as "labels", f, false);
   m.buildDraft();
@@ -89,8 +89,8 @@ beforeEach(() => {
 
 describe("buildState", () => {
   it("reads every state from the files and the build", async () => {
-    const { buildState, draftOf, userData } = await load();
-    const d = draftOf(userData.get());
+    const { buildState, draftOf, userDatasetsStore } = await load();
+    const d = draftOf(userDatasetsStore.get());
     const edges = { ...d.files, edgelist: { fileName: "e.csv", text: "" } };
     expect(buildState(d, false)).toBe("idle");
     expect(buildState({ ...d, files: edges }, true)).toBe("running");
@@ -106,7 +106,7 @@ describe("buildState", () => {
 describe("Build", () => {
   it("makes no row from a refused edge list, and waits for a file to change", async () => {
     const m = await load();
-    const id = m.userData.get().draft;
+    const id = m.userDatasetsStore.get().draft;
     await m.addFile(id, "edgelist", csv("bad.csv", "from,to\na,b\n"), false);
     m.buildDraft();
     last().onRefused!("needs source and target columns");
@@ -122,27 +122,27 @@ describe("Build", () => {
   it("hands over to the row once its edge list is read", async () => {
     const m = await load();
     m.setUpload("csv");
-    const id = m.userData.get().draft;
+    const id = m.userDatasetsStore.get().draft;
     await m.addFile(id, "edgelist", csv("roads.csv"), false);
     m.buildDraft();
     expect(last().current).toBe(id);
-    expect(m.ui.get().upload).toBe("csv");
+    expect(m.interfaceStore.get().upload).toBe("csv");
     last().onIngested!(graph(false));
     expect(m.listed().map((d) => d.id)).toEqual([id]);
-    expect(m.userData.get().building).toBe(id);
-    expect(m.userData.get().draft).not.toBe(id);
+    expect(m.userDatasetsStore.get().building).toBe(id);
+    expect(m.userDatasetsStore.get().draft).not.toBe(id);
     expect(m.draft().files.edgelist).toBe(null);
-    expect(m.ui.get().upload).toBe(null);
+    expect(m.interfaceStore.get().upload).toBe(null);
   });
 
   it("leaves a stopped row to build again, from its files", async () => {
     const m = await load();
-    const id = m.userData.get().draft;
+    const id = m.userDatasetsStore.get().draft;
     await m.addFile(id, "edgelist", csv("roads.csv"), false);
     m.buildDraft();
     last().onIngested!(graph(false));
     m.end();
-    const d = m.datasetOf(m.userData.get(), id)!;
+    const d = m.datasetOf(m.userDatasetsStore.get(), id)!;
     expect(m.buildState(d, false)).toBe("idle");
     m.pickRow(id);
     expect(engine.runs).toHaveLength(2);
@@ -152,18 +152,18 @@ describe("Build", () => {
   it("stays on + New when the edge list is refused", async () => {
     const m = await load();
     m.setUpload("csv");
-    const id = m.userData.get().draft;
+    const id = m.userDatasetsStore.get().draft;
     await m.addFile(id, "edgelist", csv("bad.csv", "from,to\na,b\n"), false);
     m.buildDraft();
     last().onRefused!("needs source and target columns");
     m.end();
-    expect(m.userData.get().draft).toBe(id);
-    expect(m.ui.get().upload).toBe("csv");
+    expect(m.userDatasetsStore.get().draft).toBe(id);
+    expect(m.interfaceStore.get().upload).toBe("csv");
   });
 
   it("keeps the other files when the edge list is replaced", async () => {
     const m = await load();
-    const id = m.userData.get().draft;
+    const id = m.userDatasetsStore.get().draft;
     await m.addFile(id, "edgelist", csv("a.csv"), false);
     await m.addFile(id, "labels", csv("names.csv", "node_id,label\na,A\n"), false);
     await m.addFile(id, "edgelist", csv("b.csv"), false);
@@ -183,17 +183,17 @@ describe("a row", () => {
     last().onIngested!(g2);
     m.end();
     expect(m.listed().map((d) => d.id)).toEqual([id]);
-    expect(m.datasetOf(m.userData.get(), id)!.graph).toBe(g2);
+    expect(m.datasetOf(m.userDatasetsStore.get(), id)!.graph).toBe(g2);
   });
 
   it("keeps its last good graph when a new edge list is refused", async () => {
     const m = await load();
     const id = await builtRow(m);
-    const before = m.datasetOf(m.userData.get(), id)!.graph;
+    const before = m.datasetOf(m.userDatasetsStore.get(), id)!.graph;
     await m.addFile(id, "edgelist", csv("bad.csv", "from,to\n"), true);
     last().onRefused!("needs source and target columns");
     m.end();
-    const d = m.datasetOf(m.userData.get(), id)!;
+    const d = m.datasetOf(m.userDatasetsStore.get(), id)!;
     expect(d.graph).toBe(before);
     expect(m.fileRefused(d, "edgelist")).toBe(true);
     expect(m.datasetAlert(d)).toBe(true);
@@ -211,12 +211,12 @@ describe("a row", () => {
 
   it("marks a refused file and a failed stage", async () => {
     const m = await load();
-    const id = m.userData.get().draft;
+    const id = m.userDatasetsStore.get().draft;
     await m.addFile(id, "edgelist", csv("roads.csv"), false);
     await m.addFile(id, "labels", csv("names.csv", "node_id,label\nz,Z\n"), false);
     m.buildDraft();
     last().onIngested!(graph(false, [{ kind: "labels", reason: "1 node_id not in the edge list" }]));
-    const row = () => m.datasetOf(m.userData.get(), id)!;
+    const row = () => m.datasetOf(m.userDatasetsStore.get(), id)!;
     expect(m.fileRefused(row(), "labels")).toBe(true);
     last().onEnd!("Hops failed: its worker stopped");
     expect(row().failure).toBe("Hops failed: its worker stopped");
@@ -228,9 +228,9 @@ describe("a row", () => {
     const id = await builtRow(m);
     m.removeRow(id);
     expect(m.listed()).toEqual([]);
-    const draft = m.userData.get().draft;
+    const draft = m.userDatasetsStore.get().draft;
     m.removeRow(draft);
-    expect(m.userData.get().draft).not.toBe(draft);
+    expect(m.userDatasetsStore.get().draft).not.toBe(draft);
   });
 });
 
@@ -242,7 +242,7 @@ describe("JSON", () => {
     m.setUpload("json");
     await m.pickJson(new File([build], "first.json"));
     expect(m.listed()).toEqual([]);
-    expect(m.userData.get().jsonName).toBe("Karate Club");
+    expect(m.userDatasetsStore.get().jsonName).toBe("Karate Club");
     m.addJson();
     await m.pickJson(new File([build], "second.json"));
     m.setJsonName("Mine");
@@ -250,26 +250,26 @@ describe("JSON", () => {
     const rows = m.listed();
     expect(rows.map((d) => d.origin)).toEqual(["json", "json"]);
     expect(rows.map((d) => d.name)).toEqual(["Mine", "Karate Club"]);
-    expect(m.data.get().current).toBe(rows[0]!.id);
-    expect(m.data.get().graph).toBe(rows[0]!.graph);
+    expect(m.datasetStore.get().current).toBe(rows[0]!.id);
+    expect(m.datasetStore.get().graph).toBe(rows[0]!.graph);
     expect(rows[0]!.graph!.name).toBe("user");
-    expect(m.userData.get().jsonDraft).toBe(null);
-    expect(m.ui.get().upload).toBe(null);
+    expect(m.userDatasetsStore.get().jsonDraft).toBe(null);
+    expect(m.interfaceStore.get().upload).toBe(null);
   });
 
   it("keeps a name typed before the file is picked", async () => {
     const m = await load();
     m.setJsonName("Typed");
     await m.pickJson(new File([build], "first.json"));
-    expect(m.userData.get().jsonName).toBe("Typed");
+    expect(m.userDatasetsStore.get().jsonName).toBe("Typed");
   });
 
   it("refuses an unreadable file on pick, and why, adding nothing", async () => {
     const m = await load();
     await m.pickJson(new File(["{"], "notes.json"));
-    expect(m.userData.get().jsonRefusal).toEqual({ fileName: "notes.json", reason: "not JSON" });
+    expect(m.userDatasetsStore.get().jsonRefusal).toEqual({ fileName: "notes.json", reason: "not JSON" });
     await m.pickJson(new File(['{"meta":{"format":0}}'], "old.json"));
-    expect(m.userData.get().jsonRefusal).toEqual({ fileName: "old.json", reason: "not a build of format 1" });
+    expect(m.userDatasetsStore.get().jsonRefusal).toEqual({ fileName: "old.json", reason: "not a build of format 1" });
     m.addJson();
     expect(m.listed()).toEqual([]);
   });

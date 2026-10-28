@@ -1,6 +1,6 @@
-import { focus, ui } from "../state/uiStore";
-import { layout } from "../state/layout";
-import type { SlotId } from "../state/layout";
+import { focus, interfaceStore } from "../state/interface";
+import { paneRowStore } from "../state/paneRow";
+import type { SlotId } from "../state/paneRow";
 import { AIM, aimStep, makeAim } from "./stripAim";
 import type { Aim, Point } from "./stripAim";
 
@@ -21,9 +21,9 @@ export function attachHoverFocus(): () => void {
   let under: SlotId | null = null;
   let restTimer = 0;
 
-  const live = () => layout.get().mode === "fit" && ui.get().upload === null;
+  const live = () => paneRowStore.get().mode === "fit" && interfaceStore.get().upload === null;
   const pass = (slot: SlotId | null) => {
-    if (ui.get().passed !== slot) ui.set({ passed: slot });
+    if (interfaceStore.get().passed !== slot) interfaceStore.set({ passed: slot });
   };
   const endAim = () => {
     clearTimeout(restTimer);
@@ -45,7 +45,7 @@ export function attachHoverFocus(): () => void {
     const p = { x: e.clientX, y: e.clientY };
     const target = e.target instanceof Element ? e.target : null;
     const slot = paneSlot(target);
-    const focused = ui.get().focused;
+    const focused = interfaceStore.get().focused;
     const was = under;
     const from = last;
     under = slot;
@@ -68,7 +68,7 @@ export function attachHoverFocus(): () => void {
         clearTimeout(restTimer);
         restTimer = window.setTimeout(() => {
           // At rest over a gap or the focused pane the trip goes on.
-          if (under !== null && under !== ui.get().focused) take(under);
+          if (under !== null && under !== interfaceStore.get().focused) take(under);
         }, AIM.rest);
         return;
       }

@@ -15,13 +15,13 @@ export type HelpSection = (typeof HELP_SECTIONS)[number]["id"];
 // What Sections shows (the section in view) and the last pick, which the sheet
 // glides to. A pick is a new object each time, so picking the same section
 // again glides back to its top.
-export const helpNav = createStore<{ section: HelpSection; goto: { id: HelpSection } | null }>({
+export const helpSectionStore = createStore<{ section: HelpSection; goto: { id: HelpSection } | null }>({
   section: "start",
   goto: null,
 });
 
 export function goToSection(id: HelpSection) {
-  helpNav.set({ section: id, goto: { id } });
+  helpSectionStore.set({ section: id, goto: { id } });
 }
 
 // The section in view: the last one whose top has reached the view's top

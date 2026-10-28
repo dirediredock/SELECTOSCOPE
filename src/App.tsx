@@ -6,9 +6,9 @@ import { attachKeyboardShortcuts } from "./interaction/keyboard";
 import { blockPageZoom } from "./interaction/navigate";
 import { attachHoverFocus } from "./interaction/hoverFocus";
 import { TooltipLayer } from "./components/Tooltip";
-import { initData } from "./data/dataStore";
+import { initData } from "./data/datasetStore";
 import { stopBuild } from "./engine/engine";
-import { watchRowMode } from "./state/layout";
+import { watchRowMode } from "./state/paneRow";
 
 export default function App() {
   useEffect(() => {

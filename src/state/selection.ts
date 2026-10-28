@@ -1,5 +1,5 @@
 import { createStore } from "./createStore";
-import { data } from "../data/dataStore";
+import { datasetStore } from "../data/datasetStore";
 
 // The node set (blue) and the edge set (orange) are independent. Each change
 // replaces the set with a new one, so every snapshot stays valid: undo later
@@ -19,13 +19,13 @@ export interface SelectionState {
 const EMPTY: ReadonlySet<number> = new Set();
 const KEY = { node: "nodes", edge: "edges" } as const;
 
-export const selection = createStore<SelectionState>({ nodes: EMPTY, edges: EMPTY });
+export const selectionStore = createStore<SelectionState>({ nodes: EMPTY, edges: EMPTY });
 
 function put(type: ItemType, next: ReadonlySet<number>) {
-  selection.set({ [KEY[type]]: next } as Partial<SelectionState>);
+  selectionStore.set({ [KEY[type]]: next } as Partial<SelectionState>);
 }
 
-const setOf = (type: ItemType) => selection.get()[KEY[type]];
+const setOf = (type: ItemType) => selectionStore.get()[KEY[type]];
 
 // A set after `ids` replace it, join it or leave it.
 export function merged(cur: ReadonlySet<number>, mode: Mode, ids: Iterable<number>): ReadonlySet<number> {
@@ -68,18 +68,18 @@ export function sharedEdges(source: Uint32Array, target: Uint32Array, nodes: Rea
 }
 
 const sharedBy = (nodes: ReadonlySet<number>): ReadonlySet<number> => {
-  const g = data.get().graph;
+  const g = datasetStore.get().graph;
   return g ? new Set(sharedEdges(g.edgeSource, g.edgeTarget, nodes)) : EMPTY;
 };
 
 // Writes a shape's nodes and edges to the set(s) the target names, each
 // replaced, joined or cut by `mode`. One set call, so one snapshot.
 function write(target: SelectTarget, mode: Mode, nodes: ReadonlySet<number>, edges: () => ReadonlySet<number>) {
-  const cur = selection.get();
+  const cur = selectionStore.get();
   const next: Partial<SelectionState> = {};
   if (target !== "edge") next.nodes = merged(cur.nodes, mode, nodes);
   if (target !== "node") next.edges = merged(cur.edges, mode, edges());
-  selection.set(next);
+  selectionStore.set(next);
 }
 
 // A shape of nodes, written where the target says: the node set, the edges
@@ -104,7 +104,7 @@ export function endpointsOf(source: Uint32Array, target: Uint32Array, edges: Ite
 // the edges' endpoints, or both.
 export function selectFromEdges(target: SelectTarget, ids: Iterable<number>, mode: Mode = "replace") {
   const edges = new Set(ids);
-  const g = data.get().graph;
+  const g = datasetStore.get().graph;
   const nodes = g ? endpointsOf(g.edgeSource, g.edgeTarget, edges) : EMPTY;
   write(target, mode, nodes, () => edges);
 }
@@ -135,7 +135,7 @@ export function hopOut(
 // A hop starts from everything selected: the node set and the edge set's
 // endpoints. Its result goes where the Select mode says, as a shape's does.
 function hopPlan(s: SelectionState) {
-  const g = data.get().graph;
+  const g = datasetStore.get().graph;
   if (!g) return null;
   const region = endpointsOf(g.edgeSource, g.edgeTarget, s.edges);
   for (const v of s.nodes) region.add(v);
@@ -194,20 +194,20 @@ export function hopCount(s: SelectionState): number {
 }
 
 export function growSelection(target: SelectTarget) {
-  const before = selection.get();
+  const before = selectionStore.get();
   const plan = hopPlan(before);
   if (!plan) return;
   if (!inChain(before)) origin = before;
   write(target, "add", plan.nodes, () => new Set(plan.edges));
-  grown.push({ before, after: selection.get() });
+  grown.push({ before, after: selectionStore.get() });
 }
 
 // Steps back the last Grow; at the origin, or on sets no Grow made, it does
 // nothing.
 export function shrinkSelection() {
-  if (!inChain(selection.get())) return;
+  if (!inChain(selectionStore.get())) return;
   const step = grown.pop();
-  if (step) selection.set({ nodes: step.before.nodes, edges: step.before.edges });
+  if (step) selectionStore.set({ nodes: step.before.nodes, edges: step.before.edges });
 }
 
 export function clearSet(type: ItemType) {
@@ -224,30 +224,30 @@ export interface HoverItem {
   group?: readonly number[];
 }
 
-export const hover = createStore<{ item: HoverItem | null }>({ item: null });
+export const hoverStore = createStore<{ item: HoverItem | null }>({ item: null });
 
 // The hovered nodes: the group, the one node, or none for an edge.
 export const hoveredNodes = (item: HoverItem | null): readonly number[] =>
   item?.type === "node" ? (item.group ?? [item.id]) : [];
 
 export function setHover(type: ItemType, id: number | null, group?: readonly number[]) {
-  const cur = hover.get().item;
+  const cur = hoverStore.get().item;
   if (id === null) {
-    if (cur) hover.set({ item: null });
+    if (cur) hoverStore.set({ item: null });
   } else if (!cur || cur.type !== type || cur.id !== id || cur.group !== group) {
-    hover.set({ item: group ? { type, id, group } : { type, id } });
+    hoverStore.set({ item: group ? { type, id, group } : { type, id } });
   }
 }
 
 export function clearHover() {
-  if (hover.get().item) hover.set({ item: null });
+  if (hoverStore.get().item) hoverStore.set({ item: null });
 }
 
 // A new dataset starts with nothing selected.
-data.subscribe((s, prev) => {
+datasetStore.subscribe((s, prev) => {
   if (s.graph !== prev.graph) {
     forgetChain();
-    selection.set({ nodes: EMPTY, edges: EMPTY });
+    selectionStore.set({ nodes: EMPTY, edges: EMPTY });
     clearHover();
   }
 });

@@ -43,7 +43,7 @@ export interface DatasetEntry {
   has_labels: boolean;
 }
 
-export interface DataState {
+export interface DatasetState {
   index: DatasetEntry[] | null;
   // The dataset on screen: a curated name, or the user's build.
   current: string | null;
@@ -66,7 +66,7 @@ export interface DataState {
 export const idleStages = (): Record<Stage, StageState> =>
   Object.fromEntries(STAGES.map((s) => [s, { status: "pending", progress: null }])) as Record<Stage, StageState>;
 
-export const data = createStore<DataState>({
+export const datasetStore = createStore<DatasetState>({
   index: null,
   current: null,
   requested: null,
@@ -88,7 +88,7 @@ const doneStages = (g: Graph) =>
 // A finished graph on screen at once: a curated build or an opened file.
 // Like every new dataset, a fresh start for every pane.
 export function showGraph(graph: Graph, current: string) {
-  data.set({ graph, current, stages: doneStages(graph), running: false, error: null, requested: null, loading: false, loadError: null });
+  datasetStore.set({ graph, current, stages: doneStages(graph), running: false, error: null, requested: null, loading: false, loadError: null });
 }
 
 let latest = 0;
@@ -96,34 +96,34 @@ let latest = 0;
 // A curated dataset's build. The panes go empty while it downloads, as on
 // opening; a newer pick wins over an older one still in flight.
 export async function loadDataset(name: string, stop: () => void) {
-  const state = data.get();
+  const state = datasetStore.get();
   if (state.loading && name === state.requested) return;
   const token = ++latest;
   if (state.current === name && state.graph) {
-    data.set({ requested: null, loading: false, loadError: null });
+    datasetStore.set({ requested: null, loading: false, loadError: null });
     return;
   }
   stop();
-  data.set({ graph: null, current: null, error: null, requested: name, loading: true, progress: 0, loadError: null });
+  datasetStore.set({ graph: null, current: null, error: null, requested: name, loading: true, progress: 0, loadError: null });
   try {
     const res = await fetch(`builds/${name}.json`);
     if (!res.ok) throw new Error(`${name}.json: HTTP ${res.status}`);
     const text = await readBody(res, (share) => {
       const p = share === null ? null : Math.floor(share * 100) / 100;
-      if (token === latest && p !== data.get().progress) data.set({ progress: p });
+      if (token === latest && p !== datasetStore.get().progress) datasetStore.set({ progress: p });
     });
     const graph = fromJson(JSON.parse(text) as BuildJson);
     if (token !== latest) return;
     showGraph(graph, name);
   } catch (e) {
-    if (token === latest) data.set({ loading: false, loadError: String(e) });
+    if (token === latest) datasetStore.set({ loading: false, loadError: String(e) });
   }
 }
 
 // A user build or an opened file: a newer pick than any curated build still
 // in flight, which then never lands. Returns the pick's token.
 export function cancelLoad(): number {
-  data.set({ requested: null, loading: false, loadError: null });
+  datasetStore.set({ requested: null, loading: false, loadError: null });
   return ++latest;
 }
 
@@ -156,18 +156,18 @@ const SHOWCASE = new Set([
 // habitual view; unless the user picked something first.
 export async function initData(stop: () => void) {
   const token = latest;
-  data.set({ loading: true, progress: null, loadError: null });
+  datasetStore.set({ loading: true, progress: null, loadError: null });
   try {
     const res = await fetch("builds/index.json");
     if (!res.ok) throw new Error(`index.json: HTTP ${res.status}`);
     const { datasets } = (await res.json()) as { datasets: DatasetEntry[] };
-    data.set({ index: datasets, loading: false });
+    datasetStore.set({ index: datasets, loading: false });
     if (token !== latest) return;
     const shown = datasets.filter((d) => SHOWCASE.has(d.name));
     const pool = shown.length ? shown : datasets;
     await loadDataset(pool[Math.floor(Math.random() * pool.length)].name, stop);
   } catch (e) {
-    data.set({ loading: false, loadError: String(e) });
+    datasetStore.set({ loading: false, loadError: String(e) });
   }
 }
 
@@ -185,7 +185,7 @@ const fileBase = (g: Graph) => (g.name === "user" ? g.title || "build" : g.name)
 
 // The graph on screen as a build file to save, once its build is finished.
 export function exportJson() {
-  const g = data.get().graph;
+  const g = datasetStore.get().graph;
   if (!g) return;
   download(new Blob([stringify(g)], { type: "application/json" }), `${fileBase(g)}.json`);
 }
@@ -193,7 +193,7 @@ export function exportJson() {
 // The graph on screen as a zip of the CSVs Build from CSV reads
 // (csvExport.ts), once its build is finished.
 export function exportCsvs() {
-  const g = data.get().graph;
+  const g = datasetStore.get().graph;
   if (!g || !exportable(g)) return;
   download(new Blob([zip(csvFiles(g))], { type: "application/zip" }), `${fileBase(g)}.zip`);
 }
@@ -221,27 +221,27 @@ export async function readBuildFile(file: File): Promise<Graph> {
 }
 
 // The stage that failed in the build on screen, in a few words.
-export function failedStage(s: DataState): string | null {
+export function failedStage(s: DatasetState): string | null {
   const stage = STAGES.find((k) => s.stages[k].status === "failed");
   return stage ? `${STAGE_NAMES[stage]} failed` : null;
 }
 
 export function setStage(stage: Stage, patch: Partial<StageState>) {
-  data.set((s) => ({ stages: { ...s.stages, [stage]: { ...s.stages[stage], ...patch } } }));
+  datasetStore.set((s) => ({ stages: { ...s.stages, [stage]: { ...s.stages[stage], ...patch } } }));
 }
 
 // The graph's stage fields changed in place.
 export function landed() {
-  data.set((s) => ({ revision: s.revision + 1 }));
+  datasetStore.set((s) => ({ revision: s.revision + 1 }));
 }
 
 // The first of `stages` not yet done: what a pane waits on. Its name and
 // progress are read apart, so each is a plain value a component can pick.
-export function waitStage(s: DataState, stages: readonly Stage[]): Stage | null {
+export function waitStage(s: DatasetState, stages: readonly Stage[]): Stage | null {
   return stages.find((k) => s.stages[k].status !== "done" && s.stages[k].status !== "off") ?? null;
 }
 
-export function stageShare(s: DataState, stage: Stage | null): number | null {
+export function stageShare(s: DatasetState, stage: Stage | null): number | null {
   if (!stage) return null;
   const st = s.stages[stage];
   return st.status === "running" ? st.progress : null;

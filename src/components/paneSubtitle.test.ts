@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { hopcensusSubtitle, ksnakesSubtitle, labelsSubtitle, matrixSubtitle, nodelinkSubtitle, paneSubtitle } from "./paneSubtitle";
+import { hopsSubtitle, shellsSubtitle, labelsSubtitle, matrixSubtitle, nodelinkSubtitle, paneSubtitle } from "./paneSubtitle";
 
 describe("pane subtitles", () => {
   it("names the Labels sort", () => {
@@ -22,17 +22,17 @@ describe("pane subtitles", () => {
   });
 
   it("names the Shells order, and grouped singletons", () => {
-    expect(ksnakesSubtitle({ ordering: "topdown", group: false })).toBe("Barycenter");
-    expect(ksnakesSubtitle({ ordering: "packed", group: true })).toBe("Size, grouped");
+    expect(shellsSubtitle({ ordering: "topdown", group: false })).toBe("Barycenter");
+    expect(shellsSubtitle({ ordering: "packed", group: true })).toBe("Size, grouped");
   });
 
   it("names Hops' shape order, and Ranking while it is on", () => {
-    expect(hopcensusSubtitle({ measure: "spread", rank: true })).toBe("Spread similarity, ranked");
-    expect(hopcensusSubtitle({ measure: "reach", rank: false })).toBe("Reach similarity");
-    expect(hopcensusSubtitle({ measure: "skew", rank: false })).toBe("Skew similarity");
+    expect(hopsSubtitle({ measure: "spread", rank: true })).toBe("Spread similarity, ranked");
+    expect(hopsSubtitle({ measure: "reach", rank: false })).toBe("Reach similarity");
+    expect(hopsSubtitle({ measure: "skew", rank: false })).toBe("Skew similarity");
   });
 
   it("gives Data none", () => {
-    expect(paneSubtitle("dataset", "s0")).toBeNull();
+    expect(paneSubtitle("data", "s0")).toBeNull();
   });
 });

@@ -1,12 +1,12 @@
 import { useRef } from "react";
 import type { CSSProperties, MouseEvent, ReactNode } from "react";
-import { focus, toggleHelp, toggleMenu, ui } from "../state/uiStore";
+import { focus, interfaceStore, toggleHelp, toggleMenu } from "../state/interface";
 import { useStore } from "../state/createStore";
-import { fitView, viewIn, views, zoomLabel } from "../state/views";
-import { bandStart, sweep, sweepSettings, toggleSweepWrap } from "../state/sweep";
+import { fitView, viewIn, paneViewsStore, zoomLabel } from "../state/paneViews";
+import { bandStart, sweepRunStore, sweepSettingsStore, toggleSweepWrap } from "../state/sweep";
 import { MAX_AR, paneInfo, slotTitle } from "../state/panes";
 import type { PaneType } from "../state/panes";
-import type { SlotId } from "../state/layout";
+import type { SlotId } from "../state/paneRow";
 import { PaneMenu } from "./PaneMenu";
 import { DownloadRail } from "./PaneMessage";
 import { usePaneSubtitle } from "./paneSubtitle";
@@ -44,13 +44,13 @@ interface PaneProps {
 //   click on the ?               show or hide Help (Data only)
 export function Pane({ slot, type, ar, share, children }: PaneProps) {
   const { list } = paneInfo(type);
-  const title = useStore(ui, (s) => slotTitle(type, s.help));
-  const isFocused = useStore(ui, (s) => s.focused === slot);
-  const isPassed = useStore(ui, (s) => s.passed === slot);
-  const menuOpen = useStore(ui, (s) => s.menuOpen === slot);
+  const title = useStore(interfaceStore, (s) => slotTitle(type, s.help));
+  const isFocused = useStore(interfaceStore, (s) => s.focused === slot);
+  const isPassed = useStore(interfaceStore, (s) => s.passed === slot);
+  const menuOpen = useStore(interfaceStore, (s) => s.menuOpen === slot);
   // A drag selects; with Space held, it navigates.
-  const grab = useStore(ui, (s) => s.spaceHeld);
-  const sweeping = useStore(sweep, (s) => (s.slot !== slot ? "off" : s.paused ? "paused" : "running"));
+  const grab = useStore(interfaceStore, (s) => s.spaceHeld);
+  const sweeping = useStore(sweepRunStore, (s) => (s.slot !== slot ? "off" : s.paused ? "paused" : "running"));
   const subtitle = usePaneSubtitle(slot, type);
 
   return (
@@ -70,7 +70,7 @@ export function Pane({ slot, type, ar, share, children }: PaneProps) {
         className="pane-header"
         onClick={() => toggleMenu(slot)}
         // A tray of its own, hidden while its menu is open.
-        data-tip={menuOpen ? undefined : trayTip(TEXT.pane.menuTip, !list && TEXT.pane.fitTip, type === "dataset" && TEXT.pane.helpTip)}
+        data-tip={menuOpen ? undefined : trayTip(TEXT.pane.menuTip, !list && TEXT.pane.fitTip, type === "data" && TEXT.pane.helpTip)}
         data-tip-side="above"
         data-tip-rest={HEADER_REST_MS}
         data-tip-no-handoff=""
@@ -89,14 +89,14 @@ export function Pane({ slot, type, ar, share, children }: PaneProps) {
           {subtitle && <span className="pane-subtitle">{subtitle}</span>}
         </div>
         {!list && <ZoomPercent slot={slot} />}
-        {type === "dataset" && <HelpButton />}
+        {type === "data" && <HelpButton />}
       </div>
       <div className="pane-body">
         {children}
-        {type !== "dataset" && <DownloadRail />}
+        {type !== "data" && <DownloadRail />}
         {menuOpen && <PaneMenu slot={slot} type={type} ar={ar} />}
       </div>
-      <div className="pane-footer">{type !== "dataset" && <SweepStrip slot={slot} />}</div>
+      <div className="pane-footer">{type !== "data" && <SweepStrip slot={slot} />}</div>
     </section>
   );
 }
@@ -120,9 +120,9 @@ function SweepMark({ running }: { running: boolean }) {
 // place. The play glyph names the state; a click anywhere on the footer band
 // switches Wrap, while the sweep is active.
 function SweepStrip({ slot }: { slot: SlotId }) {
-  const step = useStore(sweep, (s) => (s.slot === slot ? s.step : null));
-  const area = useStore(sweepSettings, (s) => s.area);
-  const wrap = useStore(sweepSettings, (s) => s.wrap);
+  const step = useStore(sweepRunStore, (s) => (s.slot === slot ? s.step : null));
+  const area = useStore(sweepSettingsStore, (s) => s.area);
+  const wrap = useStore(sweepSettingsStore, (s) => s.wrap);
   const last = useRef(0);
   if (step !== null) last.current = step;
   const w = area / 100;
@@ -149,7 +149,7 @@ function SweepStrip({ slot }: { slot: SlotId }) {
 // The pane's zoom, and its Fit all. The click stops here, so it never opens
 // the menu.
 function ZoomPercent({ slot }: { slot: SlotId }) {
-  const k = useStore(views, (s) => viewIn(s, slot).k);
+  const k = useStore(paneViewsStore, (s) => viewIn(s, slot).k);
   return (
     <button
       type="button"
@@ -174,7 +174,7 @@ export function onHelpClick(e: Pick<MouseEvent, "stopPropagation">) {
 // The Data header's ?, where a canvas pane shows its zoom percent: shows or
 // hides Help in this slot. A hairline circle, filled while it shows.
 export function HelpButton() {
-  const on = useStore(ui, (s) => s.help);
+  const on = useStore(interfaceStore, (s) => s.help);
   return (
     <button
       type="button"

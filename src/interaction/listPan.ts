@@ -1,9 +1,9 @@
-import { ui } from "../state/uiStore";
+import { interfaceStore } from "../state/interface";
 import { clearHover } from "../state/selection";
 import { setNavigating } from "./activeGesture";
 import { DRAG_START_PX } from "./selectGesture";
 import { listWheelSideways } from "./wheel";
-import { layout } from "../state/layout";
+import { paneRowStore } from "../state/paneRow";
 
 export interface ListPanOptions {
   // Pan on a plain press, not only with Space held: for a list that doesn't
@@ -29,7 +29,7 @@ export function attachListPan(
   const onDown = (e: PointerEvent) => {
     if (e.button !== 0 || press) return;
     swallowClick = false;
-    if (!plainDrag && !ui.get().spaceHeld) return;
+    if (!plainDrag && !interfaceStore.get().spaceHeld) return;
     // A classic scrollbar belongs to the browser.
     if (e.clientX - el.getBoundingClientRect().left >= el.clientWidth) return;
     press = { pointerId: e.pointerId, y0: e.clientY, lastY: e.clientY, panning: false };
@@ -67,7 +67,7 @@ export function attachListPan(
   };
 
   const onWheel = (e: WheelEvent) => {
-    if (listWheelSideways(e, layout.get().mode === "scroll")) e.preventDefault();
+    if (listWheelSideways(e, paneRowStore.get().mode === "scroll")) e.preventDefault();
   };
 
   el.addEventListener("wheel", onWheel, { passive: false });

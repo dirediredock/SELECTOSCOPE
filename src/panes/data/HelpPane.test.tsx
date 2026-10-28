@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { Store } from "../../state/createStore";
 import helpText from "../../../../docs/help_pane.txt?raw";
 
-// uiStore reads the saved theme and settings on import.
+// The interface store reads the saved theme and settings on import.
 vi.hoisted(() => {
   Object.assign(globalThis, {
     document: { documentElement: { dataset: {}, style: { setProperty() {} } } },
@@ -17,7 +17,7 @@ vi.mock("../../state/createStore", async (importOriginal) => ({
 }));
 
 const { HelpPane } = await import("./HelpPane");
-const { HELP_SECTIONS } = await import("./helpNav");
+const { HELP_SECTIONS } = await import("./helpSection");
 const html = renderToStaticMarkup(<HelpPane />);
 
 describe("Help", () => {

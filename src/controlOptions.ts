@@ -1,7 +1,8 @@
 // The options each Choice offers: its id and its visible label. Kept free of
 // the stores and the DOM.
 import type { SelectTarget } from "./state/selection";
-import type { Tool, Upload } from "./state/uiStore";
+import type { Tool } from "./state/controls";
+import type { Upload } from "./state/interface";
 
 // Where a lasso or rect writes. In a node pane: the nodes inside it, the
 // edges those nodes share (both endpoints inside), or both. In the matrix:
@@ -63,7 +64,7 @@ export const ORDERINGS = [
 ] as const;
 
 // Hops' shape orders: one measure of each node's census, each a percent
-// (panes/hopcensus/geometry.ts). Each label names the shape's measure and
+// (panes/hops/geometry.ts). Each label names the shape's measure and
 // reads after the section's caps, as "Horizontal order by shape: reach".
 // They run: Degree, the line's first value; then three read
 // along the line, as its shape is: Reach, its centre of mass, when it
