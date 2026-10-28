@@ -1,5 +1,5 @@
-import { layout, setShares, setSlotAr } from "../state/layout";
-import type { SlotId } from "../state/layout";
+import { paneRowStore, setShares, setSlotAr } from "../state/paneRow";
+import type { SlotId } from "../state/paneRow";
 import { PANE_MIN_PX, resizeOne, toShares } from "./paneWidths";
 
 // The Fit row as drawn: its panes left to right, and their widths in px.
@@ -26,6 +26,6 @@ export function fitSlotToWidth(slot: SlotId, widthAt: (h: number) => number) {
 // the pane takes that width in the row; in Scroll it becomes the slot's
 // ratio.
 export function setSlotShape(slot: SlotId, ar: number | null) {
-  if (layout.get().mode === "fit") fitSlotToWidth(slot, (h) => (ar === null ? PANE_MIN_PX : ar * h));
+  if (paneRowStore.get().mode === "fit") fitSlotToWidth(slot, (h) => (ar === null ? PANE_MIN_PX : ar * h));
   else setSlotAr(slot, ar);
 }

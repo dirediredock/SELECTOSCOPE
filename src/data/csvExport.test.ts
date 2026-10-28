@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildNow } from "./assemble";
+import { testBuild } from "./testBuild";
 import { csvFiles } from "./csvExport";
 import type { Graph } from "./graph";
 
@@ -16,7 +16,7 @@ const layout3d = csv("node_id,x,y,z", ids.map((id, i) => `${id},${i},${i * i},${
 const exported = (g: Graph) => Object.fromEntries(csvFiles(g).map((f) => [f.name, f.text]));
 
 const rebuild = (files: Record<string, string>) =>
-  buildNow(
+  testBuild(
     {
       edgelist: files["edgelist.csv"],
       labels: files["labels.csv"],
@@ -41,7 +41,7 @@ function expectLayout(a: Graph, ax: Float32Array, b: Graph, bx: Float32Array, di
 
 describe("csvFiles", () => {
   it("writes the cleaned graph's files, which build back the same graph", () => {
-    const g = buildNow({ edgelist, labels, layout2d, layout3d }, "user", "Pentagon", null);
+    const g = testBuild({ edgelist, labels, layout2d, layout3d }, "user", "Pentagon", null);
     const files = exported(g);
     expect(Object.keys(files)).toEqual(["edgelist.csv", "labels.csv", "layout_2d.csv", "layout_3d.csv"]);
     // One row per edge kept, in the file's order; direction is the graph's.
@@ -64,7 +64,7 @@ describe("csvFiles", () => {
   });
 
   it("writes a 2D derived from the 3D as a 2D of its own", () => {
-    const g = buildNow({ edgelist, layout3d }, "user", "Pentagon", null);
+    const g = testBuild({ edgelist, layout3d }, "user", "Pentagon", null);
     expect(g.layoutOwn2dOrigin).toBe("derived");
     const files = exported(g);
     expect(Object.keys(files)).toEqual(["edgelist.csv", "layout_2d.csv", "layout_3d.csv"]);
@@ -74,7 +74,7 @@ describe("csvFiles", () => {
   });
 
   it("writes the edge list alone for a graph with nothing else", () => {
-    const g = buildNow({ edgelist }, "user", "Pentagon", null);
+    const g = testBuild({ edgelist }, "user", "Pentagon", null);
     expect(Object.keys(exported(g))).toEqual(["edgelist.csv"]);
   });
 });

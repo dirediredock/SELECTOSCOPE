@@ -1,5 +1,5 @@
 import type { HopCensus } from "../../data/graph";
-import type { CensusMeasure } from "../../state/hopcensus";
+import type { CensusMeasure } from "../../state/hops";
 import type { SweepAxis } from "../../state/sweep";
 
 // Hops placement, in layout units with y up: one polyline per node

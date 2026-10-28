@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { data } from "../data/dataStore";
+import { datasetStore } from "../data/datasetStore";
 import type { Graph } from "../data/graph";
 import {
   applySelection,
@@ -9,7 +9,7 @@ import {
   hopCount,
   hopOut,
   merged,
-  selection,
+  selectionStore,
   sharedEdges,
   sharePercent,
   shrinkSelection,
@@ -100,10 +100,10 @@ describe("hopOut", () => {
 });
 
 describe("Grow and Shrink", () => {
-  const nodes = () => [...selection.get().nodes].sort();
-  const edges = () => [...selection.get().edges].sort();
+  const nodes = () => [...selectionStore.get().nodes].sort();
+  const edges = () => [...selectionStore.get().edges].sort();
   // A new graph empties both sets, so every test starts from nothing.
-  const load = () => data.set({ graph: { edgeSource: source, edgeTarget: target } as unknown as Graph });
+  const load = () => datasetStore.set({ graph: { edgeSource: source, edgeTarget: target } as unknown as Graph });
 
   it("steps back through the Grows, even from the whole graph", () => {
     load();
@@ -111,7 +111,7 @@ describe("Grow and Shrink", () => {
     growSelection("both");
     growSelection("both");
     expect(nodes()).toEqual([0, 1, 2, 3]);
-    expect(canShrink(selection.get())).toBe(true);
+    expect(canShrink(selectionStore.get())).toBe(true);
     shrinkSelection();
     expect(nodes()).toEqual([2, 3]);
     expect(edges()).toEqual([3]);
@@ -126,7 +126,7 @@ describe("Grow and Shrink", () => {
     growSelection("node");
     shrinkSelection();
     expect(nodes()).toEqual([2, 3]);
-    expect(canShrink(selection.get())).toBe(false);
+    expect(canShrink(selectionStore.get())).toBe(false);
     shrinkSelection();
     expect(nodes()).toEqual([2, 3]);
     // Growing again from the origin, and back, still stops there.
@@ -141,7 +141,7 @@ describe("Grow and Shrink", () => {
     applySelection("node", "replace", [3]);
     growSelection("node");
     applySelection("node", "add", [1]);
-    expect(canShrink(selection.get())).toBe(false);
+    expect(canShrink(selectionStore.get())).toBe(false);
     shrinkSelection();
     expect(nodes()).toEqual([1, 2, 3]);
   });
@@ -149,7 +149,7 @@ describe("Grow and Shrink", () => {
   it("never shrinks a selection no Grow made", () => {
     load();
     applySelection("node", "replace", [1, 2, 3]);
-    expect(canShrink(selection.get())).toBe(false);
+    expect(canShrink(selectionStore.get())).toBe(false);
     shrinkSelection();
     expect(nodes()).toEqual([1, 2, 3]);
   });
@@ -157,27 +157,27 @@ describe("Grow and Shrink", () => {
   it("counts the Grows the sets stand from their origin", () => {
     load();
     applySelection("node", "replace", [3]);
-    expect(hopCount(selection.get())).toBe(0);
+    expect(hopCount(selectionStore.get())).toBe(0);
     growSelection("node");
     growSelection("node");
-    expect(hopCount(selection.get())).toBe(2);
+    expect(hopCount(selectionStore.get())).toBe(2);
     shrinkSelection();
-    expect(hopCount(selection.get())).toBe(1);
+    expect(hopCount(selectionStore.get())).toBe(1);
     applySelection("node", "add", [0]);
-    expect(hopCount(selection.get())).toBe(0);
+    expect(hopCount(selectionStore.get())).toBe(0);
   });
 
   it("steps back exactly whatever the mode is now", () => {
     load();
     applySelection("node", "replace", [3]);
-    const start = selection.get();
+    const start = selectionStore.get();
     growSelection("node");
     growSelection("edge");
     expect(edges()).toEqual([1, 2, 3]);
     shrinkSelection();
     shrinkSelection();
-    expect(selection.get().nodes).toBe(start.nodes);
-    expect(selection.get().edges).toBe(start.edges);
+    expect(selectionStore.get().nodes).toBe(start.nodes);
+    expect(selectionStore.get().edges).toBe(start.edges);
   });
 });
 

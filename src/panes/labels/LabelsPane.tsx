@@ -1,10 +1,10 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { data } from "../../data/dataStore";
+import { datasetStore } from "../../data/datasetStore";
 import { useStore } from "../../state/createStore";
-import { hover, hoveredNodes, selection } from "../../state/selection";
-import { registerSweepAxis, shownIn, sweep } from "../../state/sweep";
-import { labelSortIn, labelSortOf, labelsMissing, labelsSettings } from "../../state/labels";
-import type { SlotId } from "../../state/layout";
+import { hoverStore, hoveredNodes, selectionStore } from "../../state/selection";
+import { registerSweepAxis, shownIn, sweepRunStore } from "../../state/sweep";
+import { labelSortIn, labelSortOf, labelsMissing, labelsStore } from "../../state/labels";
+import type { SlotId } from "../../state/paneRow";
 import { LIST_ROWS, VirtualList } from "../../components/VirtualList";
 import { labelOrder, sameOrder, sortRank, sortValue } from "./order";
 import type { SortKeys } from "./order";
@@ -19,15 +19,13 @@ import { TEXT } from "../../controlText";
 
 const EMPTY: Uint32Array = new Uint32Array(0);
 
-// Onion reads the Shells stage's results, Eigenvector the Centrality stage's.
-const sortReady = (g: Graph, sort: LabelSort) =>
-  sort === "onion" ? !!g.cores : sort === "eigenvector" ? !!g.centrality : true;
+// Onion reads the Shells stage's results.
+const sortReady = (g: Graph, sort: LabelSort) => sort !== "onion" || !!g.cores;
 const NONE = new Uint32Array(0);
 const sortKeys = (g: Graph): SortKeys => ({
   labels: g.labels,
   degree: g.degree,
   onion: g.cores?.onion ?? NONE,
-  eigenvector: g.centrality?.eigenvector ?? NONE,
 });
 
 // One row per node, as a pill row: node_id + 1 (zero-padded) | the sort's value
@@ -48,16 +46,16 @@ const sortKeys = (g: Graph): SortKeys => ({
 // Labels are italic. Labels (A–Z) with no labels shows a message in place of
 // the rows.
 export function LabelsPane({ slot }: { slot: SlotId }) {
-  const graph = useStore(data, (s) => s.graph);
+  const graph = useStore(datasetStore, (s) => s.graph);
   const { nodes, edges } = shownIn(
-    useStore(selection, (s) => s),
-    useStore(sweep, (s) => s),
+    useStore(selectionStore, (s) => s),
+    useStore(sweepRunStore, (s) => s),
   );
-  const sort = useStore(labelsSettings, (s) => labelSortIn(s, slot));
+  const sort = useStore(labelsStore, (s) => labelSortIn(s, slot));
   const [order, setOrder] = useState(EMPTY);
-  // Onion and Eigenvector arrive with the Shells stage; until then those sorts
-  // wait, and Degree and Labels (A–Z) work at once.
-  const keysReady = useStore(data, (s) => !!s.graph && sortReady(s.graph, sort));
+  // Onion arrives with the Shells stage; until then it waits, and Degree and
+  // Labels (A–Z) work at once.
+  const keysReady = useStore(datasetStore, (s) => !!s.graph && sortReady(s.graph, sort));
   const fade = useFadeIn(graph, keysReady && !labelsMissing(graph, sort));
   const value = useMemo(() => graph && keysReady && sortValue(sort, sortKeys(graph)), [graph, sort, keysReady]);
 
@@ -84,10 +82,10 @@ export function LabelsPane({ slot }: { slot: SlotId }) {
 
     // No rows while the message shows, so nothing to hover, band or sweep.
     const resort = (force: boolean) => {
-      const g = data.get().graph;
+      const g = datasetStore.get().graph;
       const sort = labelSortOf(slot);
       const rank = g && !labelsMissing(g, sort) && sortReady(g, sort) && sortRank(sort, sortKeys(g));
-      const next = rank ? labelOrder(rank, selection.get().nodes) : EMPTY;
+      const next = rank ? labelOrder(rank, selectionStore.get().nodes) : EMPTY;
       if (!force && sameOrder(orderRef.current, next)) return;
       orderRef.current = next;
       setOrder(next);
@@ -108,8 +106,8 @@ export function LabelsPane({ slot }: { slot: SlotId }) {
       scroller
         .querySelectorAll(".is-hover, .is-edge-hover")
         .forEach((r) => r.classList.remove("is-hover", "is-edge-hover"));
-      const item = hover.get().item;
-      const g = data.get().graph;
+      const item = hoverStore.get().item;
+      const g = datasetStore.get().graph;
       if (!item || !g) return;
       const mark = (id: number, cls: string) => scroller.querySelector(`[data-node="${id}"]`)?.classList.add(cls);
       if (item.type === "node") hoveredNodes(item).forEach((v) => mark(v, "is-hover"));
@@ -120,22 +118,17 @@ export function LabelsPane({ slot }: { slot: SlotId }) {
     };
 
     const unsubs = [
-      data.subscribe((s, prev) => {
+      datasetStore.subscribe((s, prev) => {
         if (s.graph !== prev.graph) resort(true);
-        else if (
-          (s.stages.basics.status === "done" && prev.stages.basics.status !== "done") ||
-          (s.stages.centrality.status === "done" && prev.stages.centrality.status !== "done")
-        ) {
-          resort(true);
-        }
+        else if (s.stages.shells.status === "done" && prev.stages.shells.status !== "done") resort(true);
       }),
-      selection.subscribe((s, prev) => {
+      selectionStore.subscribe((s, prev) => {
         if (s.nodes !== prev.nodes && !overRef.current) resort(false);
       }),
-      labelsSettings.subscribe((s, prev) => {
+      labelsStore.subscribe((s, prev) => {
         if (s.bySlot[slot] !== prev.bySlot[slot]) resort(false);
       }),
-      hover.subscribe(paintHover),
+      hoverStore.subscribe(paintHover),
       registerSweepAxis(slot, axis),
     ];
     resort(true);
@@ -167,7 +160,7 @@ export function LabelsPane({ slot }: { slot: SlotId }) {
   // Rows moved under a still cursor: hover whatever is there now.
   useLayoutEffect(() => gestureRef.current?.refreshHover(), [order]);
 
-  const h = hover.get().item;
+  const h = hoverStore.get().item;
   const hoverSet = new Set(hoveredNodes(h));
   // Zero-padded to the width of the largest number, so the column reads evenly.
   const digits = String(graph?.n ?? 0).length;
@@ -206,7 +199,7 @@ export function LabelsPane({ slot }: { slot: SlotId }) {
       {labelsMissing(graph, sort) && (
         <PaneMessage text={TEXT.labels.missing}><MissingFilePill kind="labels" /></PaneMessage>
       )}
-      {graph && !keysReady && <WaitingOn stages={sort === "onion" ? ["basics"] : ["centrality"]} />}
+      {graph && !keysReady && <WaitingOn stages={["shells"]} />}
     </>
   );
 }

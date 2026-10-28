@@ -5,7 +5,7 @@
 // nowhere else.
 
 import { buildGraph } from "../pipeline/graph";
-import type { CleanReport, Refusal } from "../pipeline/ingest";
+import type { Refusal } from "../pipeline/ingest";
 import { ORDERINGS, SINGLETONS } from "../pipeline/ksnakes";
 import type { KSnakes, Ordering, SingletonMode } from "../pipeline/ksnakes";
 import { SERIATIONS } from "../pipeline/seriations";
@@ -22,18 +22,8 @@ export interface BuildJson {
     title: string;
     nodes: number;
     edges: number;
-    seed: number;
     view: OpeningView;
-    has_labels: boolean;
     layouts: Partial<Record<LayoutKey, LayoutOrigin>>;
-    report: {
-      rows: number;
-      self_loops: number;
-      repeated: number;
-      components: number;
-      dropped_nodes: number;
-      dropped_edges: number;
-    };
     refused: Refusal[];
     warnings?: Refusal[];
   };
@@ -46,11 +36,13 @@ export interface BuildJson {
     core: number[];
     onion: number[];
     island: number[];
-    orders: Record<SingletonMode, { row: Record<Ordering, number[]>; crossings: Record<Ordering, number> }>;
+    orders: Record<SingletonMode, { row: Record<Ordering, number[]> }>;
   };
   hopcensus: { ecc: number[]; stubs: number[] };
-  centrality: { eigenvector: number[] };
 }
+// Older format-1 builds also carry `centrality`, the Shells orders'
+// `crossings`, and `seed`, `has_labels` and `report` in meta. Nothing reads
+// them, so fromJson skips them and those files still open.
 
 type LayoutKey = "fd_2d" | "fd_3d" | "bespoke_2d" | "bespoke_3d";
 
@@ -61,7 +53,7 @@ export const coords = (xy: Float32Array) => Array.from(xy, (x) => Math.round(x *
 // optional (the pane computes it on demand).
 export function exportable(g: Graph): boolean {
   // A graph of two or three nodes has fewer waves than three.
-  return !!(g.layoutFd && g.cores && g.ksnakes && g.centrality && g.hopCensus && g.seriations.harm1 && g.seriations.pc1);
+  return !!(g.layoutFd && g.cores && g.ksnakes && g.hopCensus && g.seriations.harm1 && g.seriations.pc1);
 }
 
 export function toJson(g: Graph): BuildJson {
@@ -78,7 +70,6 @@ export function toJson(g: Graph): BuildJson {
   put("bespoke_2d", g.layoutOwn2d, g.layoutOwn2dOrigin);
   put("bespoke_3d", g.layoutOwn3d, "bespoke");
   const ks = g.ksnakes!;
-  const r = g.report;
   return {
     meta: {
       format: FORMAT,
@@ -86,18 +77,8 @@ export function toJson(g: Graph): BuildJson {
       title: g.title,
       nodes: g.n,
       edges: g.m,
-      seed: g.seed,
       view: g.view,
-      has_labels: g.hasLabels,
       layouts: origins,
-      report: {
-        rows: r.rows,
-        self_loops: r.selfLoops,
-        repeated: r.repeated,
-        components: r.components,
-        dropped_nodes: r.droppedNodes,
-        dropped_edges: r.droppedEdges,
-      },
       refused: g.refused,
       ...(g.warnings.length ? { warnings: g.warnings } : {}),
     },
@@ -112,15 +93,11 @@ export function toJson(g: Graph): BuildJson {
       orders: Object.fromEntries(
         SINGLETONS.map((mode) => [
           mode,
-          {
-            row: Object.fromEntries(ORDERINGS.map((o) => [o, Array.from(ks.orders[mode].row[o])])),
-            crossings: ks.orders[mode].crossings,
-          },
+          { row: Object.fromEntries(ORDERINGS.map((o) => [o, Array.from(ks.orders[mode].row[o])])) },
         ]),
       ) as BuildJson["ksnakes"]["orders"],
     },
     hopcensus: { ecc: Array.from(g.hopCensus!.ecc), stubs: Array.from(g.hopCensus!.stubs) },
-    centrality: { eigenvector: Array.from(g.centrality!.eigenvector) },
   };
 }
 
@@ -138,29 +115,20 @@ export function fromJson(json: BuildJson): Graph {
   const offset = new Uint32Array(meta.nodes + 1);
   for (let v = 0; v < meta.nodes; v++) offset[v + 1] = offset[v] + ecc[v] + 1;
   if (offset[meta.nodes] !== json.hopcensus.stubs.length) throw new Error("Hops: entries don't match the eccentricities");
-  const r = meta.report;
   return {
     name: meta.name,
     title: meta.title,
     n: meta.nodes,
     m: meta.edges,
-    seed: meta.seed,
     nodeId: json.nodes.node_id,
     edgeRow: csr.edgeRow,
     csr,
     degree: degrees(csr),
     labels: json.nodes.label ?? new Array<string>(meta.nodes).fill(""),
-    hasLabels: meta.has_labels,
+    hasLabels: !!json.nodes.label,
     edgeSource: source,
     edgeTarget: target,
-    report: {
-      rows: r.rows,
-      selfLoops: r.self_loops,
-      repeated: r.repeated,
-      components: r.components,
-      droppedNodes: r.dropped_nodes,
-      droppedEdges: r.dropped_edges,
-    } satisfies CleanReport,
+    report: null,
     refused: meta.refused,
     warnings: meta.warnings ?? [],
     view: meta.view,
@@ -181,14 +149,10 @@ export function fromJson(json: BuildJson): Graph {
       orders: Object.fromEntries(
         SINGLETONS.map((mode) => [
           mode,
-          {
-            row: Object.fromEntries(ORDERINGS.map((o) => [o, Uint32Array.from(ks.orders[mode].row[o])])),
-            crossings: ks.orders[mode].crossings,
-          },
+          { row: Object.fromEntries(ORDERINGS.map((o) => [o, Uint32Array.from(ks.orders[mode].row[o])])) },
         ]),
       ) as KSnakes["orders"],
     },
-    centrality: { eigenvector: Float64Array.from(json.centrality.eigenvector) },
     hopRows: null,
     hopCensus: { ecc, offset, stubs: Uint32Array.from(json.hopcensus.stubs) },
   };

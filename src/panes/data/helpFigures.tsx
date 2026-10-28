@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
 import { useStore } from "../../state/createStore";
-import { ui } from "../../state/uiStore";
-import type { CensusMeasure } from "../../state/hopcensus";
+import { controlsStore } from "../../state/controls";
+import type { CensusMeasure } from "../../state/hops";
 import { SWEEP_AREA } from "../../state/sweep";
-import { arrival, censusOrder, censusStructure } from "../hopcensus/geometry";
+import { arrival, censusOrder, censusStructure } from "../hops/geometry";
 
 // Help's diagrams: small schematics drawn as the panes draw (the neutral mark
 // inks, the node set in blue, the edge set in orange, gridlines and enclosure
@@ -26,7 +26,7 @@ const INK = {
 // A figure: a viewBox drawn at most `width` design px wide, centred, with a
 // figure's air above and below. Figures off hides it.
 function Figure({ w, h, children }: { w: number; h: number; children: ReactNode }) {
-  const figures = useStore(ui, (s) => s.figures);
+  const figures = useStore(controlsStore, (s) => s.figures);
   if (!figures) return null;
   return (
     <div className="help-figure">

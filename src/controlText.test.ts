@@ -3,7 +3,7 @@ import helpText from "../docs/help_pane.txt?raw";
 import tooltipsText from "../docs/tooltips_ui.txt?raw";
 import { parseTooltips, TEXT, TOOLTIPS, TOOLTIPS_READ } from "./controlText";
 import "./controlOptions";
-import { INTRO } from "./panes/dataset/intros";
+import { INTRO } from "./panes/data/intros";
 
 // Tooltips are read from docs/tooltips_ui.txt. The Data list's + New
 // sentence is cut from Help: Help's words in Help's order from one paragraph,

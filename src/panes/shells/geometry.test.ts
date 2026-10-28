@@ -7,14 +7,13 @@ import { onionStride, snakeHeights, snakeStructure, snakeXY, sweepAxisX } from "
 // singletons first; aggregated, they share one bin.
 const row = Uint32Array.of(3, 2, 0, 0, 1, 1);
 const every = (r: Uint32Array) => ({ packed: r, topdown: r });
-const crossings = { packed: 0, topdown: 0 };
 const ks: KSnakes = {
   core: Uint32Array.of(1, 1, 1, 3, 3, 1),
   onion: Uint32Array.of(1, 2, 1, 3, 3, 1),
   island: Uint32Array.of(1, 1, 0, 3, 3, 2),
   orders: {
-    separate: { row: every(row), crossings },
-    aggregate: { row: every(row), crossings },
+    separate: { row: every(row) },
+    aggregate: { row: every(row) },
   },
 };
 
@@ -117,8 +116,8 @@ const pulled: KSnakes = {
   onion: Uint32Array.of(1, 1, 1, 1, 2, 3, 2),
   island: Uint32Array.of(0, 1, 2, 3, 4, 5, 6),
   orders: {
-    separate: { row: every(Uint32Array.of(0, 1, 2, 3, 0, 0, 1)), crossings },
-    aggregate: { row: every(Uint32Array.of(0, 1, 2, 3, 0, 0, 1)), crossings },
+    separate: { row: every(Uint32Array.of(0, 1, 2, 3, 0, 0, 1)) },
+    aggregate: { row: every(Uint32Array.of(0, 1, 2, 3, 0, 0, 1)) },
   },
 };
 const pull = { source: Uint32Array.of(0, 1, 2, 3, 4, 6), target: Uint32Array.of(4, 4, 6, 6, 5, 5) };

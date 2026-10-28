@@ -1,7 +1,7 @@
-import { data } from "../data/dataStore";
+import { datasetStore } from "../data/datasetStore";
 import { useStore } from "../state/createStore";
-import { addFile, copyCurated, datasetOf, fileRefused, removeFile, userData } from "../state/userData";
-import type { FileKind, OptionalKind } from "../state/userData";
+import { addFile, copyCurated, datasetOf, fileRefused, removeFile, userDatasetsStore } from "../state/userDatasets";
+import type { FileKind, OptionalKind } from "../state/userDatasets";
 import { FilePill } from "./controls";
 import { ROLE_NAMES, fileLines, reportTip } from "./report";
 
@@ -12,13 +12,13 @@ import { ROLE_NAMES, fileLines, reportTip } from "./report";
 // under a pane's message, build the row again at once.
 export function UserFilePill(props: { id: string; kind: FileKind; rebuild: boolean; disabled?: boolean; sizeAs?: string }) {
   const { id, kind, rebuild } = props;
-  const file = useStore(userData, (s) => datasetOf(s, id)?.files[kind] ?? null);
-  const refused = useStore(userData, (s) => {
+  const file = useStore(userDatasetsStore, (s) => datasetOf(s, id)?.files[kind] ?? null);
+  const refused = useStore(userDatasetsStore, (s) => {
     const d = datasetOf(s, id);
     return !!d && fileRefused(d, kind);
   });
   // As JSON, so the selector returns a plain value.
-  const report = useStore(userData, (s) => {
+  const report = useStore(userDatasetsStore, (s) => {
     const d = datasetOf(s, id);
     const f = d?.files[kind];
     if (!d || !f) return null;
@@ -49,8 +49,8 @@ export function UserFilePill(props: { id: string; kind: FileKind; rebuild: boole
 // own row takes it and builds again; a curated dataset is copied into a row
 // of the user's own with the file (copyCurated).
 export function MissingFilePill({ kind }: { kind: OptionalKind }) {
-  const current = useStore(data, (s) => s.current);
-  const own = useStore(userData, (s) => !!datasetOf(s, current));
+  const current = useStore(datasetStore, (s) => s.current);
+  const own = useStore(userDatasetsStore, (s) => !!datasetOf(s, current));
   if (own) return <UserFilePill id={current!} kind={kind} rebuild />;
   return <FilePill name={ROLE_NAMES[kind]} added={false} accent="extra" onPick={(f) => copyCurated(kind, f)} />;
 }

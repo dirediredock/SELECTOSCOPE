@@ -4,8 +4,8 @@
 
 export const SEED = 1736;
 
-// splitmix32: small, fast and identical in every JavaScript engine, so a
-// build in a browser and a bake in Node agree to the bit.
+// splitmix32: small, fast and identical in every JavaScript engine, so the
+// shuffle never depends on where a build runs.
 export function rng(seed: number): () => number {
   let s = seed >>> 0;
   return () => {

@@ -1,17 +1,17 @@
 import { useEffect, useRef } from "react";
-import { data } from "../../data/dataStore";
+import { datasetStore } from "../../data/datasetStore";
 import { landedCensus } from "../../data/graph";
 import type { Graph, HopCensus } from "../../data/graph";
 import { useStore } from "../../state/createStore";
 import { useFadeIn } from "../../components/fadeIn";
 import { WaitingOn } from "../../components/PaneMessage";
-import { hover, selection } from "../../state/selection";
-import { registerSweepAxis, shownSets, sweep } from "../../state/sweep";
-import { inkChanged, ui } from "../../state/uiStore";
-import { hopcensusIn, hopcensusOf, hopcensusSettings } from "../../state/hopcensus";
-import type { CensusMeasure } from "../../state/hopcensus";
-import type { SlotId } from "../../state/layout";
-import { viewOf, views } from "../../state/views";
+import { hoverStore, selectionStore } from "../../state/selection";
+import { registerSweepAxis, shownSets, sweepRunStore } from "../../state/sweep";
+import { controlsStore, inkChanged } from "../../state/controls";
+import { hopsIn, hopsOf, hopsStore } from "../../state/hops";
+import type { CensusMeasure } from "../../state/hops";
+import type { SlotId } from "../../state/paneRow";
+import { viewOf, paneViewsStore } from "../../state/paneViews";
 import { canvasBox, sizeCanvas } from "../../canvas/sizeCanvas";
 import { readInk } from "../../canvas/ink";
 import { frameScheduler } from "../../canvas/frame";
@@ -39,7 +39,7 @@ const INSETS = { left: 20, right: GUTTER + PAD_X, top: 20, bottom: 20 };
 // glides are, and the view holds still; a new dataset changes at once. It
 // draws nodes only: the node set, or a sweep's nodes while one runs. Five canvases, each redrawn only when its inputs change:
 // base, sets, axes, hover, gesture.
-export function HopCensusPane({ slot }: { slot: SlotId }) {
+export function HopsPane({ slot }: { slot: SlotId }) {
   const stackRef = useRef<HTMLDivElement>(null);
   const baseRef = useRef<HTMLCanvasElement>(null);
   const setsRef = useRef<HTMLCanvasElement>(null);
@@ -66,7 +66,7 @@ export function HopCensusPane({ slot }: { slot: SlotId }) {
     let scene: CensusScene | null = null;
 
     const orderOf = (g: Graph, st: CensusStructure) => {
-      const { measure, rank } = hopcensusOf(slot);
+      const { measure, rank } = hopsOf(slot);
       const o = ordered;
       if (o?.graph === g && o.st === st && o.measure === measure && o.rank === rank) return o.order;
       ordered = { graph: g, st, measure, rank, order: censusOrder(st, measure, rank) };
@@ -74,7 +74,7 @@ export function HopCensusPane({ slot }: { slot: SlotId }) {
     };
 
     const layout = () => {
-      const g = data.get().graph;
+      const g = datasetStore.get().graph;
       if (!g) return (scene = null);
       const hc = landedCensus(g);
       if (!hc) {
@@ -86,7 +86,7 @@ export function HopCensusPane({ slot }: { slot: SlotId }) {
         built = null;
       }
       const { width: w, height: h } = canvasBox(stack);
-      const { slide } = hopcensusOf(slot);
+      const { slide } = hopsOf(slot);
       const order = orderOf(g, structure.st);
       if (glide?.graph !== g) glide = null;
       if (shown.length !== g.n) shown = new Float32Array(g.n);
@@ -132,7 +132,7 @@ export function HopCensusPane({ slot }: { slot: SlotId }) {
 
     const paintHover = () => {
       const { ctx } = sizeCanvas(hoverRef.current!);
-      if (scene) drawHover(ctx, scene, readInk(stack), hover.get().item);
+      if (scene) drawHover(ctx, scene, readInk(stack), hoverStore.get().item);
     };
 
     const paintAll = () => {
@@ -157,7 +157,7 @@ export function HopCensusPane({ slot }: { slot: SlotId }) {
 
     // The sweep follows the order picked, even before a glide lands.
     const axis = (sideways: boolean, wrap: boolean) => {
-      const g = data.get().graph;
+      const g = datasetStore.get().graph;
       if (!g || !structure || structure.graph !== g) return null;
       return sweepAxis(structure.st, orderOf(g, structure.st), sideways, wrap);
     };
@@ -166,28 +166,28 @@ export function HopCensusPane({ slot }: { slot: SlotId }) {
     ro.observe(stack);
     const unsubs = [
       registerSweepAxis(slot, axis),
-      data.subscribe((s, prev) => {
+      datasetStore.subscribe((s, prev) => {
         // A new graph, or more lines landed.
         if (s.graph !== prev.graph || (s.graph && landedCensus(s.graph)?.census !== structure?.census)) frame.schedule(full);
       }),
-      hopcensusSettings.subscribe((s, prev) => {
-        const now = hopcensusIn(s, slot), was = hopcensusIn(prev, slot);
+      hopsStore.subscribe((s, prev) => {
+        const now = hopsIn(s, slot), was = hopsIn(prev, slot);
         if (now === was) return;
         // A new order glides the lines from wherever they are, mid-glide
         // included; a dataset switch, which resets the settings before its
         // layout, never does.
-        const g = data.get().graph;
+        const g = datasetStore.get().graph;
         const reordered = now.measure !== was.measure || now.rank !== was.rank;
         if (g && reordered && structure?.graph === g && shown.length === g.n) {
           glide = { graph: g, from: shown.slice(), start: performance.now() };
         }
         frame.schedule(full);
       }),
-      views.subscribe((s, prev) => s[slot] !== prev[slot] && frame.schedule(transformed)),
-      ui.subscribe((s, prev) => inkChanged(s, prev) && frame.schedule(full)),
-      selection.subscribe((s, prev) => s.nodes !== prev.nodes && frame.schedule(paintSets)),
-      sweep.subscribe((s, prev) => s.nodes !== prev.nodes && frame.schedule(paintSets)),
-      hover.subscribe(() => frame.schedule(paintHover)),
+      paneViewsStore.subscribe((s, prev) => s[slot] !== prev[slot] && frame.schedule(transformed)),
+      controlsStore.subscribe((s, prev) => inkChanged(s, prev) && frame.schedule(full)),
+      selectionStore.subscribe((s, prev) => s.nodes !== prev.nodes && frame.schedule(paintSets)),
+      sweepRunStore.subscribe((s, prev) => s.nodes !== prev.nodes && frame.schedule(paintSets)),
+      hoverStore.subscribe(() => frame.schedule(paintHover)),
     ];
     const hit = polylineHitTester(
       () => view.pos,
@@ -211,8 +211,8 @@ export function HopCensusPane({ slot }: { slot: SlotId }) {
 
   // Lines draw as their chunks land; until the first does, the stage's
   // progress shows in their place.
-  const none = useStore(data, (st) => !!st.graph && !st.graph.hopRows?.done && !st.graph.hopCensus);
-  const fade = useFadeIn(useStore(data, (st) => st.graph), !none);
+  const none = useStore(datasetStore, (st) => !!st.graph && !st.graph.hopRows?.done && !st.graph.hopCensus);
+  const fade = useFadeIn(useStore(datasetStore, (st) => st.graph), !none);
   return (
     <>
       <div ref={stackRef} className={"pane-stack" + fade}>

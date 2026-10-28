@@ -1,16 +1,16 @@
 import { useEffect, useRef } from "react";
-import { data } from "../../data/dataStore";
+import { datasetStore } from "../../data/datasetStore";
 import { useStore } from "../../state/createStore";
 import { useFadeIn } from "../../components/fadeIn";
 import { WaitingOn } from "../../components/PaneMessage";
 import type { Graph } from "../../data/graph";
-import { hover, selection } from "../../state/selection";
-import { registerSweepAxis, shownSets, sweep } from "../../state/sweep";
-import { inkChanged, ui } from "../../state/uiStore";
-import { matrixIn, matrixOf, matrixSettings } from "../../state/matrix";
-import type { SlotId } from "../../state/layout";
+import { hoverStore, selectionStore } from "../../state/selection";
+import { registerSweepAxis, shownSets, sweepRunStore } from "../../state/sweep";
+import { controlsStore, inkChanged } from "../../state/controls";
+import { matrixIn, matrixOf, matrixStore } from "../../state/matrix";
+import type { SlotId } from "../../state/paneRow";
 import type { Seriation } from "../../state/matrix";
-import { viewOf, views } from "../../state/views";
+import { viewOf, paneViewsStore } from "../../state/paneViews";
 import { canvasBox, sizeCanvas } from "../../canvas/sizeCanvas";
 import { readInk } from "../../canvas/ink";
 import { frameScheduler } from "../../canvas/frame";
@@ -65,13 +65,13 @@ export function MatrixPane({ slot }: { slot: SlotId }) {
     let scene: MatrixScene | null = null;
 
     const current = () => {
-      const g = data.get().graph;
+      const g = datasetStore.get().graph;
       const { seriation } = matrixOf(slot);
       return built && g && built.graph === g && built.seriation === seriation ? built : null;
     };
     // The order picked has landed (the engine fills it in while it runs).
     const ready = () => {
-      const g = data.get().graph;
+      const g = datasetStore.get().graph;
       return !!g && !!g.seriations[matrixOf(slot).seriation];
     };
 
@@ -86,7 +86,7 @@ export function MatrixPane({ slot }: { slot: SlotId }) {
     };
 
     const layout = () => {
-      const g = data.get().graph;
+      const g = datasetStore.get().graph;
       if (!g || !ready()) {
         built = null;
         scene = null;
@@ -152,7 +152,7 @@ export function MatrixPane({ slot }: { slot: SlotId }) {
 
     const paintHover = () => {
       const { ctx } = sizeCanvas(hoverRef.current!);
-      if (scene) drawHover(ctx, scene, readInk(stack), hover.get().item);
+      if (scene) drawHover(ctx, scene, readInk(stack), hoverStore.get().item);
     };
 
     const paintAll = () => {
@@ -177,7 +177,7 @@ export function MatrixPane({ slot }: { slot: SlotId }) {
 
     // The sweep follows the seriation picked, even before a glide lands.
     const axis = (sideways: boolean) => {
-      const g = data.get().graph;
+      const g = datasetStore.get().graph;
       if (!g || !ready()) return null;
       const row = current()?.row ?? rowsOf(g.seriations[matrixOf(slot).seriation]!);
       return sweepAxis(row, g.edgeSource, g.edgeTarget, sideways);
@@ -187,13 +187,13 @@ export function MatrixPane({ slot }: { slot: SlotId }) {
     ro.observe(stack);
     const unsubs = [
       registerSweepAxis(slot, axis),
-      data.subscribe((s, prev) => (s.graph !== prev.graph || (!current() && s.revision !== prev.revision)) && frame.schedule(full)),
-      matrixSettings.subscribe((s, prev) => matrixIn(s, slot) !== matrixIn(prev, slot) && frame.schedule(full)),
-      views.subscribe((s, prev) => s[slot] !== prev[slot] && frame.schedule(transformed)),
-      ui.subscribe((s, prev) => inkChanged(s, prev) && frame.schedule(full)),
-      selection.subscribe(() => frame.schedule(paintSets)),
-      sweep.subscribe(() => frame.schedule(paintSets)),
-      hover.subscribe(() => frame.schedule(paintHover)),
+      datasetStore.subscribe((s, prev) => (s.graph !== prev.graph || (!current() && s.revision !== prev.revision)) && frame.schedule(full)),
+      matrixStore.subscribe((s, prev) => matrixIn(s, slot) !== matrixIn(prev, slot) && frame.schedule(full)),
+      paneViewsStore.subscribe((s, prev) => s[slot] !== prev[slot] && frame.schedule(transformed)),
+      controlsStore.subscribe((s, prev) => inkChanged(s, prev) && frame.schedule(full)),
+      selectionStore.subscribe(() => frame.schedule(paintSets)),
+      sweepRunStore.subscribe(() => frame.schedule(paintSets)),
+      hoverStore.subscribe(() => frame.schedule(paintHover)),
     ];
     // Hits land on points; an edge drawn twice answers once. A Nodes-mode
     // shape takes the columns it crosses instead, in the order picked.
@@ -224,10 +224,10 @@ export function MatrixPane({ slot }: { slot: SlotId }) {
     };
   }, [slot]);
 
-  const seriation = useStore(matrixSettings, (s) => matrixIn(s, slot).seriation);
+  const seriation = useStore(matrixStore, (s) => matrixIn(s, slot).seriation);
   const fade = useFadeIn(
-    useStore(data, (st) => st.graph),
-    useStore(data, (st) => !!st.graph?.seriations[seriation]),
+    useStore(datasetStore, (st) => st.graph),
+    useStore(datasetStore, (st) => !!st.graph?.seriations[seriation]),
   );
   return (
     <>
@@ -245,6 +245,6 @@ export function MatrixPane({ slot }: { slot: SlotId }) {
 // The order picked is still being computed: its stage's progress, in place
 // of the pattern.
 function MatrixWaiting({ slot }: { slot: SlotId }) {
-  const seriation = useStore(matrixSettings, (s) => matrixIn(s, slot).seriation);
+  const seriation = useStore(matrixStore, (s) => matrixIn(s, slot).seriation);
   return <WaitingOn stages={[seriation.startsWith("pc") ? "components" : "harmonics"]} />;
 }

@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Action, Rail } from "./controls";
-import { STAGE_NAMES, data, stageShare, waitStage } from "../data/dataStore";
-import type { Stage } from "../data/dataStore";
+import { STAGE_NAMES, datasetStore, stageShare, waitStage } from "../data/datasetStore";
+import type { Stage } from "../data/datasetStore";
 import { useStore } from "../state/createStore";
 
 // A pane's content in place of its pattern: a note on what is missing, or,
@@ -42,9 +42,9 @@ function PaneRail({ share }: { share: number | null }) {
 // The first of `stages` not yet done, as its rail, or a note if it failed;
 // nothing once all are done or before there is a graph.
 export function WaitingOn({ stages }: { stages: readonly Stage[] }) {
-  const stage = useStore(data, (s) => (s.graph ? waitStage(s, stages) : null));
-  const share = useStore(data, (s) => stageShare(s, stage));
-  const failed = useStore(data, (s) => stage !== null && s.stages[stage].status === "failed");
+  const stage = useStore(datasetStore, (s) => (s.graph ? waitStage(s, stages) : null));
+  const share = useStore(datasetStore, (s) => stageShare(s, stage));
+  const failed = useStore(datasetStore, (s) => stage !== null && s.stages[stage].status === "failed");
   if (!stage) return null;
   return failed ? <PaneMessage text={`${STAGE_NAMES[stage]} failed.`} /> : <PaneRail share={share} />;
 }
@@ -52,7 +52,7 @@ export function WaitingOn({ stages }: { stages: readonly Stage[] }) {
 // A picked curated dataset downloading, as its Data row's rail, in every
 // other pane while there is no graph yet. The list's own fetch shows none.
 export function DownloadRail() {
-  const downloading = useStore(data, (s) => s.loading && s.requested !== null);
-  const share = useStore(data, (s) => s.progress);
+  const downloading = useStore(datasetStore, (s) => s.loading && s.requested !== null);
+  const share = useStore(datasetStore, (s) => s.progress);
   return downloading ? <PaneRail share={share} /> : null;
 }

@@ -1,7 +1,7 @@
 import { boundsOf } from "./bounds";
 import type { Bounds } from "./bounds";
-import { IDENTITY } from "../state/views";
-import type { Transform } from "../state/views";
+import { IDENTITY } from "../state/paneViews";
+import type { Transform } from "../state/paneViews";
 
 export { boundsOf };
 export type { Bounds };
@@ -15,7 +15,7 @@ export interface Insets {
 }
 
 // Layout units (y up) -> pane screen positions (CSS px, y down): first fitted
-// to the pane, then the pane's zoom/pan about its centre (state/views.ts).
+// to the pane, then the pane's zoom/pan about its centre (state/paneViews.ts).
 // Hit-testing reads `pos`, so selection always matches what is drawn. Shared
 // by every pane that draws items as points.
 

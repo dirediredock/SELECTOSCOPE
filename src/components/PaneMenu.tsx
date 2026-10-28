@@ -1,12 +1,12 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties, Ref } from "react";
-import { closeMenu, setHelp, ui } from "../state/uiStore";
-import { DATASET_VIEWS, FIT_SHAPES, MAX_AR, SCROLL_SHAPES, SWAPPABLE } from "../state/panes";
+import { closeMenu, interfaceStore, setHelp } from "../state/interface";
+import { DATA_VIEWS, FIT_SHAPES, MAX_AR, SCROLL_SHAPES, SWAPPABLE } from "../state/panes";
 import type { PaneType } from "../state/panes";
-import { layout, setSlotType } from "../state/layout";
+import { paneRowStore, setSlotType } from "../state/paneRow";
 import { useStore } from "../state/createStore";
-import type { SlotId } from "../state/layout";
-import { fitView } from "../state/views";
+import type { SlotId } from "../state/paneRow";
+import { fitView } from "../state/paneViews";
 import { setSlotShape } from "./fitRow";
 import { PANE_MIN_PX } from "./paneWidths";
 import { TEXT } from "../controlText";
@@ -41,8 +41,8 @@ export interface Tile {
 // the one tinted. Either way the pane refits, as Fit all does.
 export function PaneMenu({ slot, type, ar }: PaneMenuProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const help = useStore(ui, (s) => s.help);
-  const fit = useStore(layout, (s) => s.mode === "fit");
+  const help = useStore(interfaceStore, (s) => s.help);
+  const fit = useStore(paneRowStore, (s) => s.mode === "fit");
   const [size, setSize] = useState<{ w: number; h: number } | null>(null);
 
   useLayoutEffect(() => {
@@ -74,8 +74,8 @@ export function PaneMenu({ slot, type, ar }: PaneMenuProps) {
   }, [slot]);
 
   const rows =
-    type === "dataset"
-      ? DATASET_VIEWS.map((v) => ({ id: v.id, title: v.title, current: (v.id === "help") === help }))
+    type === "data"
+      ? DATA_VIEWS.map((v) => ({ id: v.id, title: v.title, current: (v.id === "help") === help }))
       : SWAPPABLE.map((p) => ({ id: p.id, title: p.title, current: p.id === type }));
 
   return (
@@ -85,7 +85,7 @@ export function PaneMenu({ slot, type, ar }: PaneMenuProps) {
       tiles={tiles.map((t) => ({ ...t, current: isCurrent(t) }))}
       onPickRow={(id) => {
         // Data's rows close the menu through setHelp.
-        if (type === "dataset") setHelp(id === "help");
+        if (type === "data") setHelp(id === "help");
         else {
           setSlotType(slot, id as PaneType);
           closeMenu();

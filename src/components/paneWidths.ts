@@ -1,7 +1,7 @@
 import { scaled } from "../uiScale";
 
 // The Fit row's width arithmetic, in px, on the panes' widths from left to
-// right. The row stores shares (see state/layout.ts); these work in px so a
+// right. The row stores shares (see state/paneRow.ts); these work in px so a
 // minimum width means the same on any window.
 
 // The narrowest a pane gets in the Fit row: its header still reads.

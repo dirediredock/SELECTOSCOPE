@@ -2,7 +2,7 @@
 // themes come for free. Contrast fades the neutral inks of the unselected
 // pattern toward the panel; the sets, hover and gesture inks stay full.
 
-import { ui } from "../state/uiStore";
+import { controlsStore } from "../state/controls";
 import { contrastShare, fade } from "./fade";
 
 // Every neutral rule on a canvas (the matrix outline, Shells' enclosures and
@@ -27,7 +27,7 @@ export function readInk(el: Element): Ink {
   const css = getComputedStyle(el);
   const v = (name: string) => css.getPropertyValue(name).trim();
   const panel = v("--panel");
-  const share = contrastShare(ui.get().contrast);
+  const share = contrastShare(controlsStore.get().contrast);
   const faded = (name: string) => fade(v(name), panel, share);
   return {
     markNode: faded("--mark-node"),

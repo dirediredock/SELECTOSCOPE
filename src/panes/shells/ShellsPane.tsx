@@ -1,16 +1,16 @@
 import { useEffect, useRef } from "react";
-import { data } from "../../data/dataStore";
+import { datasetStore } from "../../data/datasetStore";
 import { useStore } from "../../state/createStore";
 import { useFadeIn } from "../../components/fadeIn";
 import { WaitingOn } from "../../components/PaneMessage";
 import type { Graph } from "../../data/graph";
-import { hover, selection } from "../../state/selection";
-import { registerSweepAxis, shownSets, sweep } from "../../state/sweep";
-import { inkChanged, ui } from "../../state/uiStore";
-import { K_GAP, ksnakesIn, ksnakesOf, ksnakesSettings, modeOf } from "../../state/ksnakes";
-import type { KSnakesSettings } from "../../state/ksnakes";
-import type { SlotId } from "../../state/layout";
-import { fitRequests, setView, viewOf, views } from "../../state/views";
+import { hoverStore, selectionStore } from "../../state/selection";
+import { registerSweepAxis, shownSets, sweepRunStore } from "../../state/sweep";
+import { controlsStore, inkChanged } from "../../state/controls";
+import { K_GAP, shellsIn, shellsOf, shellsStore, modeOf } from "../../state/shells";
+import type { ShellsSettings } from "../../state/shells";
+import type { SlotId } from "../../state/paneRow";
+import { fitRequestsStore, setView, viewOf, paneViewsStore } from "../../state/paneViews";
 import { fitAll } from "../../state/fits";
 import { canvasBox, sizeCanvas } from "../../canvas/sizeCanvas";
 import { HAIRLINE, readInk } from "../../canvas/ink";
@@ -32,7 +32,7 @@ const PAD_Y = 20; // px above and below the pattern at 100% zoom
 const NODE_CLEAR = 1.5; // px between a dot and its island's outline
 
 // What the nodes are placed by: one ordering in one singleton mode.
-type Target = Pick<KSnakesSettings, "ordering" | "group">;
+type Target = Pick<ShellsSettings, "ordering" | "group">;
 const keyOf = (t: Target) => `${t.group}/${t.ordering}`;
 
 // Shells: each node at its onion layer's height, K spans delimited by
@@ -42,7 +42,7 @@ const keyOf = (t: Target) => `${t.group}/${t.ordering}`;
 // glides the nodes. At 100% zoom the pattern fills the pane's height, as wide
 // as Spacing says; Fit all shows it all. Five canvases, each redrawn only
 // when its inputs change: base, sets, axes, hover, gesture.
-export function KSnakesPane({ slot }: { slot: SlotId }) {
+export function ShellsPane({ slot }: { slot: SlotId }) {
   const stackRef = useRef<HTMLDivElement>(null);
   const baseRef = useRef<HTMLCanvasElement>(null);
   const setsRef = useRef<HTMLCanvasElement>(null);
@@ -66,7 +66,7 @@ export function KSnakesPane({ slot }: { slot: SlotId }) {
     } | null = null;
     // What is on screen: the target the nodes are in (or heading to), and
     // the glide from wherever they were when the toggle came.
-    let target: Target = ksnakesOf(slot);
+    let target: Target = shellsOf(slot);
     let glide: { from: Float32Array; start: number } | null = null;
     let placed = new Float32Array(0);
     // Opening, Fit all, a new dataset: fit it all once the layout exists.
@@ -74,26 +74,26 @@ export function KSnakesPane({ slot }: { slot: SlotId }) {
     let scene: SnakeScene | null = null;
 
     const current = () => {
-      const g = data.get().graph;
+      const g = datasetStore.get().graph;
       return built && g && built.graph === g ? built : null;
     };
 
     const layout = () => {
-      const g = data.get().graph;
+      const g = datasetStore.get().graph;
       if (!g || !g.ksnakes) {
         built = null;
         return (scene = null);
       }
       if (structure?.graph !== g) {
         structure = { graph: g, st: snakeStructure(g.ksnakes) };
-        target = ksnakesOf(slot);
+        target = shellsOf(slot);
         glide = null;
       }
       const { st } = structure;
       const { width: w, height: h } = canvasBox(stack);
       // The layers, the K gaps and the half gap beyond each outer span fill
       // the height; Spacing sets the width.
-      const widthPct = ksnakesOf(slot).spacing;
+      const widthPct = shellsOf(slot).spacing;
       const layers = st.maxOnion - st.minOnion + K_GAP * (st.cores.length - 1) + 1 + K_GAP;
       const step = Math.max(1, h - 2 * PAD_Y) / layers;
       const width = (widthPct / 100) * Math.max(1, w - GUTTER.left - GUTTER.right - 2 * PAD_X);
@@ -187,7 +187,7 @@ export function KSnakesPane({ slot }: { slot: SlotId }) {
         islands: order.islands,
         pills,
         inPill,
-        cuts: ksnakesOf(slot).gridlines ? p.cuts : null,
+        cuts: shellsOf(slot).gridlines ? p.cuts : null,
         tube,
         r,
         stepPx,
@@ -218,7 +218,7 @@ export function KSnakesPane({ slot }: { slot: SlotId }) {
 
     const paintHover = () => {
       const { ctx } = sizeCanvas(hoverRef.current!);
-      if (scene) drawHover(ctx, scene, readInk(stack), hover.get().item);
+      if (scene) drawHover(ctx, scene, readInk(stack), hoverStore.get().item);
     };
 
     const paintAll = () => {
@@ -258,31 +258,31 @@ export function KSnakesPane({ slot }: { slot: SlotId }) {
     ro.observe(stack);
     const unsubs = [
       registerSweepAxis(slot, axis),
-      data.subscribe((s, prev) => {
-        if (s.graph !== prev.graph || (s.stages.basics.status === "done" && prev.stages.basics.status !== "done")) {
+      datasetStore.subscribe((s, prev) => {
+        if (s.graph !== prev.graph || (s.stages.shells.status === "done" && prev.stages.shells.status !== "done")) {
           frame.schedule(full);
         }
       }),
-      ksnakesSettings.subscribe((s, prev) => {
-        const now = ksnakesIn(s, slot);
-        if (now === ksnakesIn(prev, slot)) return;
+      shellsStore.subscribe((s, prev) => {
+        const now = shellsIn(s, slot);
+        if (now === shellsIn(prev, slot)) return;
         // A new target glides from wherever the nodes are, mid-glide included.
-        if (keyOf(now) !== keyOf(target) && structure?.graph === data.get().graph && placed.length) {
+        if (keyOf(now) !== keyOf(target) && structure?.graph === datasetStore.get().graph && placed.length) {
           glide = { from: placed.slice(), start: performance.now() };
         }
         target = now;
         frame.schedule(full);
       }),
-      views.subscribe((s, prev) => s[slot] !== prev[slot] && frame.schedule(transformed)),
-      fitRequests.subscribe((s, prev) => {
+      paneViewsStore.subscribe((s, prev) => s[slot] !== prev[slot] && frame.schedule(transformed)),
+      fitRequestsStore.subscribe((s, prev) => {
         if (s[slot] === prev[slot]) return;
         wantFit = true;
         frame.schedule(full);
       }),
-      ui.subscribe((s, prev) => inkChanged(s, prev) && frame.schedule(full)),
-      selection.subscribe(() => frame.schedule(paintSets)),
-      sweep.subscribe(() => frame.schedule(paintSets)),
-      hover.subscribe(() => frame.schedule(paintHover)),
+      controlsStore.subscribe((s, prev) => inkChanged(s, prev) && frame.schedule(full)),
+      selectionStore.subscribe(() => frame.schedule(paintSets)),
+      sweepRunStore.subscribe(() => frame.schedule(paintSets)),
+      hoverStore.subscribe(() => frame.schedule(paintHover)),
     ];
     // A pill answers for all its members: the press lands on the capsule,
     // and hover and click take the whole pill.
@@ -323,8 +323,8 @@ export function KSnakesPane({ slot }: { slot: SlotId }) {
     };
   }, [slot]);
 
-  const graph = useStore(data, (st) => st.graph);
-  const fade = useFadeIn(graph, useStore(data, (st) => st.stages.basics.status === "done"));
+  const graph = useStore(datasetStore, (st) => st.graph);
+  const fade = useFadeIn(graph, useStore(datasetStore, (st) => st.stages.shells.status === "done"));
   return (
     <>
       <div ref={stackRef} className={"pane-stack" + fade}>
@@ -334,7 +334,7 @@ export function KSnakesPane({ slot }: { slot: SlotId }) {
         <canvas ref={hoverRef} />
         <canvas ref={gestureRef} />
       </div>
-      <WaitingOn stages={["basics"]} />
+      <WaitingOn stages={["shells"]} />
     </>
   );
 }

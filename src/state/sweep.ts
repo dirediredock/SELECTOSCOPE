@@ -1,10 +1,10 @@
 import { createStore } from "./createStore";
-import { data } from "../data/dataStore";
-import { layout, retyped } from "./layout";
-import type { SlotId } from "./layout";
-import { selection } from "./selection";
+import { datasetStore } from "../data/datasetStore";
+import { paneRowStore, retyped } from "./paneRow";
+import type { SlotId } from "./paneRow";
+import { selectionStore } from "./selection";
 import type { SelectionState, SelectTarget } from "./selection";
-import { ui } from "./uiStore";
+import { controlsStore } from "./controls";
 
 // Auto Sweep: a band travels along one axis of a pane, coming in at one end and
 // running wholly off the other before it comes in again, or (Wrap, a click on
@@ -54,7 +54,7 @@ export interface SweepSettings {
   wrap: boolean;
 }
 
-export const sweepSettings = createStore<SweepSettings>({
+export const sweepSettingsStore = createStore<SweepSettings>({
   sideways: false,
   area: SWEEP_AREA.opening,
   speed: SWEEP_SPEED.opening,
@@ -62,24 +62,24 @@ export const sweepSettings = createStore<SweepSettings>({
 });
 
 export function setSweepSideways(sideways: boolean) {
-  sweepSettings.set({ sideways });
+  sweepSettingsStore.set({ sideways });
 }
 
 export function setSweepArea(area: number) {
-  sweepSettings.set({ area });
+  sweepSettingsStore.set({ area });
 }
 
 export function setSweepSpeed(speed: number) {
-  sweepSettings.set({ speed });
+  sweepSettingsStore.set({ speed });
 }
 
 export function toggleSweepWrap() {
-  sweepSettings.set((s) => ({ wrap: !s.wrap }));
+  sweepSettingsStore.set((s) => ({ wrap: !s.wrap }));
 }
 
 // ---------- State ----------
 
-export interface SweepState {
+export interface SweepRunState {
   slot: SlotId | null; // the slot sweeping, or null
   paused: boolean;
   step: number;
@@ -88,12 +88,12 @@ export interface SweepState {
   held: -1 | 0 | 1; // the arrow held down (1 forward along the axis, -1 back), or 0
 }
 
-export const sweep = createStore<SweepState>({ slot: null, paused: false, step: 0, nodes: EMPTY, edges: EMPTY, held: 0 });
+export const sweepRunStore = createStore<SweepRunState>({ slot: null, paused: false, step: 0, nodes: EMPTY, edges: EMPTY, held: 0 });
 
 // What panes draw: the sweep while it is active, otherwise the selection.
-export const shownIn = (sel: SelectionState, sw: SweepState): SelectionState =>
+export const shownIn = (sel: SelectionState, sw: SweepRunState): SelectionState =>
   sw.slot === null ? sel : { nodes: sw.nodes, edges: sw.edges };
-export const shownSets = () => shownIn(selection.get(), sweep.get());
+export const shownSets = () => shownIn(selectionStore.get(), sweepRunStore.get());
 
 // ---------- The band, as pure functions (sweep.test.ts) ----------
 
@@ -196,15 +196,15 @@ let lastRead = 0;
 const stepMs = (speed: number) => PERIOD_MS / SWEEP_STEPS / (speed / 100);
 
 function bandAt(slot: SlotId, step: number): { nodes: ReadonlySet<number>; edges: ReadonlySet<number> } {
-  const graph = data.get().graph;
-  const { sideways, area, wrap } = sweepSettings.get();
+  const graph = datasetStore.get().graph;
+  const { sideways, area, wrap } = sweepSettingsStore.get();
   const axis = axes.get(slot)?.(sideways, wrap) ?? null;
   if (!graph || !axis) return { nodes: EMPTY, edges: EMPTY };
-  return bandSets(axis, step, area / 100, ui.get().selectMode, graph.edgeSource, graph.edgeTarget, wrap);
+  return bandSets(axis, step, area / 100, controlsStore.get().selectMode, graph.edgeSource, graph.edgeTarget, wrap);
 }
 
 function show(slot: SlotId, step: number) {
-  sweep.set({ slot, step, ...bandAt(slot, step) });
+  sweepRunStore.set({ slot, step, ...bandAt(slot, step) });
 }
 
 const sameSet = (a: ReadonlySet<number>, b: ReadonlySet<number>) => a.size === b.size && [...a].every((x) => b.has(x));
@@ -213,16 +213,16 @@ const sameSet = (a: ReadonlySet<number>, b: ReadonlySet<number>) => a.size === b
 // it lights does, so still panes don't redraw.
 function reread(slot: SlotId, step: number) {
   const sets = bandAt(slot, step);
-  const now = sweep.get();
-  if (!sameSet(sets.nodes, now.nodes) || !sameSet(sets.edges, now.edges)) sweep.set(sets);
+  const now = sweepRunStore.get();
+  if (!sameSet(sets.nodes, now.nodes) || !sameSet(sets.edges, now.edges)) sweepRunStore.set(sets);
 }
 
 // The store changes only when the step does (about 15 times a second), or
 // when a paused band lights something new.
 function tick(now: number) {
-  const { slot, step, paused, held } = sweep.get();
+  const { slot, step, paused, held } = sweepRunStore.get();
   if (slot === null) return;
-  const ms = stepMs(sweepSettings.get().speed);
+  const ms = stepMs(sweepSettingsStore.get().speed);
   if (!paused) {
     const next = Math.floor((now - t0) / ms) % SWEEP_STEPS;
     if (next !== step) show(slot, next);
@@ -241,7 +241,7 @@ function tick(now: number) {
 // Running, step `step` is now, a hair into it, so float error never lands on
 // the one before.
 function anchor(step: number) {
-  t0 = performance.now() - (step + 1e-6) * stepMs(sweepSettings.get().speed);
+  t0 = performance.now() - (step + 1e-6) * stepMs(sweepSettingsStore.get().speed);
 }
 
 export function startSweep(slot: SlotId) {
@@ -253,20 +253,20 @@ export function startSweep(slot: SlotId) {
 
 // Carries on from the paused step at the current speed.
 export function resumeSweep() {
-  const { slot, step, paused } = sweep.get();
+  const { slot, step, paused } = sweepRunStore.get();
   if (slot === null || !paused) return;
   anchor(step);
-  sweep.set({ paused: false, held: 0 });
+  sweepRunStore.set({ paused: false, held: 0 });
 }
 
 // An arrow: pause, step once `dir` (1 forward along the axis, -1 back) and hold, so
 // the band moves on at the Speed rate until releaseStep. Whether a sweep was
 // active to take it.
 export function pressStep(dir: 1 | -1): boolean {
-  const { slot, step } = sweep.get();
+  const { slot, step } = sweepRunStore.get();
   if (slot === null) return false;
   lastRead = holdNext = performance.now() + HOLD_DELAY_MS;
-  sweep.set({ paused: true, held: dir });
+  sweepRunStore.set({ paused: true, held: dir });
   show(slot, wrapStep(step, dir));
   return true;
 }
@@ -274,50 +274,50 @@ export function pressStep(dir: 1 | -1): boolean {
 // Ends the hold if it is this arrow's; with no arrow, any hold. The band stays
 // paused where it is.
 export function releaseStep(dir?: 1 | -1) {
-  const { held } = sweep.get();
-  if (held !== 0 && (dir === undefined || held === dir)) sweep.set({ held: 0 });
+  const { held } = sweepRunStore.get();
+  if (held !== 0 && (dir === undefined || held === dir)) sweepRunStore.set({ held: 0 });
 }
 
 // Whether a sweep was active.
 export function stopSweep(): boolean {
   cancelAnimationFrame(raf);
   raf = 0;
-  if (sweep.get().slot === null) return false;
-  sweep.set({ slot: null, paused: false, step: 0, nodes: EMPTY, edges: EMPTY, held: 0 });
+  if (sweepRunStore.get().slot === null) return false;
+  sweepRunStore.set({ slot: null, paused: false, step: 0, nodes: EMPTY, edges: EMPTY, held: 0 });
   return true;
 }
 
-selection.subscribe(() => stopSweep());
+selectionStore.subscribe(() => stopSweep());
 
 let opened = false;
 
-data.subscribe((s, prev) => {
+datasetStore.subscribe((s, prev) => {
   if (s.graph === prev.graph) return;
   stopSweep();
   if (opened || !s.graph) return;
   opened = true;
-  const matrix = layout.get().slots.find((x) => x.type === "matrix");
+  const matrix = paneRowStore.get().slots.find((x) => x.type === "matrix");
   if (matrix) startSweep(matrix.slot);
 });
 
 // A slot that changes type, or leaves the line-up, stops its sweep.
-layout.subscribe((s, prev) => {
+paneRowStore.subscribe((s, prev) => {
   const fresh = retyped(s.slots, prev.slots);
-  const slot = sweep.get().slot;
+  const slot = sweepRunStore.get().slot;
   if (slot !== null && (fresh.includes(slot) || !s.slots.some((x) => x.slot === slot))) stopSweep();
 });
 
 // A new Select mode shows at once, at the same step.
-ui.subscribe((s, prev) => {
-  const { slot, step } = sweep.get();
+controlsStore.subscribe((s, prev) => {
+  const { slot, step } = sweepRunStore.get();
   if (slot !== null && s.selectMode !== prev.selectMode) show(slot, step);
 });
 
 // A new orientation or area shows at once, at the same step. A new speed carries on
 // from where the band is, so it never jumps (a held arrow takes it from its
 // next step). So does Wrap: the band keeps its place, at the step nearest it.
-sweepSettings.subscribe((s, prev) => {
-  const { slot, step, paused } = sweep.get();
+sweepSettingsStore.subscribe((s, prev) => {
+  const { slot, step, paused } = sweepRunStore.get();
   if (slot === null) return;
   if (s.speed !== prev.speed && !paused) {
     const now = performance.now();

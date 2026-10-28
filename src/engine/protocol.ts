@@ -6,9 +6,9 @@ import type { Graph } from "../pipeline/graph";
 import type { Seriation } from "../pipeline/seriations";
 import type { CleanReport, DatasetTexts, LayoutKind, Refusal, Warning } from "../pipeline/ingest";
 
-export type CoreRequest = { type: "build"; texts: DatasetTexts };
+export type IngestRequest = { type: "build"; texts: DatasetTexts };
 
-export type CoreMessage =
+export type IngestMessage =
   | {
       type: "ingested";
       graph: Graph;
@@ -18,9 +18,9 @@ export type CoreMessage =
       refused: Refusal[];
       warnings: Warning[];
     }
-  | { type: "cores"; cores: Cores; ksnakes: KSnakes }
-  | { type: "centrality"; centrality: Float64Array }
   | { type: "error"; message: string };
+
+export type ShellsMessage = { type: "shells"; cores: Cores; ksnakes: KSnakes };
 
 export type HopsRequest = { type: "graph"; graph: Graph } | { type: "range"; from: number; to: number };
 

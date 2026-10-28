@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { homeOf, IDENTITY, zoomAt } from "./views";
-import type { Transform } from "./views";
+import { homeOf, IDENTITY, zoomAt } from "./paneViews";
+import type { Transform } from "./paneViews";
 
 // screen = c + (fitted - c) * k + t, written relative to the centre c.
 const screen = (t: Transform, q: number) => q * t.k + t.tx;

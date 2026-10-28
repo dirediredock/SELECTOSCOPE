@@ -1,5 +1,5 @@
-import { pressSpace, releaseSpace } from "../state/uiStore";
-import { pressStep, releaseStep, sweep } from "../state/sweep";
+import { pressSpace, releaseSpace } from "../state/interface";
+import { pressStep, releaseStep, sweepRunStore } from "../state/sweep";
 
 const CONTROL =
   'button, input, textarea, select, a[href], [contenteditable]:not([contenteditable="false"]), ' +
@@ -46,7 +46,7 @@ export function attachKeyboardShortcuts(): () => void {
   const onArrowDown = (e: KeyboardEvent) => {
     const dir = arrow(e);
     if (dir === 0 || e.defaultPrevented || keepsArrows(e) || modified(e)) return;
-    if (e.repeat ? sweep.get().slot === null : !pressStep(dir)) return;
+    if (e.repeat ? sweepRunStore.get().slot === null : !pressStep(dir)) return;
     e.preventDefault();
     e.stopPropagation();
   };

@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import { eigenvectorCentrality } from "./centrality";
 import { cores } from "./cores";
 import { hopCensus } from "./hopcensus";
 import { ingest } from "./ingest";
@@ -43,15 +42,5 @@ describe("hop census", () => {
     const { ecc, stubs } = hopCensus(graph);
     expect([...ecc]).toEqual([1, 1, 1]);
     expect([...stubs.subarray(0, 2)]).toEqual([2, 2]);
-  });
-});
-
-describe("eigenvector centrality", () => {
-  it("is the unit leading eigenvector, a star's hub largest", () => {
-    const { graph, by } = load("h-a h-b h-c h-d");
-    const c = by(eigenvectorCentrality(graph));
-    // Star K1,4: hub 1/√2, leaves 1/(2√2).
-    expect(c.h).toBeCloseTo(Math.SQRT1_2, 9);
-    expect(c.a).toBeCloseTo(Math.SQRT1_2 / 2, 9);
   });
 });

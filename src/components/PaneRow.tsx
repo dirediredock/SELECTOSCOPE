@@ -1,44 +1,44 @@
 import { Fragment, memo, useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactNode } from "react";
 import { useStore } from "../state/createStore";
-import { layout, setShares } from "../state/layout";
-import type { SlotId } from "../state/layout";
+import { paneRowStore, setShares } from "../state/paneRow";
+import type { SlotId } from "../state/paneRow";
 import { PANES } from "../state/panes";
 import type { PaneType } from "../state/panes";
 import { Pane } from "./Pane";
 import { NodeLinkPane } from "../panes/nodelink/NodeLinkPane";
 import { LabelsPane } from "../panes/labels/LabelsPane";
 import { MatrixPane } from "../panes/matrix/MatrixPane";
-import { DatasetPane } from "../panes/DatasetPane";
-import { HelpPane } from "../panes/dataset/HelpPane";
-import { focus, ui } from "../state/uiStore";
-import { KSnakesPane } from "../panes/ksnakes/KSnakesPane";
-import { HopCensusPane } from "../panes/hopcensus/HopCensusPane";
+import { DataPane } from "../panes/data/DataPane";
+import { HelpPane } from "../panes/data/HelpPane";
+import { focus, interfaceStore } from "../state/interface";
+import { ShellsPane } from "../panes/shells/ShellsPane";
+import { HopsPane } from "../panes/hops/HopsPane";
 import { PANE_MIN_PX, dragHandle, evenPair, sharesFromRatios, toShares } from "./paneWidths";
 import { fitSlotToWidth, maxWidthsOf, rowPanes, widthsOf } from "./fitRow";
 import { beginGesture, endGesture, gestureActive } from "../interaction/activeGesture";
 
 const CONTENT: Record<PaneType, (slot: SlotId) => ReactNode> = {
-  dataset: (slot) => <DatasetContent slot={slot} />,
+  data: (slot) => <DataContent slot={slot} />,
   nodelink: (slot) => <NodeLinkPane slot={slot} />,
   labels: (slot) => <LabelsPane slot={slot} />,
   matrix: (slot) => <MatrixPane slot={slot} />,
-  ksnakes: (slot) => <KSnakesPane slot={slot} />,
-  hopcensus: (slot) => <HopCensusPane slot={slot} />,
+  shells: (slot) => <ShellsPane slot={slot} />,
+  hops: (slot) => <HopsPane slot={slot} />,
 };
 
 // The Data slot shows its list, or Help in its place. The slot keeps its
 // type, so its width and share never change. The list mounts afresh on return
 // and reveals its ringed row, as on open.
-function DatasetContent({ slot }: { slot: SlotId }) {
-  const help = useStore(ui, (s) => s.help);
-  return help ? <HelpPane /> : <DatasetPane slot={slot} />;
+function DataContent({ slot }: { slot: SlotId }) {
+  const help = useStore(interfaceStore, (s) => s.help);
+  return help ? <HelpPane /> : <DataPane slot={slot} />;
 }
 
 // Scroll the row so the focused pane sits at its centre (NodeLink when no
 // pane is focused).
 function centreFocused(row: HTMLElement) {
-  const focused = ui.get().focused;
+  const focused = interfaceStore.get().focused;
   const pane =
     (focused && row.querySelector<HTMLElement>(`.pane[data-slot="${focused}"]`)) ||
     row.querySelector<HTMLElement>('.pane[data-pane="nodelink"]');
@@ -87,9 +87,9 @@ function onScrollFrame(row: HTMLElement, fn: () => void) {
 // pane under the row's centre has focus, as under a still pointer.
 export function PaneRow() {
   const rowRef = useRef<HTMLDivElement>(null);
-  const slots = useStore(layout, (s) => s.slots);
-  const fit = useStore(layout, (s) => s.mode === "fit");
-  const saved = useStore(layout, (s) => s.shares);
+  const slots = useStore(paneRowStore, (s) => s.slots);
+  const fit = useStore(paneRowStore, (s) => s.mode === "fit");
+  const saved = useStore(paneRowStore, (s) => s.shares);
   // Fit's opening proportions come from the default line-up, never from the
   // Scroll ratios.
   const shares = saved ? slots.map((x) => saved[x.slot]) : sharesFromRatios(PANES.map((p) => p.ar));
@@ -99,7 +99,7 @@ export function PaneRow() {
   // exist they are the user's, so this only runs the first time the row fits.
   useLayoutEffect(() => {
     const labels = slots.find((x) => x.type === "labels");
-    if (fit && !layout.get().shares && labels) fitSlotToWidth(labels.slot, () => PANE_MIN_PX);
+    if (fit && !paneRowStore.get().shares && labels) fitSlotToWidth(labels.slot, () => PANE_MIN_PX);
     if (!fit) centreFocused(rowRef.current!);
   }, [fit]);
 

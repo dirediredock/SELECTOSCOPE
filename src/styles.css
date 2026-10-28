@@ -2411,7 +2411,7 @@ textarea {
 }
 
 /* Thumbnails: the row as a card, its picture inset at the top and sides
-   (DatasetPane's TILE_INSET) and the row's caption, laid out as the row is,
+   (DataPane's TILE_INSET) and the row's caption, laid out as the row is,
    under it (TILE_CAPTION high), with room to clear the rounded corners. The
    corners round as the pill's ends do, so tiles and rows read as one family. */
 .list-row.is-tile {
@@ -2450,7 +2450,7 @@ textarea {
 }
 
 /* A group's header: large caps in the strongest ink, set on the row's
-   baseline, so each group stands out on a scroll. Its row is taller than a pill's (DatasetPane's GROUP_AIR), so air
+   baseline, so each group stands out on a scroll. Its row is taller than a pill's (DataPane's GROUP_AIR), so air
    above it, not a line, divides it from the group before, and the label sits
    nearer its own rows, a small gap above them (GROUP_GAP). It reads as a heading and never as a row to pick.
    Too long for a narrow pane, it is cut at the edge, with no ellipsis. */

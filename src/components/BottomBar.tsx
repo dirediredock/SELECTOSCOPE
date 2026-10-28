@@ -1,17 +1,18 @@
 import { useEffect, useId, useRef } from "react";
 import type { ReactNode } from "react";
-import { focus, openNew, setNewHover, setUpload, toggleHelp, toggleFigures, toggleThumbnails, ui } from "../state/uiStore";
-import { data, exportCsvs, exportJson } from "../data/dataStore";
+import { controlsStore, toggleFigures, toggleThumbnails } from "../state/controls";
+import { focus, interfaceStore, openNew, setNewHover, setUpload, toggleHelp } from "../state/interface";
+import { datasetStore, exportCsvs, exportJson } from "../data/datasetStore";
 import { exportable } from "../data/format";
 import { reportTip } from "./report";
 import { UserFilePill } from "./UserFilePill";
 import { useStore } from "../state/createStore";
 import { slotTitle } from "../state/panes";
-import type { Upload } from "../state/uiStore";
+import type { Upload } from "../state/interface";
 import type { PaneType } from "../state/panes";
-import { layout } from "../state/layout";
-import type { SlotId } from "../state/layout";
-import { matrixIn, matrixSettings, setForm, setSeriation } from "../state/matrix";
+import { paneRowStore } from "../state/paneRow";
+import type { SlotId } from "../state/paneRow";
+import { matrixIn, matrixStore, setForm, setSeriation } from "../state/matrix";
 import { CENSUS_MEASURES, FORMS, LABEL_SORTS, LAYOUTS, ORDERINGS, SERIATIONS, UPLOADS } from "../controlOptions";
 import {
   setSweepArea,
@@ -19,19 +20,19 @@ import {
   setSweepSpeed,
   pressStep,
   releaseStep,
-  sweep,
-  sweepSettings,
+  sweepRunStore,
+  sweepSettingsStore,
   SWEEP_AREA,
   SWEEP_SPEED,
   resumeSweep,
   startSweep,
   stopSweep,
 } from "../state/sweep";
-import { labelSortIn, labelsMissing, labelsSettings, setLabelSort } from "../state/labels";
-import { fitView, viewIn, views, ZOOM_STEP, zoomBy, zoomLabel } from "../state/views";
+import { labelSortIn, labelsMissing, labelsStore, setLabelSort } from "../state/labels";
+import { fitView, viewIn, paneViewsStore, ZOOM_STEP, zoomBy, zoomLabel } from "../state/paneViews";
 import { Choice } from "./Choice";
 import { Action, FilePill, HelpToggle, HoldStepper, PlayGlyph, RUN_CELLS, Section, Slider, Stepper, StopGlyph, Switch, Transport, trayTip } from "./controls";
-import { HELP_SECTIONS, helpNav, goToSection } from "../panes/dataset/helpNav";
+import { HELP_SECTIONS, helpSectionStore, goToSection } from "../panes/data/helpSection";
 import { TEXT } from "../controlText";
 import {
   OPTIONAL_KINDS,
@@ -49,11 +50,11 @@ import {
   setJsonName,
   setName,
   stopBuild,
-  userData,
-} from "../state/userData";
+  userDatasetsStore,
+} from "../state/userDatasets";
 import {
-  hopcensusIn,
-  hopcensusSettings,
+  hopsIn,
+  hopsStore,
   railOfSlide,
   setMeasure,
   setSlide,
@@ -61,21 +62,21 @@ import {
   slideFromRail,
   slideText,
   toggleRank,
-} from "../state/hopcensus";
+} from "../state/hops";
 import {
-  ksnakesIn,
-  ksnakesSettings,
+  shellsIn,
+  shellsStore,
   BIN_SPACING,
   setOrdering,
   setBinSpacing,
   toggleGridlines,
   toggleGroup,
-} from "../state/ksnakes";
+} from "../state/shells";
 import {
   layoutMissing,
   liveAllowed,
   nodelinkIn,
-  nodelinkSettings,
+  nodelinkStore,
   setNodeLinkLayout,
   setNodeLinkLive,
 } from "../state/nodelink";
@@ -83,7 +84,7 @@ import {
 // The header's zoom percent again, between − and +, which step about the
 // pane's centre. A click on the percent fits all, as in the header.
 function ZoomSection({ slot }: { slot: SlotId }) {
-  const k = useStore(views, (s) => viewIn(s, slot).k);
+  const k = useStore(paneViewsStore, (s) => viewIn(s, slot).k);
   return (
     <Section label="Zoom" tip={TEXT.zoom.tip}>
       <Stepper
@@ -112,14 +113,14 @@ function ZoomSection({ slot }: { slot: SlotId }) {
 // message in place of its pattern (`blocked`) has nothing to sweep, so Run
 // is disabled there.
 function SweepSection({ slot, type, blocked = false }: { slot: SlotId; type: PaneType; blocked?: boolean }) {
-  const state = useStore(sweep, (s) => (s.slot === null ? "idle" : s.paused ? "paused" : "running"));
-  const sideways = useStore(sweepSettings, (st) => st.sideways);
-  const area = useStore(sweepSettings, (st) => st.area);
-  const speed = useStore(sweepSettings, (st) => st.speed);
-  const held = useStore(sweep, (s) => s.held);
+  const state = useStore(sweepRunStore, (s) => (s.slot === null ? "idle" : s.paused ? "paused" : "running"));
+  const sideways = useStore(sweepSettingsStore, (st) => st.sideways);
+  const area = useStore(sweepSettingsStore, (st) => st.area);
+  const speed = useStore(sweepSettingsStore, (st) => st.speed);
+  const held = useStore(sweepRunStore, (s) => s.held);
   // The pill draws the band's way: the sweeping pane's, else this one's.
-  const sweeping = useStore(sweep, (s) => s.slot);
-  const bandType = useStore(layout, (s) => s.slots.find((x) => x.slot === sweeping)?.type ?? type);
+  const sweeping = useStore(sweepRunStore, (s) => s.slot);
+  const bandType = useStore(paneRowStore, (s) => s.slots.find((x) => x.slot === sweeping)?.type ?? type);
   const idle = state === "idle";
   return (
     <>
@@ -221,8 +222,8 @@ function NameField(props: {
 
 // A user dataset's name: a row's, or the CSV draft's.
 function RowName({ id, wide }: { id: string; wide?: boolean }) {
-  const name = useStore(userData, (s) => datasetOf(s, id)?.name ?? "");
-  const edited = useStore(userData, (s) => datasetOf(s, id)?.nameEdited ?? false);
+  const name = useStore(userDatasetsStore, (s) => datasetOf(s, id)?.name ?? "");
+  const edited = useStore(userDatasetsStore, (s) => datasetOf(s, id)?.nameEdited ?? false);
   return (
     <NameField
       value={name}
@@ -237,12 +238,12 @@ function RowName({ id, wide }: { id: string; wide?: boolean }) {
 
 // Build from CSV: the edge list, its name and Add, disabled until the edge
 // list is in and, after a refused one, until it changes. Once the edge list is
-// read the new row takes the strip over (state/userData.ts handOver); the
+// read the new row takes the strip over (state/userDatasets.ts handOver); the
 // other files wait for its Change.
 function CsvControls() {
-  const id = useStore(userData, (s) => s.draft);
-  const state = useStore(userData, (s) => buildState(draftOf(s), s.building === s.draft));
-  const hasEdges = useStore(userData, (s) => !!draftOf(s).files.edgelist);
+  const id = useStore(userDatasetsStore, (s) => s.draft);
+  const state = useStore(userDatasetsStore, (s) => buildState(draftOf(s), s.building === s.draft));
+  const hasEdges = useStore(userDatasetsStore, (s) => !!draftOf(s).files.edgelist);
   return (
     <>
       <Section label="Dataset" tip={TEXT.dataset.csvTip}>
@@ -264,16 +265,16 @@ function CsvControls() {
 // isn't a build is refused at once, in the refusal hue, why in its tip; then
 // its name, and Add, which opens it as a row with no engine run.
 function JsonControls() {
-  const picked = useStore(userData, (s) => s.jsonDraft !== null);
-  const refused = useStore(userData, (s) => s.jsonRefusal !== null);
+  const picked = useStore(userDatasetsStore, (s) => s.jsonDraft !== null);
+  const refused = useStore(userDatasetsStore, (s) => s.jsonRefusal !== null);
   // As JSON, so the selector returns a plain value.
-  const report = useStore(userData, (s) => {
+  const report = useStore(userDatasetsStore, (s) => {
     const r = s.jsonRefusal;
     const blocks = r && reportTip({ role: JSON_FILE, file: r.fileName }, { refused: [r.reason], notes: [] });
     return blocks ? JSON.stringify(blocks) : null;
   });
-  const name = useStore(userData, (s) => s.jsonName);
-  const edited = useStore(userData, (s) => s.jsonNameEdited);
+  const name = useStore(userDatasetsStore, (s) => s.jsonName);
+  const edited = useStore(userDatasetsStore, (s) => s.jsonNameEdited);
   return (
     <>
       <Section label="Dataset" tip={TEXT.dataset.jsonTip}>
@@ -342,10 +343,10 @@ function ChangeSection({ id, csv }: { id: string; csv: boolean }) {
 // build is stopped from its own row only), Export JSON and Export CSVs once
 // its build is finished, and, for the user's own rows, Remove.
 function DatasetSection() {
-  const current = useStore(data, (s) => s.current);
-  const origin = useStore(userData, (s) => datasetOf(s, current)?.origin ?? null);
-  const building = useStore(userData, (s) => s.building !== null && s.building === current);
-  const ready = useStore(data, (s) => !s.running && !!s.graph && exportable(s.graph));
+  const current = useStore(datasetStore, (s) => s.current);
+  const origin = useStore(userDatasetsStore, (s) => datasetOf(s, current)?.origin ?? null);
+  const building = useStore(userDatasetsStore, (s) => s.building !== null && s.building === current);
+  const ready = useStore(datasetStore, (s) => !s.running && !!s.graph && exportable(s.graph));
   return (
     <Section label="Dataset" tip={trayTip(origin === null ? TEXT.dataset.curatedTip : TEXT.dataset.ownTip, building && TEXT.dataset.buildingTip)}>
       {building && <Transport cells={STOP_CELLS} state="running" running onClick={stopBuild} />}
@@ -366,7 +367,7 @@ function DatasetSection() {
 
 // + New again, last in every dataset's strip: a click is a click on the + New
 // row, and hovering it shows that row, gliding the list to the top
-// (DatasetPane). A click swaps the strip for uploading, so leaving clears it.
+// (DataPane). A click swaps the strip for uploading, so leaving clears it.
 function AddDatasetSection() {
   useEffect(() => () => setNewHover(false), []);
   return (
@@ -381,11 +382,11 @@ function AddDatasetSection() {
 // The Data strip serves what the Data pane has ringed. + New: uploading
 // alone. A dataset: its row's actions, an own row's Change, Thumbnails, which
 // turns each row into a picture of the dataset's 2D layout, then + New.
-function DatasetControls() {
-  const upload = useStore(ui, (s) => s.upload);
-  const thumbnails = useStore(ui, (s) => s.thumbnails);
-  const current = useStore(data, (s) => s.current);
-  const origin = useStore(userData, (s) => datasetOf(s, current)?.origin ?? null);
+function DataControls() {
+  const upload = useStore(interfaceStore, (s) => s.upload);
+  const thumbnails = useStore(controlsStore, (s) => s.thumbnails);
+  const current = useStore(datasetStore, (s) => s.current);
+  const origin = useStore(userDatasetsStore, (s) => datasetOf(s, current)?.origin ?? null);
   if (upload) return <UploadControls upload={upload} />;
   return (
     <>
@@ -403,8 +404,8 @@ function DatasetControls() {
 // the sheet to that section. Figures shows or hides its pictures, as
 // Thumbnails does the list's.
 function HelpControls() {
-  const section = useStore(helpNav, (s) => s.section);
-  const figures = useStore(ui, (s) => s.figures);
+  const section = useStore(helpSectionStore, (s) => s.section);
+  const figures = useStore(controlsStore, (s) => s.figures);
   return (
     <>
       <Section label={TEXT.help.sections}>
@@ -418,9 +419,9 @@ function HelpControls() {
 }
 
 // The Data slot's strip: Help's, while it shows, else the list's.
-function DatasetSlotControls() {
-  const help = useStore(ui, (s) => s.help);
-  return help ? <HelpControls /> : <DatasetControls />;
+function DataSlotControls() {
+  const help = useStore(interfaceStore, (s) => s.help);
+  return help ? <HelpControls /> : <DataControls />;
 }
 
 // Toggles Help and hands the strip to the Data slot, so the
@@ -428,14 +429,14 @@ function DatasetSlotControls() {
 // the pointer is outside every pane, as ever.
 export function toggleFromStrip() {
   toggleHelp();
-  const dataset = layout.get().slots.find((x) => x.type === "dataset");
+  const dataset = paneRowStore.get().slots.find((x) => x.type === "data");
   if (dataset) focus(dataset.slot);
 }
 
 // The strip's left end, in every pane's strip: shows or hides Help
 // in the Data slot, as Theme sits at the top strip's right.
 export function StripHelp() {
-  const on = useStore(ui, (s) => s.help);
+  const on = useStore(interfaceStore, (s) => s.help);
   return (
     <HelpToggle
       on={on}
@@ -448,8 +449,8 @@ export function StripHelp() {
 
 // The rows' order under the selected rows, which always come first.
 function LabelsControls({ slot }: { slot: SlotId }) {
-  const sort = useStore(labelsSettings, (s) => labelSortIn(s, slot));
-  const g = useStore(data, (st) => st.graph);
+  const sort = useStore(labelsStore, (s) => labelSortIn(s, slot));
+  const g = useStore(datasetStore, (st) => st.graph);
   return (
     <>
       <Section label="Vertical order by" tip={TEXT.labels.sortTip}>
@@ -465,10 +466,10 @@ function LabelsControls({ slot }: { slot: SlotId }) {
 // layout can be picked; one the dataset lacks shows a message in the pane,
 // with nothing to simulate or sweep.
 function NodeLinkControls({ slot }: { slot: SlotId }) {
-  const s = useStore(nodelinkSettings, (st) => nodelinkIn(st, slot));
-  const g = useStore(data, (st) => st.graph);
+  const s = useStore(nodelinkStore, (st) => nodelinkIn(st, slot));
+  const g = useStore(datasetStore, (st) => st.graph);
   // The computed layouts land after the graph: read again as they do.
-  useStore(data, (st) => `${!!st.graph?.layoutFd}${!!st.graph?.layoutFd3d}`);
+  useStore(datasetStore, (st) => `${!!st.graph?.layoutFd}${!!st.graph?.layoutFd3d}`);
   const missing = layoutMissing(g, s);
   const canLive = liveAllowed(g) && !missing;
   return (
@@ -501,7 +502,7 @@ function NodeLinkControls({ slot }: { slot: SlotId }) {
 
 // The seriation (node order) and the form the matrix is drawn in.
 function MatrixControls({ slot }: { slot: SlotId }) {
-  const s = useStore(matrixSettings, (st) => matrixIn(st, slot));
+  const s = useStore(matrixStore, (st) => matrixIn(st, slot));
   return (
     <>
       <Section label="Diagonal order by" tip={TEXT.matrix.seriationTip}>
@@ -524,8 +525,8 @@ function MatrixControls({ slot }: { slot: SlotId }) {
 // Horizontal order by: the bins' order and the singleton group, both of which glide the nodes.
 // Vertical: how the pattern is drawn, its width at 100% zoom (% of the room
 // between the axis labels) and the hairlines between bins.
-function KSnakesControls({ slot }: { slot: SlotId }) {
-  const s = useStore(ksnakesSettings, (st) => ksnakesIn(st, slot));
+function ShellsControls({ slot }: { slot: SlotId }) {
+  const s = useStore(shellsStore, (st) => shellsIn(st, slot));
   return (
     <>
       <Section label="Horizontal order by" tip={TEXT.ksnakes.orderingTip}>
@@ -550,7 +551,7 @@ function KSnakesControls({ slot }: { slot: SlotId }) {
         />
       </Section>
       <ZoomSection slot={slot} />
-      <SweepSection slot={slot} type="ksnakes" />
+      <SweepSection slot={slot} type="shells" />
     </>
   );
 }
@@ -558,8 +559,8 @@ function KSnakesControls({ slot }: { slot: SlotId }) {
 // Horizontal order by shape: the measure that orders the lines sideways,
 // whether they are spaced by rank or by its value (Ranking), and how far they
 // slide (Spacing, multiples of a bin's side, on a squared rail).
-function HopCensusControls({ slot }: { slot: SlotId }) {
-  const s = useStore(hopcensusSettings, (st) => hopcensusIn(st, slot));
+function HopsControls({ slot }: { slot: SlotId }) {
+  const s = useStore(hopsStore, (st) => hopsIn(st, slot));
   return (
     <>
       <Section label="Horizontal order by shape" tip={TEXT.hopcensus.measureTip}>
@@ -579,18 +580,18 @@ function HopCensusControls({ slot }: { slot: SlotId }) {
         <Switch label="Ranking" on={s.rank} onToggle={() => toggleRank(slot)} />
       </Section>
       <ZoomSection slot={slot} />
-      <SweepSection slot={slot} type="hopcensus" />
+      <SweepSection slot={slot} type="hops" />
     </>
   );
 }
 
 const CONTROLS: Partial<Record<PaneType, (slot: SlotId) => ReactNode>> = {
-  dataset: () => <DatasetSlotControls />,
+  data: () => <DataSlotControls />,
   labels: (slot) => <LabelsControls slot={slot} />,
   nodelink: (slot) => <NodeLinkControls slot={slot} />,
   matrix: (slot) => <MatrixControls slot={slot} />,
-  ksnakes: (slot) => <KSnakesControls slot={slot} />,
-  hopcensus: (slot) => <HopCensusControls slot={slot} />,
+  shells: (slot) => <ShellsControls slot={slot} />,
+  hops: (slot) => <HopsControls slot={slot} />,
 };
 
 // Contextual strip: shows the focused pane's controls, with its title at the
@@ -598,9 +599,9 @@ const CONTROLS: Partial<Record<PaneType, (slot: SlotId) => ReactNode>> = {
 // settings. Help's ? at the far left balances the title, so the
 // controls stay centred.
 export function BottomBar() {
-  const shown = useStore(ui, (s) => s.focused);
-  const type = useStore(layout, (s) => (shown ? s.slots.find((x) => x.slot === shown)!.type : null));
-  const title = useStore(ui, (s) => (type ? slotTitle(type, s.help) : ""));
+  const shown = useStore(interfaceStore, (s) => s.focused);
+  const type = useStore(paneRowStore, (s) => (shown ? s.slots.find((x) => x.slot === shown)!.type : null));
+  const title = useStore(interfaceStore, (s) => (type ? slotTitle(type, s.help) : ""));
   const titleId = useId();
   return (
     <footer className="bottombar" aria-labelledby={shown && type ? titleId : undefined}>

@@ -1,11 +1,11 @@
-import { CONTRAST, setContrast, setSelectMode, setTool, toggleTheme, ui } from "../state/uiStore";
+import { CONTRAST, controlsStore, setContrast, setSelectMode, setTool, toggleTheme } from "../state/controls";
 import {
   canGrow,
   canShrink,
   clearSet,
   growSelection,
   hopCount,
-  selection,
+  selectionStore,
   sharePercent,
   shrinkSelection,
 } from "../state/selection";
@@ -14,8 +14,8 @@ import { useMemo } from "react";
 import { useStore } from "../state/createStore";
 import { Choice } from "./Choice";
 import { ArrowStepper, Section, Slider, Switch, trayTip } from "./controls";
-import { data } from "../data/dataStore";
-import { sweep } from "../state/sweep";
+import { datasetStore } from "../data/datasetStore";
+import { sweepRunStore } from "../state/sweep";
 import { TEXT } from "../controlText";
 import { scaled } from "../uiScale";
 
@@ -58,9 +58,9 @@ function Logo() {
 function SetCount(props: { type: "node" | "edge"; total: number | null }) {
   const pick = <T,>(s: { nodes: ReadonlySet<T>; edges: ReadonlySet<T> }) =>
     (props.type === "node" ? s.nodes : s.edges).size;
-  const sweeping = useStore(sweep, (s) => s.slot !== null);
-  const banded = useStore(sweep, pick);
-  const selected = useStore(selection, pick);
+  const sweeping = useStore(sweepRunStore, (s) => s.slot !== null);
+  const banded = useStore(sweepRunStore, pick);
+  const selected = useStore(selectionStore, pick);
   return (
     <SetCountView
       type={props.type}
@@ -121,20 +121,20 @@ export function SetCountView(props: {
 // a shape is drawn, and a hop out or back. Every shape replaces the set(s) it
 // writes. The last two rest while a sweep is active. At the right, the theme.
 export function TopBar() {
-  const tool = useStore(ui, (s) => s.tool);
-  const selectMode = useStore(ui, (s) => s.selectMode);
-  const graph = useStore(data, (s) => s.graph);
-  const theme = useStore(ui, (s) => s.theme);
-  const contrast = useStore(ui, (s) => s.contrast);
+  const tool = useStore(controlsStore, (s) => s.tool);
+  const selectMode = useStore(controlsStore, (s) => s.selectMode);
+  const graph = useStore(datasetStore, (s) => s.graph);
+  const theme = useStore(controlsStore, (s) => s.theme);
+  const contrast = useStore(controlsStore, (s) => s.contrast);
   // The Grow check is a pass over the edges, so it runs only when the sets,
   // the mode or the graph change.
-  const sets = useStore(selection, (s) => s);
+  const sets = useStore(selectionStore, (s) => s);
   const grow = useMemo(() => canGrow(sets, selectMode), [sets, selectMode, graph]);
   const shrink = canShrink(sets);
   const hops = hopCount(sets);
   // While a sweep is active the panes show its band, not the sets, so the
   // Brush and Extend set trays fade whole, as idle Sweep controls do.
-  const sweeping = useStore(sweep, (s) => s.slot !== null);
+  const sweeping = useStore(sweepRunStore, (s) => s.slot !== null);
   return (
     <header className="topbar">
       <div className="topbar-left">

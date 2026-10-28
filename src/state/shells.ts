@@ -1,9 +1,9 @@
 import { createStore } from "./createStore";
 import { ORDERINGS } from "../controlOptions";
-import { data } from "../data/dataStore";
-import { fitView } from "./views";
-import { layout, retyped } from "./layout";
-import type { SlotId } from "./layout";
+import { datasetStore } from "../data/datasetStore";
+import { fitView } from "./paneViews";
+import { paneRowStore, retyped } from "./paneRow";
+import type { SlotId } from "./paneRow";
 
 // Shells' settings, chosen in the bottom strip while it is focused. Each Shells
 // slot has its own, and a dataset switch is a fresh start.
@@ -22,29 +22,29 @@ export const modeOf = (group: boolean): PipelineMode => (group ? "aggregate" : "
 export const BIN_SPACING = { min: 10, max: 400, opening: 100 } as const;
 export const K_GAP = 2;
 
-export interface KSnakesSettings {
+export interface ShellsSettings {
   ordering: Ordering;
   group: boolean; // the singleton group
   gridlines: boolean; // the hairlines between bins
   spacing: number; // the pattern's width, % of the room between the axis gutters
 }
 
-const OPENING: KSnakesSettings = {
+const OPENING: ShellsSettings = {
   ordering: "packed",
   group: true,
   gridlines: false,
   spacing: BIN_SPACING.opening,
 };
 
-type BySlot = Partial<Record<SlotId, KSnakesSettings>>;
+type BySlot = Partial<Record<SlotId, ShellsSettings>>;
 
-export const ksnakesSettings = createStore<{ bySlot: BySlot }>({ bySlot: {} });
+export const shellsStore = createStore<{ bySlot: BySlot }>({ bySlot: {} });
 
-export const ksnakesIn = (s: { bySlot: BySlot }, slot: SlotId) => s.bySlot[slot] ?? OPENING;
-export const ksnakesOf = (slot: SlotId) => ksnakesIn(ksnakesSettings.get(), slot);
+export const shellsIn = (s: { bySlot: BySlot }, slot: SlotId) => s.bySlot[slot] ?? OPENING;
+export const shellsOf = (slot: SlotId) => shellsIn(shellsStore.get(), slot);
 
-function update(slot: SlotId, patch: Partial<KSnakesSettings>) {
-  ksnakesSettings.set((s) => ({ bySlot: { ...s.bySlot, [slot]: { ...ksnakesIn(s, slot), ...patch } } }));
+function update(slot: SlotId, patch: Partial<ShellsSettings>) {
+  shellsStore.set((s) => ({ bySlot: { ...s.bySlot, [slot]: { ...shellsIn(s, slot), ...patch } } }));
 }
 
 // The height stays, so the view does too; the nodes glide to their new x.
@@ -53,11 +53,11 @@ export function setOrdering(slot: SlotId, ordering: Ordering) {
 }
 
 export function toggleGroup(slot: SlotId) {
-  update(slot, { group: !ksnakesOf(slot).group });
+  update(slot, { group: !shellsOf(slot).group });
 }
 
 export function toggleGridlines(slot: SlotId) {
-  update(slot, { gridlines: !ksnakesOf(slot).gridlines });
+  update(slot, { gridlines: !shellsOf(slot).gridlines });
 }
 
 // A new spacing refits, so the new shape shows whole.
@@ -66,15 +66,15 @@ export function setBinSpacing(slot: SlotId, spacing: number) {
   fitView(slot);
 }
 
-data.subscribe((s, prev) => {
-  if (s.graph !== prev.graph) ksnakesSettings.set({ bySlot: {} });
+datasetStore.subscribe((s, prev) => {
+  if (s.graph !== prev.graph) shellsStore.set({ bySlot: {} });
 });
 
 // A slot that becomes Shells starts from the defaults.
-layout.subscribe((s, prev) => {
+paneRowStore.subscribe((s, prev) => {
   const fresh = retyped(s.slots, prev.slots);
-  if (!fresh.some((slot) => ksnakesSettings.get().bySlot[slot])) return;
-  const bySlot = { ...ksnakesSettings.get().bySlot };
+  if (!fresh.some((slot) => shellsStore.get().bySlot[slot])) return;
+  const bySlot = { ...shellsStore.get().bySlot };
   fresh.forEach((slot) => delete bySlot[slot]);
-  ksnakesSettings.set({ bySlot });
+  shellsStore.set({ bySlot });
 });

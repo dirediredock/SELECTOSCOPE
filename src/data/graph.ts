@@ -4,7 +4,7 @@
 // One Graph object stands for one dataset for as long as it is shown: its
 // identity changing means a new dataset (a fresh start for every pane). The
 // engine fills its stage fields in place as each result lands, and bumps
-// the data store's revision, so the panes redraw with what is there. A
+// the dataset store's revision, so the panes redraw with what is there. A
 // field still null is a stage still running.
 
 import type { Cores } from "../pipeline/cores";
@@ -24,7 +24,7 @@ export type OpeningView = "3d" | "2d" | null;
 // The Hops pane's lines: node v's stub census is
 // stubs[offset[v] .. offset[v + 1]), ecc[v] + 1 entries, one per hop.
 // The Shells pane's placement, by node_idx: k-core and onion layer, the
-// island, and per singleton mode each ordering's row positions and crossings
+// island, and per singleton mode each ordering's row positions
 // (pipeline/ksnakes.ts).
 export type KSnakes = Cores & Orders;
 
@@ -46,7 +46,6 @@ export interface Graph {
   title: string;
   n: number;
   m: number;
-  seed: number;
   // Provenance: the ids as written in the CSVs.
   nodeId: string[];
   edgeRow: Uint32Array;
@@ -57,7 +56,9 @@ export interface Graph {
   hasLabels: boolean;
   edgeSource: Uint32Array;
   edgeTarget: Uint32Array;
-  report: CleanReport;
+  // What cleaning changed; null for a graph loaded from a build file, which
+  // doesn't keep it (no file pill shows it).
+  report: CleanReport | null;
   refused: Refusal[];
   // Files that loaded with something to note (labels for only some nodes).
   warnings: Warning[];
@@ -79,7 +80,6 @@ export interface Graph {
   // The Shells pane's placement: core and onion again, beside the islands
   // and orderings.
   ksnakes: KSnakes | null;
-  centrality: { eigenvector: Float64Array } | null;
   hopRows: HopRows | null;
   hopCensus: HopCensus | null;
 }

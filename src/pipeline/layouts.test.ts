@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { ingest } from "./ingest";
-import { flattened, forceDirected2d, forceDirected3d, isFlat, normalize, ownLayouts } from "./layouts";
+import { flattened, forceDirected2d, forceDirected3d, isFlat, normalize, ownLayouts, turn } from "./layouts";
+import { pythag } from "./linalg/dense";
 import { harmonicVectors } from "./seriations";
 
 const radius = (xy: Float64Array, dim: number) => {
@@ -12,6 +13,29 @@ const radius = (xy: Float64Array, dim: number) => {
   }
   return Math.sqrt(r);
 };
+
+describe("engine-proof math", () => {
+  // To 2e-15, not to the bit: Math.cos rounds the angle 2πi/size first, turn
+  // reduces it exactly by quarter turns.
+  it("turns as cos and sin do", () => {
+    for (let size = 1; size <= 64; size++)
+      for (let i = 0; i < size; i++) {
+        const [c, s] = turn(i, size);
+        const a = (2 * Math.PI * i) / size;
+        expect(Math.abs(c - Math.cos(a))).toBeLessThan(2e-15);
+        expect(Math.abs(s - Math.sin(a))).toBeLessThan(2e-15);
+      }
+    expect(turn(0, 4)).toEqual([1, 0]);
+    expect(turn(2, 4)).toEqual([-1, -0]);
+  });
+
+  it("measures a hypotenuse as Math.hypot does, without overflow", () => {
+    for (const [a, b] of [[3, 4], [-5, 12], [0, 0], [1e-300, 1e-300], [1e300, 1e300], [0.1, 1]]) {
+      const h = Math.hypot(a, b);
+      expect(Math.abs(pythag(a, b) - h)).toBeLessThanOrEqual(2 * Number.EPSILON * h);
+    }
+  });
+});
 
 describe("layouts", () => {
   it("normalizes to the unit bounding sphere", () => {

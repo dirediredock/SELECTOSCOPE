@@ -28,7 +28,7 @@ const ADD_COPY = [
 ] as const;
 import { Choice } from "../../components/Choice";
 import { SetCountView } from "../../components/TopBar";
-import { CONTRAST, ui } from "../../state/uiStore";
+import { CONTRAST, controlsStore } from "../../state/controls";
 import {
   CENSUS_MEASURES,
   FORMS,
@@ -40,20 +40,20 @@ import {
   TOOLS,
   UPLOADS,
 } from "../../controlOptions";
-import { BIN_SPACING } from "../../state/ksnakes";
+import { BIN_SPACING } from "../../state/shells";
 import { SWEEP_AREA, SWEEP_SPEED } from "../../state/sweep";
 import {
   railOfSlide,
   SLIDE,
   SLIDE_RAIL,
   slideText,
-} from "../../state/hopcensus";
+} from "../../state/hops";
 import { TEXT } from "../../controlText";
 import { glideScroll } from "../../components/glideScroll";
 import { attachListPan } from "../../interaction/listPan";
 import { PaneMenuView } from "../../components/PaneMenu";
 import { FIT_SHAPES, SWAPPABLE } from "../../state/panes";
-import { HELP_SECTIONS, helpNav, sectionAt, topTarget } from "./helpNav";
+import { HELP_SECTIONS, helpSectionStore, sectionAt, topTarget } from "./helpSection";
 import {
   ExtendHops,
   Gestures,
@@ -80,8 +80,8 @@ const SCROLLBAR_IDLE_MS = 1000;
 // and a pick there glides its heading to the top.
 export function HelpPane() {
   const ref = useRef<HTMLDivElement>(null);
-  const goto = useStore(helpNav, (s) => s.goto);
-  const figures = useStore(ui, (s) => s.figures);
+  const goto = useStore(helpSectionStore, (s) => s.goto);
+  const figures = useStore(controlsStore, (s) => s.figures);
   const [scrolling, setScrolling] = useState(false);
   const idleTimer = useRef(0);
 
@@ -95,7 +95,7 @@ export function HelpPane() {
       HELP_SECTIONS[
         sectionAt(tops, el.scrollTop, el.clientHeight, el.scrollHeight)
       ]!.id;
-    if (helpNav.get().section !== section) helpNav.set({ section });
+    if (helpSectionStore.get().section !== section) helpSectionStore.set({ section });
   };
 
   useLayoutEffect(() => {
@@ -402,7 +402,7 @@ export function HelpPane() {
             <p>
               DEGREE for a sort based on degree centrality, or how many
               neighbors each node has, the most first. Degree is also the
-              tie-breaker in the other numeric sorts.
+              tie-breaker in the ONION sort.
             </p>
             <p>
               ONION for a sort based on the onion decomposition, or how deep a
@@ -411,16 +411,10 @@ export function HelpPane() {
               onion value.
             </p>
             <p>
-              EIGENVECTOR for a sort based on eigenvector centrality directly
-              from the Adjacency matrix, or how well connected a node's
-              neighbors are, the highest first.
-            </p>
-            <p>
-              Every sort but LABELS (A–Z) shows each node's value in a column
-              between its number and its label: whole numbers for DEGREE and
-              ONION, three decimals for EIGENVECTOR. When the pane is narrow,
-              the node number hides first, so the value and the label keep the
-              room.
+              Every sort but LABELS (A–Z) shows each node's value, a whole
+              number, in a column between its number and its label. When the
+              pane is narrow, the node number hides first, so the value and the
+              label keep the room.
             </p>
           </PaneBlock>
           <PaneBlock title="NodeLink">
@@ -928,7 +922,7 @@ const REPLICA_SCALE = 0.8;
 // when it would be wider than the sheet. `tray` sets it on a live tray, for
 // the count pills, which have no outline of their own. Figures off hides it.
 function Replica(props: { tray?: boolean; children: ReactNode }) {
-  const figures = useStore(ui, (s) => s.figures);
+  const figures = useStore(controlsStore, (s) => s.figures);
   return figures ? <ReplicaRow {...props} /> : null;
 }
 
