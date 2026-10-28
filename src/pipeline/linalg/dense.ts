@@ -2,6 +2,21 @@
 // form, then the implicit QL method (the classic tred2 / tql2 pair). Used
 // whole for small graphs, and for the Lanczos tridiagonal (lanczos.ts).
 
+// √(a² + b²) without overflow, from + − × ÷ and √ alone, which every engine
+// rounds alike. Why not Math.hypot: engines differ in its last bit, and a
+// build must not depend on the browser that made it.
+export function pythag(a: number, b: number): number {
+  const x = Math.abs(a);
+  const y = Math.abs(b);
+  if (x > y) {
+    const r = y / x;
+    return x * Math.sqrt(1 + r * r);
+  }
+  if (y === 0) return 0;
+  const r = x / y;
+  return y * Math.sqrt(1 + r * r);
+}
+
 // Eigenvalues of the symmetric tridiagonal matrix with diagonal `d` and
 // off-diagonal `e` (e[i] joins i and i + 1; e has d.length - 1 entries),
 // ascending, written into d. Each array in `rows` is a row of the eigenvector
@@ -12,7 +27,7 @@ export function tridiagonalEigen(d: Float64Array, offDiag: Float64Array, rows: F
   const n = d.length;
   const e = new Float64Array(n);
   e.set(offDiag.subarray(0, n - 1));
-  const eps = 2 ** -52;
+  const eps = Number.EPSILON;
   let f = 0;
   let tst1 = 0;
   for (let l = 0; l < n; l++) {
@@ -28,7 +43,7 @@ export function tridiagonalEigen(d: Float64Array, offDiag: Float64Array, rows: F
         if (++iter > 100) throw new Error("tridiagonalEigen: no convergence");
         let g = d[l];
         let p = (d[l + 1] - g) / (2 * e[l]);
-        let r = Math.hypot(p, 1);
+        let r = pythag(p, 1);
         if (p < 0) r = -r;
         d[l] = e[l] / (p + r);
         d[l + 1] = e[l] * (p + r);
@@ -49,7 +64,7 @@ export function tridiagonalEigen(d: Float64Array, offDiag: Float64Array, rows: F
           s2 = s;
           g = c * e[i];
           h = c * p;
-          r = Math.hypot(p, e[i]);
+          r = pythag(p, e[i]);
           e[i + 1] = s * r;
           s = e[i] / r;
           c = p / r;

@@ -7,8 +7,12 @@ import "./styles.css";
 // Labels' rows open faded as the canvases do (styles.css has 0%'s share).
 setContrast(CONTRAST.opening);
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-);
+// `?bake`: the curated builds' bake (scripts/bake.ts) drives the engine here,
+// with no interface. Loaded only then, so no one else downloads it.
+if (new URLSearchParams(location.search).has("bake")) void import("./engine/bakeHook");
+else
+  createRoot(document.getElementById("root")!).render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  );

@@ -11,7 +11,7 @@
     "build": "tsc --noEmit && tsc --noEmit -p scripts && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:builds": "BAKE_ALL=1 vitest run scripts/bake.test.ts",
+    "test:builds": "BAKE_CHROME=1 vitest run scripts/bake.chrome.test.ts",
     "bake": "tsx scripts/bake.ts"
   },
   "dependencies": {

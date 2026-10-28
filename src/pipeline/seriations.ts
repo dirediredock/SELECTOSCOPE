@@ -49,7 +49,7 @@ export function pinSign(v: Float64Array): Float64Array {
 }
 
 const rounded = (v: Float64Array) => {
-  const s = 10 ** ROUND;
+  const s = Number(`1e${ROUND}`);
   return v.map((x) => Math.round(x * s) / s);
 };
 

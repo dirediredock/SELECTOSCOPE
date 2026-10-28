@@ -101,7 +101,7 @@ function jacobi3(M: number[]): { values: number[]; vectors: number[][] } {
   const A = [...M];
   const V = [1, 0, 0, 0, 1, 0, 0, 0, 1];
   for (let sweep = 0; sweep < 50; sweep++) {
-    const off = A[1] ** 2 + A[2] ** 2 + A[5] ** 2;
+    const off = A[1] * A[1] + A[2] * A[2] + A[5] * A[5];
     if (off < 1e-30) break;
     for (const [p, q] of [
       [0, 1],
@@ -159,6 +159,35 @@ export function ownLayouts(own2d: Float64Array | undefined, own3d: Float64Array 
 const TWIN_SPREAD = 0.01;
 const SEED_DECIMALS = 10;
 
+// The cosine and sine of i/size of a turn, from + − × ÷ alone: the nearest
+// quarter turn, then a Taylor series for the rest (at most an eighth of a
+// turn, where 10 terms reach the last bit). Why not Math.cos and Math.sin:
+// engines differ in their last bit, and FD can grow that into a different
+// layout, so a build would depend on the browser that made it.
+export function turn(i: number, size: number): [number, number] {
+  const q = Math.round((4 * i) / size);
+  const x = (2 * Math.PI * (4 * i - q * size)) / (4 * size);
+  const x2 = x * x;
+  // Horner's form, innermost term first: the small terms add up before the 1.
+  let cos = 1;
+  let sin = 1;
+  for (let k = 10; k >= 1; k--) {
+    cos = 1 - (x2 / ((2 * k - 1) * (2 * k))) * cos;
+    sin = 1 - (x2 / (2 * k * (2 * k + 1))) * sin;
+  }
+  sin *= x;
+  switch (((q % 4) + 4) % 4) {
+    case 0:
+      return [cos, sin];
+    case 1:
+      return [-sin, cos];
+    case 2:
+      return [-cos, -sin];
+    default:
+      return [sin, -cos];
+  }
+}
+
 // FD's start: the first `dim` harmonics as the axes (H1 for x, H2 for y),
 // in the unit square, rounded so float noise never reorders it. Linked nodes
 // start close, the mass is balanced about the
@@ -179,7 +208,7 @@ export function spectralSeed(harm: Float64Array[], n: number, dim: number) {
     lo[a] = min;
     span = Math.max(span, max - min);
   }
-  const scale = 10 ** SEED_DECIMALS;
+  const scale = Number(`1e${SEED_DECIMALS}`);
   for (let v = 0; v < n; v++) {
     for (let a = 0; a < dim; a++) {
       xy[v * dim + a] = span > 0 ? Math.round(((xy[v * dim + a] - lo[a]) / span) * scale) / scale : 0;
@@ -206,10 +235,10 @@ export function spectralSeed(harm: Float64Array[], n: number, dim: number) {
     const size = end - start;
     if (size > 1) {
       for (let i = 0; i < size; i++) {
-        const angle = (2 * Math.PI * i) / size;
+        const [cos, sin] = turn(i, size);
         const v = order[start + i];
-        xy[v * dim] += TWIN_SPREAD * spacing * Math.cos(angle);
-        xy[v * dim + 1] += TWIN_SPREAD * spacing * Math.sin(angle);
+        xy[v * dim] += TWIN_SPREAD * spacing * cos;
+        xy[v * dim + 1] += TWIN_SPREAD * spacing * sin;
       }
     }
     start = end;
@@ -328,7 +357,7 @@ function fruchtermanReingold(
     let moved = 0;
     for (let i = 0; i < n; i++) {
       let l2 = 0;
-      for (let a = 0; a < dim; a++) l2 += disp[i * dim + a] ** 2;
+      for (let a = 0; a < dim; a++) l2 += disp[i * dim + a] * disp[i * dim + a];
       const s = t / Math.max(Math.sqrt(l2), 0.01);
       for (let a = 0; a < dim; a++) {
         const step = disp[i * dim + a] * s;

@@ -1,12 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { attach } from "../pipeline/ingest";
-import { buildNow, withFiles } from "./assemble";
+import { withFiles } from "./assemble";
+import { testBuild } from "./testBuild";
 
 const edgelist = ["source,target", "a,b", "b,c", "c,d", "d,a", "a,c"].join("\n");
 const csv = (header: string, rows: string[]) => [header, ...rows].join("\n");
 
 describe("withFiles", () => {
-  const base = buildNow({ edgelist }, "user", "Square", null);
+  const base = testBuild({ edgelist }, "user", "Square", null);
 
   it("lays labels over a built graph by node id, leaving the graph as it was", () => {
     const labels = csv("node_id,label", ["a,Ann", "c,Cy"]);

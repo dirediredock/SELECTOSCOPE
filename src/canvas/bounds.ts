@@ -1,5 +1,5 @@
-// A point set's extent, in its own units. Pure, so the bake
-// (scripts/bake.ts) can use it outside the browser.
+// A point set's extent, in its own units. Pure, so the thumbnails
+// (panes/data/thumb.ts) and tests can use it outside a pane.
 
 export interface Bounds {
   x0: number;
