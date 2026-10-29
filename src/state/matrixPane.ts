@@ -1,7 +1,7 @@
 import { createStore } from "./createStore";
 import { FORMS, SERIATIONS } from "../controlOptions";
-import { datasetStore } from "../data/datasetStore";
-import { fitView } from "./paneViews";
+import { datasetStore } from "./dataset";
+import { fitView } from "./fitRequests";
 import { paneRowStore, retyped } from "./paneRow";
 import type { SlotId } from "./paneRow";
 
@@ -24,13 +24,13 @@ const OPENING: MatrixSettings = { seriation: DEFAULT_SERIATION, form: DEFAULT_FO
 
 type BySlot = Partial<Record<SlotId, MatrixSettings>>;
 
-export const matrixStore = createStore<{ bySlot: BySlot }>({ bySlot: {} });
+export const matrixPaneStore = createStore<{ bySlot: BySlot }>({ bySlot: {} });
 
 export const matrixIn = (s: { bySlot: BySlot }, slot: SlotId) => s.bySlot[slot] ?? OPENING;
-export const matrixOf = (slot: SlotId) => matrixIn(matrixStore.get(), slot);
+export const matrixOf = (slot: SlotId) => matrixIn(matrixPaneStore.get(), slot);
 
 function update(slot: SlotId, patch: Partial<MatrixSettings>) {
-  matrixStore.set((s) => ({ bySlot: { ...s.bySlot, [slot]: { ...matrixIn(s, slot), ...patch } } }));
+  matrixPaneStore.set((s) => ({ bySlot: { ...s.bySlot, [slot]: { ...matrixIn(s, slot), ...patch } } }));
 }
 
 export function setSeriation(slot: SlotId, seriation: Seriation) {
@@ -46,14 +46,14 @@ export function setForm(slot: SlotId, form: Form) {
 }
 
 datasetStore.subscribe((s, prev) => {
-  if (s.graph !== prev.graph) matrixStore.set({ bySlot: {} });
+  if (s.graph !== prev.graph) matrixPaneStore.set({ bySlot: {} });
 });
 
 // A slot that becomes a matrix starts from the defaults.
 paneRowStore.subscribe((s, prev) => {
   const fresh = retyped(s.slots, prev.slots);
-  if (!fresh.some((slot) => matrixStore.get().bySlot[slot])) return;
-  const bySlot = { ...matrixStore.get().bySlot };
+  if (!fresh.some((slot) => matrixPaneStore.get().bySlot[slot])) return;
+  const bySlot = { ...matrixPaneStore.get().bySlot };
   fresh.forEach((slot) => delete bySlot[slot]);
-  matrixStore.set({ bySlot });
+  matrixPaneStore.set({ bySlot });
 });

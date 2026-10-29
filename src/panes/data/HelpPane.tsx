@@ -40,20 +40,20 @@ import {
   TOOLS,
   UPLOADS,
 } from "../../controlOptions";
-import { BIN_SPACING } from "../../state/shells";
-import { SWEEP_AREA, SWEEP_SPEED } from "../../state/sweep";
+import { BIN_SPACING } from "../../state/shellsPane";
+import { SWEEP_AREA, SWEEP_SPEED } from "../../state/sweepSettings";
 import {
   railOfSlide,
   SLIDE,
   SLIDE_RAIL,
   slideText,
-} from "../../state/hops";
+} from "../../state/hopsPane";
 import { TEXT } from "../../controlText";
 import { glideScroll } from "../../components/glideScroll";
 import { attachListPan } from "../../interaction/listPan";
 import { PaneMenuView } from "../../components/PaneMenu";
 import { FIT_SHAPES, SWAPPABLE } from "../../state/panes";
-import { HELP_SECTIONS, helpSectionStore, sectionAt, topTarget } from "./helpSection";
+import { HELP_SECTIONS, helpPaneStore, sectionAt, topTarget } from "../../state/helpPane";
 import {
   ExtendHops,
   Gestures,
@@ -80,7 +80,7 @@ const SCROLLBAR_IDLE_MS = 1000;
 // and a pick there glides its heading to the top.
 export function HelpPane() {
   const ref = useRef<HTMLDivElement>(null);
-  const goto = useStore(helpSectionStore, (s) => s.goto);
+  const goto = useStore(helpPaneStore, (s) => s.goto);
   const figures = useStore(controlsStore, (s) => s.figures);
   const [scrolling, setScrolling] = useState(false);
   const idleTimer = useRef(0);
@@ -95,7 +95,7 @@ export function HelpPane() {
       HELP_SECTIONS[
         sectionAt(tops, el.scrollTop, el.clientHeight, el.scrollHeight)
       ]!.id;
-    if (helpSectionStore.get().section !== section) helpSectionStore.set({ section });
+    if (helpPaneStore.get().section !== section) helpPaneStore.set({ section });
   };
 
   useLayoutEffect(() => {

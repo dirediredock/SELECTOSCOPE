@@ -1,6 +1,6 @@
 import type { HopCensus } from "../../data/graph";
-import type { CensusMeasure } from "../../state/hops";
-import type { SweepAxis } from "../../state/sweep";
+import type { CensusMeasure } from "../../state/hopsPane";
+import type { SweepAxis } from "../../state/sweepRun";
 
 // Hops placement, in layout units with y up: one polyline per node
 // through its stub census (src/pipeline/hopcensus.ts), in the bin of its

@@ -2,7 +2,7 @@ import { interfaceStore } from "../state/interface";
 import { UI_SCALE } from "../uiScale";
 import { setView, viewOf, zoomAt } from "../state/paneViews";
 import type { SlotId } from "../state/paneRow";
-import { clearHover } from "../state/selection";
+import { clearHover } from "../state/hover";
 import { wheelAction } from "./wheel";
 import { abortGesture, setNavigating } from "./activeGesture";
 import { touchFrame } from "./touchFrame";

@@ -18,7 +18,7 @@ async function release(url: string, text: string) {
 
 async function load() {
   vi.resetModules();
-  return import("./datasetStore");
+  return import("./dataset");
 }
 
 beforeEach(() => {

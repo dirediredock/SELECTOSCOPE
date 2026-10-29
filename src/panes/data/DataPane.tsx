@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { datasetStore, initData, loadDataset } from "../../data/datasetStore";
-import type { DatasetEntry } from "../../data/datasetStore";
+import { datasetStore, initData, loadDataset } from "../../state/dataset";
+import type { DatasetEntry } from "../../state/dataset";
 import { exportable } from "../../data/format";
 import { stopBuild } from "../../engine/engine";
 import { useStore } from "../../state/createStore";

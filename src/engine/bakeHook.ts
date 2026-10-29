@@ -5,7 +5,7 @@
 // Why no interface: nothing on screen may add to a build (NodeLink asking
 // for FD 3D, the opening showcase load).
 
-import { datasetStore } from "../data/datasetStore";
+import { datasetStore } from "../state/dataset";
 import { exportable, stringify } from "../data/format";
 import type { OpeningView } from "../data/graph";
 import { bakeThumb } from "../panes/data/thumb";

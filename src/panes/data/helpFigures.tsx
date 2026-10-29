@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import { useStore } from "../../state/createStore";
 import { controlsStore } from "../../state/controls";
-import type { CensusMeasure } from "../../state/hops";
-import { SWEEP_AREA } from "../../state/sweep";
+import type { CensusMeasure } from "../../state/hopsPane";
+import { SWEEP_AREA } from "../../state/sweepSettings";
 import { arrival, censusOrder, censusStructure } from "../hops/geometry";
 
 // Help's diagrams: small schematics drawn as the panes draw (the neutral mark

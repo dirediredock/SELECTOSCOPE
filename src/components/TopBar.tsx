@@ -14,8 +14,8 @@ import { useMemo } from "react";
 import { useStore } from "../state/createStore";
 import { Choice } from "./Choice";
 import { ArrowStepper, Section, Slider, Switch, trayTip } from "./controls";
-import { datasetStore } from "../data/datasetStore";
-import { sweepRunStore } from "../state/sweep";
+import { datasetStore } from "../state/dataset";
+import { sweepRunStore } from "../state/sweepRun";
 import { TEXT } from "../controlText";
 import { scaled } from "../uiScale";
 

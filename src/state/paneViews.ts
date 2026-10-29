@@ -1,9 +1,7 @@
 import { createStore } from "./createStore";
-import { paneInfo } from "./panes";
 import type { PaneType } from "./panes";
-import { paneRowStore, retyped, typeOf } from "./paneRow";
+import { typeOf } from "./paneRow";
 import type { SlotId } from "./paneRow";
-import { datasetStore } from "../data/datasetStore";
 
 // Each slot's zoom and pan, applied on top of its fit-to-pane, about the
 // pane's centre c:
@@ -37,17 +35,6 @@ export function setView(slot: SlotId, t: Transform) {
   paneViewsStore.set({ [slot]: t });
 }
 
-// Fit all, from the header's or the strip's zoom percent. A canvas pane fits
-// by resetting its transform, and a pane whose fit depends on its content
-// listens here too. A counter, so a second fit still notifies when the view
-// is already fitted.
-export const fitRequestsStore = createStore<Partial<Record<SlotId, number>>>({});
-
-export function fitView(slot: SlotId) {
-  homeView(slot);
-  fitRequestsStore.set((s) => ({ [slot]: (s[slot] ?? 0) + 1 }));
-}
-
 // The home view alone, with no fit request: a pane that fits its own way
 // (Shells) is left at home.
 export function homeView(slot: SlotId) {
@@ -73,20 +60,3 @@ export function zoomBy(slot: SlotId, factor: number) {
 
 // The zoom as the header and the strip show it.
 export const zoomLabel = (k: number) => `${Math.round(k * 100)}%`;
-
-// A new dataset is a fresh start: every pane opens fitted. Lists answer the
-// fit request too (Labels scrolls to the top).
-datasetStore.subscribe((s, prev) => {
-  if (s.graph !== prev.graph) paneRowStore.get().slots.forEach((x) => fitView(x.slot));
-});
-
-// A new type opens at its home view, as Fit all does. A new row mode refits
-// every canvas pane (lists keep their scroll), and a new Scroll ratio its pane.
-paneRowStore.subscribe((s, prev) => {
-  if (s.mode !== prev.mode) s.slots.filter((x) => !paneInfo(x.type).list).forEach((x) => fitView(x.slot));
-  retyped(s.slots, prev.slots).forEach(fitView);
-  s.slots.forEach((x) => {
-    const p = prev.slots.find((q) => q.slot === x.slot);
-    if (p && p.type === x.type && p.ar !== x.ar) fitView(x.slot);
-  });
-});

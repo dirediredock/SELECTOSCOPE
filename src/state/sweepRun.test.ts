@@ -7,16 +7,18 @@ import {
   releaseStep,
   resumeSweep,
   bandStart,
-  setSweepSideways,
-  setSweepSpeed,
   startSweep,
   stopSweep,
   sweepRunStore,
-  sweepSettingsStore,
   SWEEP_STEPS,
-  toggleSweepWrap,
   wrapStep,
-} from "./sweep";
+} from "./sweepRun";
+import {
+  setSweepSideways,
+  setSweepSpeed,
+  sweepSettingsStore,
+  toggleSweepWrap,
+} from "./sweepSettings";
 import { toggleItem } from "./selection";
 import { sweepAxis } from "../panes/matrix/geometry";
 

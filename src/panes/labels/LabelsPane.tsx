@@ -1,15 +1,16 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { datasetStore } from "../../data/datasetStore";
+import { datasetStore } from "../../state/dataset";
 import { useStore } from "../../state/createStore";
-import { hoverStore, hoveredNodes, selectionStore } from "../../state/selection";
-import { registerSweepAxis, shownIn, sweepRunStore } from "../../state/sweep";
-import { labelSortIn, labelSortOf, labelsMissing, labelsStore } from "../../state/labels";
+import { hoverStore, hoveredNodes } from "../../state/hover";
+import { selectionStore } from "../../state/selection";
+import { registerSweepAxis, shownIn, sweepRunStore } from "../../state/sweepRun";
+import { labelSortIn, labelSortOf, labelsMissing, labelsPaneStore } from "../../state/labelsPane";
 import type { SlotId } from "../../state/paneRow";
 import { LIST_ROWS, VirtualList } from "../../components/VirtualList";
 import { labelOrder, sameOrder, sortRank, sortValue } from "./order";
 import type { SortKeys } from "./order";
 import type { Graph } from "../../data/graph";
-import type { LabelSort } from "../../state/labels";
+import type { LabelSort } from "../../state/labelsPane";
 import { attachListGesture } from "./listGesture";
 import type { ListGesture } from "./listGesture";
 import { useFadeIn } from "../../components/fadeIn";
@@ -51,7 +52,7 @@ export function LabelsPane({ slot }: { slot: SlotId }) {
     useStore(selectionStore, (s) => s),
     useStore(sweepRunStore, (s) => s),
   );
-  const sort = useStore(labelsStore, (s) => labelSortIn(s, slot));
+  const sort = useStore(labelsPaneStore, (s) => labelSortIn(s, slot));
   const [order, setOrder] = useState(EMPTY);
   // Onion arrives with the Shells stage; until then it waits, and Degree and
   // Labels (A–Z) work at once.
@@ -125,7 +126,7 @@ export function LabelsPane({ slot }: { slot: SlotId }) {
       selectionStore.subscribe((s, prev) => {
         if (s.nodes !== prev.nodes && !overRef.current) resort(false);
       }),
-      labelsStore.subscribe((s, prev) => {
+      labelsPaneStore.subscribe((s, prev) => {
         if (s.bySlot[slot] !== prev.bySlot[slot]) resort(false);
       }),
       hoverStore.subscribe(paintHover),

@@ -47,18 +47,18 @@ function update(slot: SlotId, patch: Partial<Slot>) {
   paneRowStore.set((s) => ({ slots: s.slots.map((x) => (x.slot === slot ? { ...x, ...patch } : x)) }));
 }
 
-// A new type starts from its home view and default settings (paneViews.ts,
-// nodelink.ts and matrix.ts listen here).
+// A new type starts from its home view and default settings (fitRequests.ts,
+// nodelinkPane.ts and matrixPane.ts listen here).
 export function setSlotType(slot: SlotId, type: PaneType) {
   if (typeOf(slot) !== type) update(slot, { type });
 }
 
-// A new Scroll ratio refits the pane, as Fit all does (paneViews.ts).
+// A new Scroll ratio refits the pane, as Fit all does (fitRequests.ts).
 export function setSlotAr(slot: SlotId, ar: number | null) {
   if (slotOf(slot).ar !== ar) update(slot, { ar });
 }
 
-// Follow the window's shape. A new mode refits every canvas pane (paneViews.ts).
+// Follow the window's shape. A new mode refits every canvas pane (fitRequests.ts).
 export function watchRowMode() {
   const onResize = () => {
     const mode = windowRowMode(paneRowStore.get().mode);

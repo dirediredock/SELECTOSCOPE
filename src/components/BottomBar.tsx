@@ -2,7 +2,7 @@ import { useEffect, useId, useRef } from "react";
 import type { ReactNode } from "react";
 import { controlsStore, toggleFigures, toggleThumbnails } from "../state/controls";
 import { focus, interfaceStore, openNew, setNewHover, setUpload, toggleHelp } from "../state/interface";
-import { datasetStore, exportCsvs, exportJson } from "../data/datasetStore";
+import { datasetStore, exportCsvs, exportJson } from "../state/dataset";
 import { exportable } from "../data/format";
 import { reportTip } from "./report";
 import { UserFilePill } from "./UserFilePill";
@@ -12,27 +12,30 @@ import type { Upload } from "../state/interface";
 import type { PaneType } from "../state/panes";
 import { paneRowStore } from "../state/paneRow";
 import type { SlotId } from "../state/paneRow";
-import { matrixIn, matrixStore, setForm, setSeriation } from "../state/matrix";
+import { matrixIn, matrixPaneStore, setForm, setSeriation } from "../state/matrixPane";
 import { CENSUS_MEASURES, FORMS, LABEL_SORTS, LAYOUTS, ORDERINGS, SERIATIONS, UPLOADS } from "../controlOptions";
 import {
   setSweepArea,
   setSweepSideways,
   setSweepSpeed,
-  pressStep,
-  releaseStep,
-  sweepRunStore,
   sweepSettingsStore,
   SWEEP_AREA,
   SWEEP_SPEED,
+} from "../state/sweepSettings";
+import {
+  pressStep,
+  releaseStep,
+  sweepRunStore,
   resumeSweep,
   startSweep,
   stopSweep,
-} from "../state/sweep";
-import { labelSortIn, labelsMissing, labelsStore, setLabelSort } from "../state/labels";
-import { fitView, viewIn, paneViewsStore, ZOOM_STEP, zoomBy, zoomLabel } from "../state/paneViews";
+} from "../state/sweepRun";
+import { labelSortIn, labelsMissing, labelsPaneStore, setLabelSort } from "../state/labelsPane";
+import { fitView } from "../state/fitRequests";
+import { viewIn, paneViewsStore, ZOOM_STEP, zoomBy, zoomLabel } from "../state/paneViews";
 import { Choice } from "./Choice";
 import { Action, FilePill, HelpToggle, HoldStepper, PlayGlyph, RUN_CELLS, Section, Slider, Stepper, StopGlyph, Switch, Transport, trayTip } from "./controls";
-import { HELP_SECTIONS, helpSectionStore, goToSection } from "../panes/data/helpSection";
+import { HELP_SECTIONS, helpPaneStore, goToSection } from "../state/helpPane";
 import { TEXT } from "../controlText";
 import {
   OPTIONAL_KINDS,
@@ -54,7 +57,7 @@ import {
 } from "../state/userDatasets";
 import {
   hopsIn,
-  hopsStore,
+  hopsPaneStore,
   railOfSlide,
   setMeasure,
   setSlide,
@@ -62,24 +65,24 @@ import {
   slideFromRail,
   slideText,
   toggleRank,
-} from "../state/hops";
+} from "../state/hopsPane";
 import {
   shellsIn,
-  shellsStore,
+  shellsPaneStore,
   BIN_SPACING,
   setOrdering,
   setBinSpacing,
   toggleGridlines,
   toggleGroup,
-} from "../state/shells";
+} from "../state/shellsPane";
 import {
   layoutMissing,
   liveAllowed,
   nodelinkIn,
-  nodelinkStore,
+  nodelinkPaneStore,
   setNodeLinkLayout,
   setNodeLinkLive,
-} from "../state/nodelink";
+} from "../state/nodelinkPane";
 
 // The header's zoom percent again, between − and +, which step about the
 // pane's centre. A click on the percent fits all, as in the header.
@@ -404,7 +407,7 @@ function DataControls() {
 // the sheet to that section. Figures shows or hides its pictures, as
 // Thumbnails does the list's.
 function HelpControls() {
-  const section = useStore(helpSectionStore, (s) => s.section);
+  const section = useStore(helpPaneStore, (s) => s.section);
   const figures = useStore(controlsStore, (s) => s.figures);
   return (
     <>
@@ -449,7 +452,7 @@ export function StripHelp() {
 
 // The rows' order under the selected rows, which always come first.
 function LabelsControls({ slot }: { slot: SlotId }) {
-  const sort = useStore(labelsStore, (s) => labelSortIn(s, slot));
+  const sort = useStore(labelsPaneStore, (s) => labelSortIn(s, slot));
   const g = useStore(datasetStore, (st) => st.graph);
   return (
     <>
@@ -466,7 +469,7 @@ function LabelsControls({ slot }: { slot: SlotId }) {
 // layout can be picked; one the dataset lacks shows a message in the pane,
 // with nothing to simulate or sweep.
 function NodeLinkControls({ slot }: { slot: SlotId }) {
-  const s = useStore(nodelinkStore, (st) => nodelinkIn(st, slot));
+  const s = useStore(nodelinkPaneStore, (st) => nodelinkIn(st, slot));
   const g = useStore(datasetStore, (st) => st.graph);
   // The computed layouts land after the graph: read again as they do.
   useStore(datasetStore, (st) => `${!!st.graph?.layoutFd}${!!st.graph?.layoutFd3d}`);
@@ -502,7 +505,7 @@ function NodeLinkControls({ slot }: { slot: SlotId }) {
 
 // The seriation (node order) and the form the matrix is drawn in.
 function MatrixControls({ slot }: { slot: SlotId }) {
-  const s = useStore(matrixStore, (st) => matrixIn(st, slot));
+  const s = useStore(matrixPaneStore, (st) => matrixIn(st, slot));
   return (
     <>
       <Section label="Diagonal order by" tip={TEXT.matrix.seriationTip}>
@@ -526,7 +529,7 @@ function MatrixControls({ slot }: { slot: SlotId }) {
 // Vertical: how the pattern is drawn, its width at 100% zoom (% of the room
 // between the axis labels) and the hairlines between bins.
 function ShellsControls({ slot }: { slot: SlotId }) {
-  const s = useStore(shellsStore, (st) => shellsIn(st, slot));
+  const s = useStore(shellsPaneStore, (st) => shellsIn(st, slot));
   return (
     <>
       <Section label="Horizontal order by" tip={TEXT.ksnakes.orderingTip}>
@@ -560,7 +563,7 @@ function ShellsControls({ slot }: { slot: SlotId }) {
 // whether they are spaced by rank or by its value (Ranking), and how far they
 // slide (Spacing, multiples of a bin's side, on a squared rail).
 function HopsControls({ slot }: { slot: SlotId }) {
-  const s = useStore(hopsStore, (st) => hopsIn(st, slot));
+  const s = useStore(hopsPaneStore, (st) => hopsIn(st, slot));
   return (
     <>
       <Section label="Horizontal order by shape" tip={TEXT.hopcensus.measureTip}>

@@ -1,4 +1,5 @@
-import { clearHover, selectFromNodes, setHover, toggleItem } from "../../state/selection";
+import { clearHover, setHover } from "../../state/hover";
+import { selectFromNodes, toggleItem } from "../../state/selection";
 import type { Mode } from "../../state/selection";
 import { controlsStore } from "../../state/controls";
 import { interfaceStore } from "../../state/interface";

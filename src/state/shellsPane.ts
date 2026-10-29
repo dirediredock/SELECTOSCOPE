@@ -1,7 +1,7 @@
 import { createStore } from "./createStore";
 import { ORDERINGS } from "../controlOptions";
-import { datasetStore } from "../data/datasetStore";
-import { fitView } from "./paneViews";
+import { datasetStore } from "./dataset";
+import { fitView } from "./fitRequests";
 import { paneRowStore, retyped } from "./paneRow";
 import type { SlotId } from "./paneRow";
 
@@ -38,13 +38,13 @@ const OPENING: ShellsSettings = {
 
 type BySlot = Partial<Record<SlotId, ShellsSettings>>;
 
-export const shellsStore = createStore<{ bySlot: BySlot }>({ bySlot: {} });
+export const shellsPaneStore = createStore<{ bySlot: BySlot }>({ bySlot: {} });
 
 export const shellsIn = (s: { bySlot: BySlot }, slot: SlotId) => s.bySlot[slot] ?? OPENING;
-export const shellsOf = (slot: SlotId) => shellsIn(shellsStore.get(), slot);
+export const shellsOf = (slot: SlotId) => shellsIn(shellsPaneStore.get(), slot);
 
 function update(slot: SlotId, patch: Partial<ShellsSettings>) {
-  shellsStore.set((s) => ({ bySlot: { ...s.bySlot, [slot]: { ...shellsIn(s, slot), ...patch } } }));
+  shellsPaneStore.set((s) => ({ bySlot: { ...s.bySlot, [slot]: { ...shellsIn(s, slot), ...patch } } }));
 }
 
 // The height stays, so the view does too; the nodes glide to their new x.
@@ -67,14 +67,14 @@ export function setBinSpacing(slot: SlotId, spacing: number) {
 }
 
 datasetStore.subscribe((s, prev) => {
-  if (s.graph !== prev.graph) shellsStore.set({ bySlot: {} });
+  if (s.graph !== prev.graph) shellsPaneStore.set({ bySlot: {} });
 });
 
 // A slot that becomes Shells starts from the defaults.
 paneRowStore.subscribe((s, prev) => {
   const fresh = retyped(s.slots, prev.slots);
-  if (!fresh.some((slot) => shellsStore.get().bySlot[slot])) return;
-  const bySlot = { ...shellsStore.get().bySlot };
+  if (!fresh.some((slot) => shellsPaneStore.get().bySlot[slot])) return;
+  const bySlot = { ...shellsPaneStore.get().bySlot };
   fresh.forEach((slot) => delete bySlot[slot]);
-  shellsStore.set({ bySlot });
+  shellsPaneStore.set({ bySlot });
 });

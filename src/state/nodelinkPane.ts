@@ -1,9 +1,9 @@
 import { createStore } from "./createStore";
 import { LAYOUTS } from "../controlOptions";
-import { fitView } from "./paneViews";
+import { fitView } from "./fitRequests";
 import { paneRowStore, retyped } from "./paneRow";
 import type { SlotId } from "./paneRow";
-import { datasetStore } from "../data/datasetStore";
+import { datasetStore } from "./dataset";
 import type { Graph } from "../data/graph";
 import { identity, rotateBy, startRotation } from "../panes/nodelink/rotation";
 import type { Mat3 } from "../panes/nodelink/rotation";
@@ -83,13 +83,13 @@ export function openingSettings(g: Graph | null): Pick<NodeLinkSettings, "layout
 
 type BySlot = Partial<Record<SlotId, NodeLinkSettings>>;
 
-export const nodelinkStore = createStore<{ bySlot: BySlot }>({ bySlot: {} });
+export const nodelinkPaneStore = createStore<{ bySlot: BySlot }>({ bySlot: {} });
 
 export const nodelinkIn = (s: { bySlot: BySlot }, slot: SlotId) => s.bySlot[slot] ?? opening;
-export const nodelinkOf = (slot: SlotId) => nodelinkIn(nodelinkStore.get(), slot);
+export const nodelinkOf = (slot: SlotId) => nodelinkIn(nodelinkPaneStore.get(), slot);
 
 function update(slot: SlotId, patch: (s: NodeLinkSettings) => Partial<NodeLinkSettings>) {
-  nodelinkStore.set((s) => {
+  nodelinkPaneStore.set((s) => {
     const cur = nodelinkIn(s, slot);
     return { bySlot: { ...s.bySlot, [slot]: { ...cur, ...patch(cur) } } };
   });
@@ -127,17 +127,17 @@ datasetStore.subscribe((s, prev) => {
   const open = openingSettings(s.graph);
   opening = { ...opening, ...open, rotation };
   const bySlot: BySlot = {};
-  for (const [slot, cur] of Object.entries(nodelinkStore.get().bySlot)) {
+  for (const [slot, cur] of Object.entries(nodelinkPaneStore.get().bySlot)) {
     if (cur) bySlot[slot] = { ...cur, ...open, rotation };
   }
-  nodelinkStore.set({ bySlot });
+  nodelinkPaneStore.set({ bySlot });
 });
 
 // A slot that becomes NodeLink starts from the opening settings.
 paneRowStore.subscribe((s, prev) => {
   const fresh = retyped(s.slots, prev.slots);
-  if (!fresh.some((slot) => nodelinkStore.get().bySlot[slot])) return;
-  const bySlot = { ...nodelinkStore.get().bySlot };
+  if (!fresh.some((slot) => nodelinkPaneStore.get().bySlot[slot])) return;
+  const bySlot = { ...nodelinkPaneStore.get().bySlot };
   fresh.forEach((slot) => delete bySlot[slot]);
-  nodelinkStore.set({ bySlot });
+  nodelinkPaneStore.set({ bySlot });
 });

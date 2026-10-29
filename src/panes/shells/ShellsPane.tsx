@@ -1,17 +1,19 @@
 import { useEffect, useRef } from "react";
-import { datasetStore } from "../../data/datasetStore";
+import { datasetStore } from "../../state/dataset";
 import { useStore } from "../../state/createStore";
 import { useFadeIn } from "../../components/fadeIn";
 import { WaitingOn } from "../../components/PaneMessage";
 import type { Graph } from "../../data/graph";
-import { hoverStore, selectionStore } from "../../state/selection";
-import { registerSweepAxis, shownSets, sweepRunStore } from "../../state/sweep";
+import { hoverStore } from "../../state/hover";
+import { selectionStore } from "../../state/selection";
+import { registerSweepAxis, shownSets, sweepRunStore } from "../../state/sweepRun";
 import { controlsStore, inkChanged } from "../../state/controls";
-import { K_GAP, shellsIn, shellsOf, shellsStore, modeOf } from "../../state/shells";
-import type { ShellsSettings } from "../../state/shells";
+import { K_GAP, shellsIn, shellsOf, shellsPaneStore, modeOf } from "../../state/shellsPane";
+import type { ShellsSettings } from "../../state/shellsPane";
 import type { SlotId } from "../../state/paneRow";
-import { fitRequestsStore, setView, viewOf, paneViewsStore } from "../../state/paneViews";
-import { fitAll } from "../../state/fits";
+import { fitRequestsStore } from "../../state/fitRequests";
+import { setView, viewOf, paneViewsStore } from "../../state/paneViews";
+import { fitAll } from "../../state/fitAll";
 import { canvasBox, sizeCanvas } from "../../canvas/sizeCanvas";
 import { HAIRLINE, readInk } from "../../canvas/ink";
 import { frameScheduler } from "../../canvas/frame";
@@ -263,7 +265,7 @@ export function ShellsPane({ slot }: { slot: SlotId }) {
           frame.schedule(full);
         }
       }),
-      shellsStore.subscribe((s, prev) => {
+      shellsPaneStore.subscribe((s, prev) => {
         const now = shellsIn(s, slot);
         if (now === shellsIn(prev, slot)) return;
         // A new target glides from wherever the nodes are, mid-glide included.

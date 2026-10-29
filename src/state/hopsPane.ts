@@ -1,7 +1,7 @@
 import { CENSUS_MEASURES } from "../controlOptions";
 import { createStore } from "./createStore";
-import { datasetStore } from "../data/datasetStore";
-import { fitView } from "./paneViews";
+import { datasetStore } from "./dataset";
+import { fitView } from "./fitRequests";
 import { paneRowStore, retyped } from "./paneRow";
 import type { SlotId } from "./paneRow";
 
@@ -40,13 +40,13 @@ const OPENING: HopsSettings = { measure: "reach", rank: false, slide: SLIDE.open
 
 type BySlot = Partial<Record<SlotId, HopsSettings>>;
 
-export const hopsStore = createStore<{ bySlot: BySlot }>({ bySlot: {} });
+export const hopsPaneStore = createStore<{ bySlot: BySlot }>({ bySlot: {} });
 
 export const hopsIn = (s: { bySlot: BySlot }, slot: SlotId) => s.bySlot[slot] ?? OPENING;
-export const hopsOf = (slot: SlotId) => hopsIn(hopsStore.get(), slot);
+export const hopsOf = (slot: SlotId) => hopsIn(hopsPaneStore.get(), slot);
 
 function update(slot: SlotId, patch: Partial<HopsSettings>) {
-  hopsStore.set((s) => ({ bySlot: { ...s.bySlot, [slot]: { ...hopsIn(s, slot), ...patch } } }));
+  hopsPaneStore.set((s) => ({ bySlot: { ...s.bySlot, [slot]: { ...hopsIn(s, slot), ...patch } } }));
 }
 
 // A new order keeps the zoom and pan: the fit leaves room for every line's
@@ -68,14 +68,14 @@ export function setSlide(slot: SlotId, slide: number) {
 }
 
 datasetStore.subscribe((s, prev) => {
-  if (s.graph !== prev.graph) hopsStore.set({ bySlot: {} });
+  if (s.graph !== prev.graph) hopsPaneStore.set({ bySlot: {} });
 });
 
 // A slot that becomes Hops starts from the defaults.
 paneRowStore.subscribe((s, prev) => {
   const fresh = retyped(s.slots, prev.slots);
-  if (!fresh.some((slot) => hopsStore.get().bySlot[slot])) return;
-  const bySlot = { ...hopsStore.get().bySlot };
+  if (!fresh.some((slot) => hopsPaneStore.get().bySlot[slot])) return;
+  const bySlot = { ...hopsPaneStore.get().bySlot };
   fresh.forEach((slot) => delete bySlot[slot]);
-  hopsStore.set({ bySlot });
+  hopsPaneStore.set({ bySlot });
 });

@@ -1,23 +1,25 @@
 import { useEffect, useRef } from "react";
 import { useStore } from "../../state/createStore";
-import { datasetStore } from "../../data/datasetStore";
+import { datasetStore } from "../../state/dataset";
 import type { Graph } from "../../data/graph";
-import { hoverStore, selectionStore } from "../../state/selection";
-import { registerSweepAxis, shownSets, sweepRunStore } from "../../state/sweep";
+import { hoverStore } from "../../state/hover";
+import { selectionStore } from "../../state/selection";
+import { registerSweepAxis, shownSets, sweepRunStore } from "../../state/sweepRun";
 import { controlsStore, inkChanged } from "../../state/controls";
-import { fitRequestsStore, viewOf, paneViewsStore } from "../../state/paneViews";
+import { fitRequestsStore } from "../../state/fitRequests";
+import { viewOf, paneViewsStore } from "../../state/paneViews";
 import {
   isSpatial,
   layoutMissing,
   layoutPositions,
   nodelinkIn,
   nodelinkOf,
-  nodelinkStore,
+  nodelinkPaneStore,
   rotateView,
   shownView,
-} from "../../state/nodelink";
+} from "../../state/nodelinkPane";
 import type { SlotId } from "../../state/paneRow";
-import type { NodeLinkView } from "../../state/nodelink";
+import type { NodeLinkView } from "../../state/nodelinkPane";
 import { canvasBox, sizeCanvas } from "../../canvas/sizeCanvas";
 import { readInk } from "../../canvas/ink";
 import { frameScheduler } from "../../canvas/frame";
@@ -191,7 +193,7 @@ export function NodeLinkPane({ slot }: { slot: SlotId }) {
     ro.observe(stack);
     const unsubs = [
       registerSweepAxis(slot, axis),
-      // A new dataset opens fitted: state/paneViews.ts resets every pane's view.
+      // A new dataset opens fitted: state/fitRequests.ts resets every pane's view.
       datasetStore.subscribe((s, prev) => {
         if (s.graph !== prev.graph) frame.schedule(full);
         // A layout frame, or FD settling (Interactive then takes over).
@@ -205,7 +207,7 @@ export function NodeLinkPane({ slot }: { slot: SlotId }) {
         }
       }),
       paneViewsStore.subscribe((s, prev) => s[slot] !== prev[slot] && frame.schedule(transformed)),
-      nodelinkStore.subscribe((next, before) => {
+      nodelinkPaneStore.subscribe((next, before) => {
         const s = nodelinkIn(next, slot), prev = nodelinkIn(before, slot);
         if (shownView(s) !== shownView(prev) || s.rotation !== prev.rotation || s.liveRun !== prev.liveRun) {
           frame.schedule(full);
@@ -262,7 +264,7 @@ export function NodeLinkPane({ slot }: { slot: SlotId }) {
   }, [slot]);
 
   const g = useStore(datasetStore, (s) => s.graph);
-  const s = useStore(nodelinkStore, (st) => nodelinkIn(st, slot));
+  const s = useStore(nodelinkPaneStore, (st) => nodelinkIn(st, slot));
   // FD (and Interactive, which starts from it) waits on its stages; an own
   // layout the dataset lacks is a message.
   const computed = s.live || s.layout === "fd";

@@ -3,18 +3,18 @@ import type { Store } from "../state/createStore";
 import type { PaneType } from "../state/panes";
 import type { SlotId } from "../state/paneRow";
 import { CENSUS_MEASURES, LABEL_SORTS, LAYOUTS, ORDERINGS, SERIATIONS } from "../controlOptions";
-import { labelSortOf, labelsStore } from "../state/labels";
-import type { LabelSort } from "../state/labels";
-import { nodelinkOf, nodelinkStore } from "../state/nodelink";
-import type { NodeLinkSettings } from "../state/nodelink";
-import { matrixOf, matrixStore } from "../state/matrix";
-import type { MatrixSettings } from "../state/matrix";
-import { shellsOf, shellsStore } from "../state/shells";
-import type { ShellsSettings } from "../state/shells";
-import { hopsOf, hopsStore } from "../state/hops";
-import type { HopsSettings } from "../state/hops";
-import { STAGE_NAMES, datasetStore, waitStage } from "../data/datasetStore";
-import type { Stage } from "../data/datasetStore";
+import { labelSortOf, labelsPaneStore } from "../state/labelsPane";
+import type { LabelSort } from "../state/labelsPane";
+import { nodelinkOf, nodelinkPaneStore } from "../state/nodelinkPane";
+import type { NodeLinkSettings } from "../state/nodelinkPane";
+import { matrixOf, matrixPaneStore } from "../state/matrixPane";
+import type { MatrixSettings } from "../state/matrixPane";
+import { shellsOf, shellsPaneStore } from "../state/shellsPane";
+import type { ShellsSettings } from "../state/shellsPane";
+import { hopsOf, hopsPaneStore } from "../state/hopsPane";
+import type { HopsSettings } from "../state/hopsPane";
+import { STAGE_NAMES, datasetStore, waitStage } from "../state/dataset";
+import type { Stage } from "../state/dataset";
 import { useStore } from "../state/createStore";
 
 // The subtitle beside a pane's title: what the pane's strip has chosen,
@@ -64,11 +64,11 @@ export function paneSubtitle(type: PaneType, slot: SlotId): string | null {
 
 const STORES: Record<PaneType, Store<object> | null> = {
   data: null,
-  labels: labelsStore,
-  nodelink: nodelinkStore,
-  matrix: matrixStore,
-  shells: shellsStore,
-  hops: hopsStore,
+  labels: labelsPaneStore,
+  nodelink: nodelinkPaneStore,
+  matrix: matrixPaneStore,
+  shells: shellsPaneStore,
+  hops: hopsPaneStore,
 };
 
 const never = () => () => {};

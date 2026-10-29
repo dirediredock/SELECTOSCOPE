@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { attachKeyboardShortcuts } from "./keyboard";
 import { pressSpace, releaseSpace } from "../state/interface";
-import { pressStep, releaseStep, sweepRunStore } from "../state/sweep";
+import { pressStep, releaseStep, sweepRunStore } from "../state/sweepRun";
 
 vi.mock("../state/interface", () => ({ pressSpace: vi.fn(), releaseSpace: vi.fn() }));
-vi.mock("../state/sweep", () => ({
+vi.mock("../state/sweepRun", () => ({
   pressStep: vi.fn(), releaseStep: vi.fn(), sweepRunStore: { get: vi.fn() },
 }));
 

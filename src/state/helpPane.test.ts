@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { helpSectionStore, goToSection, sectionAt, topTarget } from "./helpSection";
+import { helpPaneStore, goToSection, sectionAt, topTarget } from "./helpPane";
 
 // Five sections, the last short; the view is 300 high over 1200 of content.
 const TOPS = [0, 250, 500, 800, 1050];
@@ -45,9 +45,9 @@ describe("Sections' glide target", () => {
 describe("Sections' pick", () => {
   it("shows the pick and asks for a fresh glide each time", () => {
     goToSection("sweep");
-    const first = helpSectionStore.get().goto;
-    expect(helpSectionStore.get().section).toBe("sweep");
+    const first = helpPaneStore.get().goto;
+    expect(helpPaneStore.get().section).toBe("sweep");
     goToSection("sweep");
-    expect(helpSectionStore.get().goto).not.toBe(first);
+    expect(helpPaneStore.get().goto).not.toBe(first);
   });
 });

@@ -1,6 +1,6 @@
 import type { Bounds } from "../../canvas/pointView";
-import type { Form } from "../../state/matrix";
-import type { SweepAxis } from "../../state/sweep";
+import type { Form } from "../../state/matrixPane";
+import type { SweepAxis } from "../../state/sweepRun";
 
 // The node x node matrix in its two forms, in layout units (y up). A cell
 // is (row, col), both in [0, n): the nodes' positions in the seriation. Cell

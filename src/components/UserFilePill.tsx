@@ -1,4 +1,4 @@
-import { datasetStore } from "../data/datasetStore";
+import { datasetStore } from "../state/dataset";
 import { useStore } from "../state/createStore";
 import { addFile, copyCurated, datasetOf, fileRefused, removeFile, userDatasetsStore } from "../state/userDatasets";
 import type { FileKind, OptionalKind } from "../state/userDatasets";

@@ -1,5 +1,5 @@
 import { interfaceStore } from "../state/interface";
-import { clearHover } from "../state/selection";
+import { clearHover } from "../state/hover";
 import { setNavigating } from "./activeGesture";
 import { DRAG_START_PX } from "./selectGesture";
 import { listWheelSideways } from "./wheel";

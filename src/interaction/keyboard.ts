@@ -1,5 +1,5 @@
 import { pressSpace, releaseSpace } from "../state/interface";
-import { pressStep, releaseStep, sweepRunStore } from "../state/sweep";
+import { pressStep, releaseStep, sweepRunStore } from "../state/sweepRun";
 
 const CONTROL =
   'button, input, textarea, select, a[href], [contenteditable]:not([contenteditable="false"]), ' +

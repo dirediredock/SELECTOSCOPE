@@ -1,8 +1,8 @@
 import { HAIRLINE } from "../../canvas/ink";
 import type { Ink } from "../../canvas/ink";
 import type { PointView } from "../../canvas/pointView";
-import { hoveredNodes } from "../../state/selection";
-import type { HoverItem } from "../../state/selection";
+import { hoveredNodes } from "../../state/hover";
+import type { HoverItem } from "../../state/hover";
 import { onionStride } from "./geometry";
 import type { SnakeHeights, SnakeStructure } from "./geometry";
 

@@ -1,15 +1,16 @@
 import { useEffect, useRef } from "react";
-import { datasetStore } from "../../data/datasetStore";
+import { datasetStore } from "../../state/dataset";
 import { useStore } from "../../state/createStore";
 import { useFadeIn } from "../../components/fadeIn";
 import { WaitingOn } from "../../components/PaneMessage";
 import type { Graph } from "../../data/graph";
-import { hoverStore, selectionStore } from "../../state/selection";
-import { registerSweepAxis, shownSets, sweepRunStore } from "../../state/sweep";
+import { hoverStore } from "../../state/hover";
+import { selectionStore } from "../../state/selection";
+import { registerSweepAxis, shownSets, sweepRunStore } from "../../state/sweepRun";
 import { controlsStore, inkChanged } from "../../state/controls";
-import { matrixIn, matrixOf, matrixStore } from "../../state/matrix";
+import { matrixIn, matrixOf, matrixPaneStore } from "../../state/matrixPane";
 import type { SlotId } from "../../state/paneRow";
-import type { Seriation } from "../../state/matrix";
+import type { Seriation } from "../../state/matrixPane";
 import { viewOf, paneViewsStore } from "../../state/paneViews";
 import { canvasBox, sizeCanvas } from "../../canvas/sizeCanvas";
 import { readInk } from "../../canvas/ink";
@@ -188,7 +189,7 @@ export function MatrixPane({ slot }: { slot: SlotId }) {
     const unsubs = [
       registerSweepAxis(slot, axis),
       datasetStore.subscribe((s, prev) => (s.graph !== prev.graph || (!current() && s.revision !== prev.revision)) && frame.schedule(full)),
-      matrixStore.subscribe((s, prev) => matrixIn(s, slot) !== matrixIn(prev, slot) && frame.schedule(full)),
+      matrixPaneStore.subscribe((s, prev) => matrixIn(s, slot) !== matrixIn(prev, slot) && frame.schedule(full)),
       paneViewsStore.subscribe((s, prev) => s[slot] !== prev[slot] && frame.schedule(transformed)),
       controlsStore.subscribe((s, prev) => inkChanged(s, prev) && frame.schedule(full)),
       selectionStore.subscribe(() => frame.schedule(paintSets)),
@@ -224,7 +225,7 @@ export function MatrixPane({ slot }: { slot: SlotId }) {
     };
   }, [slot]);
 
-  const seriation = useStore(matrixStore, (s) => matrixIn(s, slot).seriation);
+  const seriation = useStore(matrixPaneStore, (s) => matrixIn(s, slot).seriation);
   const fade = useFadeIn(
     useStore(datasetStore, (st) => st.graph),
     useStore(datasetStore, (st) => !!st.graph?.seriations[seriation]),
@@ -245,6 +246,6 @@ export function MatrixPane({ slot }: { slot: SlotId }) {
 // The order picked is still being computed: its stage's progress, in place
 // of the pattern.
 function MatrixWaiting({ slot }: { slot: SlotId }) {
-  const seriation = useStore(matrixStore, (s) => matrixIn(s, slot).seriation);
+  const seriation = useStore(matrixPaneStore, (s) => matrixIn(s, slot).seriation);
   return <WaitingOn stages={[seriation.startsWith("pc") ? "components" : "harmonics"]} />;
 }

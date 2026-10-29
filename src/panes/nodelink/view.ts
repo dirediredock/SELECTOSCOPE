@@ -1,4 +1,4 @@
-import type { SweepAxis } from "../../state/sweep";
+import type { SweepAxis } from "../../state/sweepRun";
 
 // Mark size shrinks as graphs grow, within legible bounds. Marks keep their
 // screen size under zoom, so zooming in separates crowded nodes.

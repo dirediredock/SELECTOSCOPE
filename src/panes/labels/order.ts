@@ -1,4 +1,4 @@
-import type { LabelSort } from "../../state/labels";
+import type { LabelSort } from "../../state/labelsPane";
 
 // The Labels pane's pure logic: row order, Finder clicks and the rubber band.
 // No DOM here, so it is unit-tested directly (order.test.ts).
