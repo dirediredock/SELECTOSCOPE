@@ -13,14 +13,14 @@
 // bin; aggregated, a shell's single-node islands share one bin. Per singleton
 // mode and ordering, `row` is each node's position in its shell's row: a
 // bin's members are contiguous, onion descending left to right (each snake
-// keeps its staircase), then by their inner rank: by want, degree and
+// keeps its staircase), then by their inner rank: by want, degree, kind and
 // node_idx. The want is always the one separate topdown gives (the mean
 // position of the node's neighbours in other shells).
 //
 // In a tree island (its own edges one fewer than its members), children
 // follow their parents instead: layer by layer, densest first, each member by
 // the mean place along the snake of its island neighbours in denser layers
-// (none last), then by want, degree and node_idx. Wherever every member has
+// (none last), then by want, degree, kind and node_idx. Wherever every member has
 // at most one such neighbour, each subtree runs contiguous in every layer,
 // and no two of the island's edges joining the same two layers cross.
 //
@@ -39,10 +39,17 @@
 // Positions are normalised per row, (i + 0.5) / len(row), so rows of
 // different lengths pull on each other alike. Ties never fall to a previous
 // position: bins tie-break by size, onion profile (sorted member onions),
-// degree profile (sorted member degrees), then the smallest node_idx.
+// degree profile (sorted member degrees), kind profile, then the smallest
+// node_idx.
 // node_idx is random (randomize.ts), so it only decides between parts that
 // match on every structural key. Wants compare rounded to ROUND, so float
 // noise never outranks a structural key.
+//
+// Degree alone leaves too much to node_idx: two leaves of different hubs tie
+// on it, so relabelling would swap them and every edge drawn from them. So
+// each node also has a kind (structuralKinds): its rank after colour
+// refinement. Nodes of one kind look alike from every hop, and only they can
+// still fall to node_idx. Inner ranks and bin keys both use it.
 
 import type { Graph } from "./graph";
 import { degrees } from "./graph";
@@ -54,6 +61,7 @@ export const SINGLETONS = ["separate", "aggregate"] as const;
 export type SingletonMode = (typeof SINGLETONS)[number];
 
 const ROUND = 1e-6;
+const MAX_REFINE = 256;
 const quantized = (x: number) => (Number.isNaN(x) ? Infinity : Math.round(x / ROUND) * ROUND);
 
 export interface SnakeOrders {
@@ -91,6 +99,39 @@ function compareTuples(a: number[], b: number[]) {
   return a.length - b.length;
 }
 
+// Colour refinement, ranked by structure so no number depends on node_idx.
+// Each round ranks the nodes by their rank so far, then their neighbours'
+// sorted ranks, until no class splits. Starting from degree, a rank always
+// refines the one before. Stopping at MAX_REFINE is still invariant, only
+// coarser. Why a cap: a long path splits one class per round.
+export function structuralKinds(g: Graph): Int32Array {
+  const { n, offsets, neighbours } = g;
+  const degree = degrees(g);
+  const rank = (keys: number[][]) => {
+    const order = Array.from({ length: n }, (_, v) => v).sort((u, v) => compareTuples(keys[u], keys[v]));
+    const out = new Int32Array(n);
+    let classes = 0;
+    order.forEach((v, i) => {
+      if (i === 0 || compareTuples(keys[order[i - 1]], keys[v]) !== 0) classes++;
+      out[v] = classes - 1;
+    });
+    return { out, classes };
+  };
+  let { out: kind, classes } = rank(Array.from(degree, (d) => [d]));
+  for (let round = 0; round < MAX_REFINE && classes < n; round++) {
+    const current = kind;
+    const keys = Array.from({ length: n }, (_, v) => {
+      const around = Array.from(neighbours.subarray(offsets[v], offsets[v + 1]), (u) => current[u]);
+      return [current[v], ...around.sort((a, b) => a - b)];
+    });
+    const next = rank(keys);
+    if (next.classes === classes) break;
+    kind = next.out;
+    classes = next.classes;
+  }
+  return kind;
+}
+
 // The shells, onion layers and islands; the same in every mode.
 class Shells {
   n: number;
@@ -99,6 +140,7 @@ class Shells {
   core: Uint32Array;
   onion: Uint32Array;
   degree: Uint32Array;
+  kind: Int32Array;
   shell: Int32Array;
   count: number;
   isl: Int32Array;
@@ -113,6 +155,7 @@ class Shells {
     this.core = c.core;
     this.onion = c.onion;
     this.degree = degrees(g);
+    this.kind = structuralKinds(g);
     const values = [...new Set(c.core)].sort((a, b) => a - b);
     const index = new Map(values.map((v, i) => [v, i]));
     this.shell = Int32Array.from(c.core, (v) => index.get(v)!);
@@ -195,9 +238,11 @@ class Bins {
       -1,
       ...sorted(m.map((v) => sh.degree[v])),
       -1,
+      ...sorted(m.map((v) => sh.kind[v])),
+      -1,
       Math.min(...m),
     ]);
-    // The tuple compares (size, onions, degrees, smallest node) in turn: the
+    // The tuple compares (size, onions, degrees, kinds, smallest node) in turn: the
     // -1 marks end each profile, and every profile in one comparison has the
     // same length once the sizes tie.
     const byKey = Array.from({ length: B }, (_, b) => b).sort((a, b) => compareTuples(keys[a], keys[b]));
@@ -289,11 +334,11 @@ class Bins {
 }
 
 // Each node's rank among its island's layer: by want (none last), degree and
-// node_idx, except in a tree island, where children follow parents.
+// kind, then node_idx, except in a tree island, where children follow parents.
 function innerRanks(sh: Shells, want: Float64Array): Int32Array {
   const n = sh.n;
   const byStart = Array.from({ length: n }, (_, v) => v).sort(
-    (a, b) => quantized(want[a]) - quantized(want[b]) || sh.degree[a] - sh.degree[b] || a - b,
+    (a, b) => quantized(want[a]) - quantized(want[b]) || sh.degree[a] - sh.degree[b] || sh.kind[a] - sh.kind[b] || a - b,
   );
   const start = new Int32Array(n);
   byStart.forEach((v, i) => (start[v] = i));
