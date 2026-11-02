@@ -1,6 +1,8 @@
 import { localPoint, sizeCanvas } from "../canvas/sizeCanvas";
-import { clearHover, selectFromEdges, selectFromNodes, setHover, toggleGroup, toggleItem } from "../state/selection";
-import type { HoverItem, ItemType, Mode } from "../state/selection";
+import { clearHover, setHover } from "../state/hover";
+import { selectFromEdges, selectFromNodes, toggleGroup, toggleItem } from "../state/selection";
+import type { HoverItem } from "../state/hover";
+import type { ItemType, Mode } from "../state/selection";
 import { controlsStore } from "../state/controls";
 import { interfaceStore } from "../state/interface";
 import type { Tool } from "../state/controls";

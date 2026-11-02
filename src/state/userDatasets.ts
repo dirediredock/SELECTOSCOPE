@@ -12,7 +12,7 @@
 import { startBuild as runEngine, stopBuild as stopEngine } from "../engine/engine";
 import { attach } from "../pipeline/ingest";
 import type { DatasetTexts, OptionalTexts } from "../pipeline/ingest";
-import { BuildFileError, cancelLoad, datasetStore, readBuildFile, showGraph } from "../data/datasetStore";
+import { BuildFileError, cancelLoad, datasetStore, readBuildFile, showGraph } from "./dataset";
 import { withFiles } from "../data/assemble";
 import { exportable } from "../data/format";
 import type { Graph } from "../data/graph";

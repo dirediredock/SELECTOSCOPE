@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fitAll } from "./fits";
+import { fitAll } from "./fitAll";
 
 describe("fitAll", () => {
   it("zooms out only when the pattern is too tall", () => {

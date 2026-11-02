@@ -1,15 +1,16 @@
 import { useEffect, useRef } from "react";
-import { datasetStore } from "../../data/datasetStore";
+import { datasetStore } from "../../state/dataset";
 import { landedCensus } from "../../data/graph";
 import type { Graph, HopCensus } from "../../data/graph";
 import { useStore } from "../../state/createStore";
 import { useFadeIn } from "../../components/fadeIn";
 import { WaitingOn } from "../../components/PaneMessage";
-import { hoverStore, selectionStore } from "../../state/selection";
-import { registerSweepAxis, shownSets, sweepRunStore } from "../../state/sweep";
+import { hoverStore } from "../../state/hover";
+import { selectionStore } from "../../state/selection";
+import { registerSweepAxis, shownSets, sweepRunStore } from "../../state/sweepRun";
 import { controlsStore, inkChanged } from "../../state/controls";
-import { hopsIn, hopsOf, hopsStore } from "../../state/hops";
-import type { CensusMeasure } from "../../state/hops";
+import { hopsIn, hopsOf, hopsPaneStore } from "../../state/hopsPane";
+import type { CensusMeasure } from "../../state/hopsPane";
 import type { SlotId } from "../../state/paneRow";
 import { viewOf, paneViewsStore } from "../../state/paneViews";
 import { canvasBox, sizeCanvas } from "../../canvas/sizeCanvas";
@@ -170,7 +171,7 @@ export function HopsPane({ slot }: { slot: SlotId }) {
         // A new graph, or more lines landed.
         if (s.graph !== prev.graph || (s.graph && landedCensus(s.graph)?.census !== structure?.census)) frame.schedule(full);
       }),
-      hopsStore.subscribe((s, prev) => {
+      hopsPaneStore.subscribe((s, prev) => {
         const now = hopsIn(s, slot), was = hopsIn(prev, slot);
         if (now === was) return;
         // A new order glides the lines from wherever they are, mid-glide

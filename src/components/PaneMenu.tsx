@@ -6,7 +6,7 @@ import type { PaneType } from "../state/panes";
 import { paneRowStore, setSlotType } from "../state/paneRow";
 import { useStore } from "../state/createStore";
 import type { SlotId } from "../state/paneRow";
-import { fitView } from "../state/paneViews";
+import { fitView } from "../state/fitRequests";
 import { setSlotShape } from "./fitRow";
 import { PANE_MIN_PX } from "./paneWidths";
 import { TEXT } from "../controlText";

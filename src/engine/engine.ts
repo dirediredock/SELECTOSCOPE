@@ -12,8 +12,8 @@
 import type { Graph as Csr } from "../pipeline/graph";
 import type { DatasetTexts } from "../pipeline/ingest";
 import { assemble } from "../data/assemble";
-import { STAGE_NAMES, cancelLoad, datasetStore, idleStages, landed, setStage } from "../data/datasetStore";
-import type { Stage } from "../data/datasetStore";
+import { STAGE_NAMES, cancelLoad, datasetStore, idleStages, landed, setStage } from "../state/dataset";
+import type { Stage } from "../state/dataset";
 import { censusFromRows } from "../data/graph";
 import type { Graph, OpeningView } from "../data/graph";
 import type {

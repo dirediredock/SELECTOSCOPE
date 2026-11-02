@@ -61,7 +61,7 @@ export const rotateBy = (r: Mat3, dx: number, dy: number): Mat3 => orthonormaliz
 
 // The opening orientation: tipped 45 degrees so the top leans toward the
 // viewer, a three-quarter view that shows depth at a glance. A flat layout
-// has no 3D view (state/nodelink.ts), so its rotation stays face-on.
+// has no 3D view (state/nodelinkPane.ts), so its rotation stays face-on.
 export const START_TILT = Math.PI / 4;
 
 export function startRotation(layout3d: Float32Array | null, n: number): Mat3 {

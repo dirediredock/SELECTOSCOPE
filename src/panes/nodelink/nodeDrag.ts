@@ -3,8 +3,9 @@ import type { PointView } from "../../canvas/pointView";
 import type { HitTester } from "../../interaction/pointHits";
 import { DRAG_START_PX } from "../../interaction/selectGesture";
 import { beginGesture, endGesture, gestureActive, isNavigating, setNavigating } from "../../interaction/activeGesture";
-import { selectionStore, setHover, toggleItem } from "../../state/selection";
-import { sweepRunStore } from "../../state/sweep";
+import { selectionStore, toggleItem } from "../../state/selection";
+import { setHover } from "../../state/hover";
+import { sweepRunStore } from "../../state/sweepRun";
 import { interfaceStore } from "../../state/interface";
 import type { LiveSim } from "./live";
 

@@ -2,12 +2,12 @@
 // (engine/engine.ts). Each pane draws from whatever has landed and shows its
 // stage's progress while its own result is missing.
 
-import { createStore } from "../state/createStore";
-import { csvFiles } from "./csvExport";
-import { exportable, fromJson, stringify } from "./format";
-import type { BuildJson } from "./format";
-import type { Graph, OpeningView } from "./graph";
-import { zip } from "./zip";
+import { createStore } from "./createStore";
+import { csvFiles } from "../data/csvExport";
+import { exportable, fromJson, stringify } from "../data/format";
+import type { BuildJson } from "../data/format";
+import type { Graph, OpeningView } from "../data/graph";
+import { zip } from "../data/zip";
 
 export const STAGES = ["ingest", "shells", "hops", "harmonics", "components", "fd2d", "fd3d"] as const;
 export type Stage = (typeof STAGES)[number];
@@ -127,7 +127,7 @@ export function cancelLoad(): number {
   return ++latest;
 }
 
-// The datasets the app may open on: those whose Matrix sweep (sweep.ts's
+// The datasets the app may open on: those whose Matrix sweep (sweepRun.ts's
 // showcase) lights every pane most strikingly. The Data list shows them all.
 const SHOWCASE = new Set([
   "fullerene_structures_C3840",

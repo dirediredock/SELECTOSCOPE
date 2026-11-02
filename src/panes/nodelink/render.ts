@@ -10,8 +10,8 @@
 
 import type { Ink } from "../../canvas/ink";
 import type { Graph } from "../../data/graph";
-import { hoveredNodes } from "../../state/selection";
-import type { HoverItem } from "../../state/selection";
+import { hoveredNodes } from "../../state/hover";
+import type { HoverItem } from "../../state/hover";
 
 const BUCKETS = 12;
 // The far bucket's opacity in 3D; the near one is opaque.

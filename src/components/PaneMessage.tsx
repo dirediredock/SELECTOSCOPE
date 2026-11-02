@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Action, Rail } from "./controls";
-import { STAGE_NAMES, datasetStore, stageShare, waitStage } from "../data/datasetStore";
-import type { Stage } from "../data/datasetStore";
+import { STAGE_NAMES, datasetStore, stageShare, waitStage } from "../state/dataset";
+import type { Stage } from "../state/dataset";
 import { useStore } from "../state/createStore";
 
 // A pane's content in place of its pattern: a note on what is missing, or,

@@ -17,7 +17,7 @@ vi.mock("../../state/createStore", async (importOriginal) => ({
 }));
 
 const { HelpPane } = await import("./HelpPane");
-const { HELP_SECTIONS } = await import("./helpSection");
+const { HELP_SECTIONS } = await import("../../state/helpPane");
 const html = renderToStaticMarkup(<HelpPane />);
 
 describe("Help", () => {

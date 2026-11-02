@@ -4,7 +4,7 @@ import { readInk } from "../../canvas/ink";
 import { sizeCanvas } from "../../canvas/sizeCanvas";
 import { useStore } from "../../state/createStore";
 import { controlsStore } from "../../state/controls";
-import { datasetStore } from "../../data/datasetStore";
+import { datasetStore } from "../../state/dataset";
 import type { Graph } from "../../data/graph";
 import { AlertDot } from "../../components/controls";
 import { drawThumb, fetchThumb, thumbOf } from "./thumb";

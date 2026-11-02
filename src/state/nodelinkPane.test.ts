@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Graph, OpeningView } from "../data/graph";
-import { hasLayout, layoutPositions, LIVE_MAX_NODES, openingSettings } from "./nodelink";
+import { hasLayout, layoutPositions, LIVE_MAX_NODES, openingSettings } from "./nodelinkPane";
 
 // Just what the layouts read: the size and the layouts. A graph has FD
 // always, FD in 3D once it is computed, and maybe its own 2D and 3D.

@@ -63,7 +63,7 @@ async function load() {
   vi.resetModules();
   const ud = await import("./userDatasets");
   const { interfaceStore, setUpload } = await import("./interface");
-  const { datasetStore } = await import("../data/datasetStore");
+  const { datasetStore } = await import("./dataset");
   // The build's end, as the engine signals it: finished, or stopped.
   const { stopBuild: end } = await import("../engine/engine");
   const listed = () => ud.userDatasetsStore.get().datasets.filter((d) => d.graph !== null);

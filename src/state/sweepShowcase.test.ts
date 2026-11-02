@@ -10,8 +10,8 @@ vi.mock("./controls", async () => {
 // The showcase is once per module's life, so each test imports it afresh.
 async function load() {
   vi.resetModules();
-  const sweep = await import("./sweep");
-  const { datasetStore } = await import("../data/datasetStore");
+  const sweep = await import("./sweepRun");
+  const { datasetStore } = await import("./dataset");
   const { paneRowStore, setSlotType } = await import("./paneRow");
   const matrix = paneRowStore.get().slots.find((x) => x.type === "matrix")!.slot;
   // A new graph each time, as a dataset switch lands one.

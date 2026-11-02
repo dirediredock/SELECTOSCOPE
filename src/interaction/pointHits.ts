@@ -1,4 +1,4 @@
-import type { HoverItem } from "../state/selection";
+import type { HoverItem } from "../state/hover";
 import { lassoMask } from "./lassoMask";
 
 // Hit-testing over items drawn as points, given their screen positions in pane

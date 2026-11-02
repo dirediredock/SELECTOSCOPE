@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { datasetStore } from "../data/datasetStore";
+import { datasetStore } from "./dataset";
 import type { Graph } from "../data/graph";
 import {
   applySelection,

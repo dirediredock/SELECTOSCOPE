@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { railOfSlide, SLIDE, SLIDE_RAIL, slideFromRail, slideText } from "./hops";
+import { railOfSlide, SLIDE, SLIDE_RAIL, slideFromRail, slideText } from "./hopsPane";
 
 describe("slide rail", () => {
   it("runs squared from 0 to the max", () => {
