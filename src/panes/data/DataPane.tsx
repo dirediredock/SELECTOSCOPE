@@ -9,7 +9,7 @@ import { controlsStore } from "../../state/controls";
 import { interfaceStore, openNew, setUpload } from "../../state/interface";
 import { datasetAlert, pickRow, userDatasetsStore } from "../../state/userDatasets";
 import type { UserDataset } from "../../state/userDatasets";
-import { LIST_ROWS, VirtualList } from "../../components/VirtualList";
+import { LIST_ROWS, VirtualList, insetEnd } from "../../components/VirtualList";
 import { Action, AlertDot, Rail } from "../../components/controls";
 import { attachListPan } from "../../interaction/listPan";
 import { DatasetTile } from "./DatasetTile";
@@ -154,7 +154,7 @@ export function DataPane({ slot }: { slot: SlotId }) {
 
   useLayoutEffect(() => {
     const el = scrollerRef.current!;
-    const measure = () => setWidth(el.clientWidth - LIST_ROWS.pad - LIST_ROWS.padEnd);
+    const measure = () => setWidth(el.clientWidth - LIST_ROWS.pad - insetEnd(el, LIST_ROWS));
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(el);

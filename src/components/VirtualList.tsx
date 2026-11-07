@@ -5,10 +5,12 @@ import { anchoredScrollTop } from "./listAnchor";
 import { scaled } from "../uiScale";
 
 // Row geometry in CSS pixels, from design px (uiScale.ts). Rows sit at content
-// y = top + i * pitch; `pad` insets them at the left and bottom, and `padEnd`
-// at the right, inside the scrollbar's gutter, which is air enough. It is handed
-// to CSS as custom properties, so the stylesheet can't drift from the maths
-// the panes hit-test with.
+// y = top + i * pitch; `pad` insets them at the left and bottom. `padEnd` is
+// the air at the right, scrollbar gutter included: where the gutter is reserved
+// (desktop) it is most of that air, and where scrollbars overlay the content
+// (iOS, overlay Firefox) it is none, so the rows make up the rest themselves
+// (insetEnd). It is handed to CSS as custom properties, so the stylesheet can't
+// drift from the maths the panes hit-test with.
 export interface RowGeometry {
   rowHeight: number;
   rowGap: number;
@@ -23,9 +25,29 @@ export const LIST_ROWS: RowGeometry = {
   rowHeight: scaled(26),
   rowGap: scaled(4),
   pad: scaled(16),
-  padEnd: 0,
+  padEnd: scaled(16),
   top: scaled(18),
 };
+
+// The rows' own right inset in a scroller: padEnd less the scrollbar gutter
+// the browser reserves there (none where scrollbars overlay). The scrollers
+// have no border, so the gutter is the width the content box doesn't get.
+export const insetEnd = (el: HTMLElement, g: RowGeometry) =>
+  Math.max(0, g.padEnd - (el.offsetWidth - el.clientWidth));
+
+// insetEnd for a scroller, kept as it resizes.
+export function useInsetEnd(ref: RefObject<HTMLElement | null>, g: RowGeometry) {
+  const [inset, setInset] = useState(g.padEnd);
+  useLayoutEffect(() => {
+    const el = ref.current!;
+    const measure = () => setInset(insetEnd(el, g));
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [ref, g]);
+  return inset;
+}
 
 // How long the scrollbar stays after the last scroll.
 const SCROLLBAR_IDLE_MS = 1000;
@@ -71,6 +93,7 @@ export function VirtualList({
   const ref = scrollerRef ?? ownRef;
   const [scrollTop, setScrollTop] = useState(0);
   const [height, setHeight] = useState(0);
+  const padEnd = useInsetEnd(ref, geometry);
   // The scrollbar shows only while the list scrolls, and a moment after.
   const [scrolling, setScrolling] = useState(false);
   const idleTimer = useRef(0);
@@ -163,7 +186,7 @@ export function VirtualList({
         {
           "--row-h": `${rowHeight}px`,
           "--list-pad": `${pad}px`,
-          "--list-pad-end": `${geometry.padEnd}px`,
+          "--list-pad-end": `${padEnd}px`,
         } as CSSProperties
       }
       onScroll={(e) => {

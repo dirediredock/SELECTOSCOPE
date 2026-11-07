@@ -2155,7 +2155,9 @@ textarea {
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior-y: contain;
-  /* The gutter stays when nothing overflows, so rows end in one place. */
+  /* The gutter stays when nothing overflows, so rows end in one place. It is
+     part of the rows' right air; their inset (insetEnd) makes up the rest,
+     all of it where scrollbars overlay and reserve no gutter (iOS). */
   scrollbar-gutter: stable;
 }
 

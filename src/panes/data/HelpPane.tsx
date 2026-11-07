@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { useStore } from "../../state/createStore";
-import { LIST_ROWS } from "../../components/VirtualList";
+import { LIST_ROWS, useInsetEnd } from "../../components/VirtualList";
 import {
   ArrowStepper,
   FilePill,
@@ -80,6 +80,7 @@ const SCROLLBAR_IDLE_MS = 1000;
 // and a pick there glides its heading to the top.
 export function HelpPane() {
   const ref = useRef<HTMLDivElement>(null);
+  const padEnd = useInsetEnd(ref, LIST_ROWS);
   const goto = useStore(helpPaneStore, (s) => s.goto);
   const figures = useStore(controlsStore, (s) => s.figures);
   const [scrolling, setScrolling] = useState(false);
@@ -134,7 +135,7 @@ export function HelpPane() {
       style={
         {
           "--list-pad": `${LIST_ROWS.pad}px`,
-          "--list-pad-end": `${LIST_ROWS.padEnd}px`,
+          "--list-pad-end": `${padEnd}px`,
           "--list-top": `${LIST_ROWS.top}px`,
         } as CSSProperties
       }
