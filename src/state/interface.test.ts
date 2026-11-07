@@ -26,25 +26,25 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllGlobals());
 
 describe("the help flag", () => {
-  it("is off by default", async () => {
+  it("is on by default", async () => {
     stubStorage();
     const { interfaceStore } = await load();
-    expect(interfaceStore.get().help).toBe(false);
+    expect(interfaceStore.get().help).toBe(true);
   });
 
-  it("starts off on every load, even if it was left on", async () => {
-    stubStorage({ "selectoscope-help": "1" });
+  it("starts on every load, even if it was left off", async () => {
+    stubStorage({ "selectoscope-help": "0" });
     const { interfaceStore } = await load();
-    expect(interfaceStore.get().help).toBe(false);
+    expect(interfaceStore.get().help).toBe(true);
   });
 
   it("toggles without saving", async () => {
     const items = stubStorage();
     const { interfaceStore, toggleHelp } = await load();
     toggleHelp();
-    expect(interfaceStore.get().help).toBe(true);
-    toggleHelp();
     expect(interfaceStore.get().help).toBe(false);
+    toggleHelp();
+    expect(interfaceStore.get().help).toBe(true);
     expect(items.has("selectoscope-help")).toBe(false);
   });
 
@@ -62,9 +62,9 @@ describe("the help flag", () => {
   it("lasts the session when storage is blocked", async () => {
     stubStorage({}, true);
     const { interfaceStore, toggleHelp } = await load();
-    expect(interfaceStore.get().help).toBe(false);
-    toggleHelp();
     expect(interfaceStore.get().help).toBe(true);
+    toggleHelp();
+    expect(interfaceStore.get().help).toBe(false);
   });
 });
 

@@ -45,8 +45,8 @@ export const interfaceStore = createStore<InterfaceState>({
   upload: null,
   lastUpload: "csv",
   newHover: false,
-  // Off on every load: the list is where a session starts.
-  help: false,
+  // On at every load: a session opens on Help.
+  help: true,
   spaceHeld: false,
 });
 

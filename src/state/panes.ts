@@ -2,10 +2,11 @@ import { TEXT } from "../controlText";
 
 // The pane types, in the default line-up. `native` is the item type the pane
 // selects and hovers; `list` panes scroll vertically with the wheel. `ar` is
-// the default width / height (styles.css `--ar`). Data's gives it 70% of the
-// share a 1 / 3 would in Fit's opening row, so the room goes to the plots.
+// the default width / height (styles.css `--ar`), from which Fit's opening
+// row takes its proportions (PaneRow.tsx then sets Labels and Data to their
+// opening tiles).
 export const PANES = [
-  { id: "data", title: "Data", native: null, list: true, ar: 0.224 },
+  { id: "data", title: "Data", native: null, list: true, ar: 1 / 3 },
   { id: "labels", title: "Labels", native: "node", list: true, ar: 1 / 3 },
   { id: "nodelink", title: "NodeLink", native: "node", list: false, ar: 1 },
   { id: "matrix", title: "Matrix", native: "edge", list: false, ar: 1 / 3 },
@@ -54,3 +55,8 @@ export const SCROLL_SHAPES = [MINIMUM, TALL, PORTRAIT_GOLDEN] as const;
 // A pane's opening ratio in the Scroll row: tall 3:1, but NodeLink, the row's
 // centrepiece, opens at the widest.
 export const scrollOpeningAr = (type: PaneType) => (type === "nodelink" ? PORTRAIT_GOLDEN : TALL).ar;
+
+// The tiles a pane's header menu offers. Data has the same three in either
+// row, Scroll's (minimum, tall 3:1 where it opens, portrait golden its widest):
+// a list gains nothing from a square.
+export const shapesFor = (type: PaneType, fit: boolean) => (fit && type !== "data" ? FIT_SHAPES : SCROLL_SHAPES);

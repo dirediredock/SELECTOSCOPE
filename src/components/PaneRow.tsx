@@ -3,7 +3,7 @@ import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactNode } from
 import { useStore } from "../state/createStore";
 import { paneRowStore, setShares } from "../state/paneRow";
 import type { SlotId } from "../state/paneRow";
-import { PANES } from "../state/panes";
+import { PANES, scrollOpeningAr } from "../state/panes";
 import type { PaneType } from "../state/panes";
 import { Pane } from "./Pane";
 import { NodeLinkPane } from "../panes/nodelink/NodeLinkPane";
@@ -14,8 +14,8 @@ import { HelpPane } from "../panes/data/HelpPane";
 import { focus, interfaceStore } from "../state/interface";
 import { ShellsPane } from "../panes/shells/ShellsPane";
 import { HopsPane } from "../panes/hops/HopsPane";
-import { PANE_MIN_PX, dragHandle, evenPair, sharesFromRatios, toShares } from "./paneWidths";
-import { fitSlotToWidth, maxWidthsOf, rowPanes, widthsOf } from "./fitRow";
+import { PANE_MIN_PX, dragHandle, evenPair, resizeOne, sharesFromRatios, toShares } from "./paneWidths";
+import { maxWidthsOf, rowPanes, widthsOf } from "./fitRow";
 import { beginGesture, endGesture, gestureActive } from "../interaction/activeGesture";
 
 const CONTENT: Record<PaneType, (slot: SlotId) => ReactNode> = {
@@ -95,11 +95,21 @@ export function PaneRow() {
   const shares = saved ? slots.map((x) => saved[x.slot]) : sharesFromRatios(PANES.map((p) => p.ar));
 
   // Fit opens with Labels at its narrowest, as its Minimum tile sets it: the
-  // list reads at that width, and the room goes to the plots. Once shares
-  // exist they are the user's, so this only runs the first time the row fits.
+  // list reads at that width, and the room goes to the plots. Data (opening
+  // on Help) takes its Tall 3:1 tile, as in Scroll; Labels, at its minimum,
+  // gives none of that room. Once shares exist they are the user's, so this
+  // only runs the first time the row fits.
   useLayoutEffect(() => {
-    const labels = slots.find((x) => x.type === "labels");
-    if (fit && !paneRowStore.get().shares && labels) fitSlotToWidth(labels.slot, () => PANE_MIN_PX);
+    if (fit && !paneRowStore.get().shares) {
+      // One pass over the drawn widths: the row hasn't redrawn between the two.
+      const panes = rowPanes();
+      let w = widthsOf(panes);
+      const labels = slots.findIndex((x) => x.type === "labels");
+      const data = slots.findIndex((x) => x.type === "data");
+      if (labels >= 0) w = resizeOne(w, labels, PANE_MIN_PX, PANE_MIN_PX);
+      if (data >= 0) w = resizeOne(w, data, scrollOpeningAr("data") * panes[data].getBoundingClientRect().height, PANE_MIN_PX);
+      if (labels >= 0 || data >= 0) setShares(toShares(w));
+    }
     if (!fit) centreFocused(rowRef.current!);
   }, [fit]);
 

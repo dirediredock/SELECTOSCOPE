@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties, Ref } from "react";
 import { closeMenu, interfaceStore, setHelp } from "../state/interface";
-import { DATA_VIEWS, FIT_SHAPES, MAX_AR, SCROLL_SHAPES, SWAPPABLE } from "../state/panes";
+import { DATA_VIEWS, SWAPPABLE, shapesFor } from "../state/panes";
 import type { PaneType } from "../state/panes";
 import { paneRowStore, setSlotType } from "../state/paneRow";
 import { useStore } from "../state/createStore";
@@ -35,9 +35,9 @@ export interface Tile {
 // row per pane type (for Data, its list and Help), then the
 // shape tiles. Neutral, the current type and
 // shape tinted. Closes on a pick or a press anywhere else.
-// Three tiles set the pane's shape: in Fit (minimum, portrait golden, square)
-// its width at its height, in Scroll (minimum, tall 3:1, portrait golden) its
-// ratio. The pane's current shape is
+// Three tiles set the pane's shape: in Fit (minimum, portrait golden, square;
+// Data's are Scroll's) its width at its height, in Scroll (minimum, tall 3:1,
+// portrait golden) its ratio. The pane's current shape is
 // the one tinted. Either way the pane refits, as Fit all does.
 export function PaneMenu({ slot, type, ar }: PaneMenuProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -50,8 +50,7 @@ export function PaneMenu({ slot, type, ar }: PaneMenuProps) {
     setSize(pane ? { w: pane.offsetWidth, h: pane.offsetHeight } : null);
   }, []);
 
-  // No shape wider than the pane may be (Data: no Square).
-  const tiles = (fit ? FIT_SHAPES : SCROLL_SHAPES).filter((t) => t.ar === null || t.ar <= (MAX_AR[type] ?? Infinity));
+  const tiles = shapesFor(type, fit);
   const isCurrent = (t: Tile) => {
     if (!fit) return t.ar === null || ar === null ? t.ar === ar : Math.abs(ar / t.ar - 1) < SHAPE_TOLERANCE;
     if (!size) return false;
