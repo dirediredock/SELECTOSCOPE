@@ -45,11 +45,11 @@ describe("Help", () => {
     expect(missing).toEqual([]);
   });
 
-  it("draws its controls only as inert copies", () => {
+  it("draws its controls only as inert copies, but for the live Sound toggle", () => {
     // Walk the tags, tracking how deep inside an inert copy each one sits.
     const VOID = new Set(["input", "br", "img", "hr", "meta", "link"]);
     const stack: boolean[] = [];
-    let live = 0;
+    const live: string[] = [];
     let inert = 0;
     for (const [tag, close, name] of html.matchAll(/<(\/?)([a-z0-9]+)\b[^>]*>/g)) {
       if (close) {
@@ -57,11 +57,13 @@ describe("Help", () => {
         continue;
       }
       const inside = stack.includes(true) || tag.includes('inert=""');
-      if (/^(button|input|select|textarea)$/.test(name!)) inside ? inert++ : live++;
+      if (/^(button|input|select|textarea)$/.test(name!)) inside ? inert++ : live.push(tag);
       if (!VOID.has(name!) && !tag.endsWith("/>")) stack.push(tag.includes('inert=""'));
     }
     expect(inert).toBeGreaterThan(10);
-    expect(live).toBe(0);
+    // The sweep's sound is switched on only here, so its toggle is real.
+    expect(live).toHaveLength(1);
+    expect(live[0]).toContain('role="switch"');
   });
 
   it("copies the header menu as a NodeLink pane opens it", () => {

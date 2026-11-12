@@ -120,7 +120,6 @@ export const TEXT = {
     idleTip: tip(STRIP, "SWEEP CONTROLS, IDLE"),
     stepForward: "Forwards step",
     stepBack: "Backwards step",
-    sound: "Sweep sound",
     // The footer strip under the sweeping pane.
     wrap: "Wrap the band around",
   },

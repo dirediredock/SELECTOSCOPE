@@ -32,10 +32,9 @@ import {
 } from "../state/sweepRun";
 import { labelSortIn, labelsMissing, labelsPaneStore, setLabelSort } from "../state/labelsPane";
 import { fitView } from "../state/fitRequests";
-import { sweepSoundStore, toggleSweepSound } from "../state/sweepSound";
 import { viewIn, paneViewsStore, zoomLabel, zoomStep } from "../state/paneViews";
 import { Choice } from "./Choice";
-import { Action, FilePill, HelpToggle, HoldStepper, PlayGlyph, RUN_CELLS, Section, Slider, SoundToggle, Stepper, StopGlyph, Switch, Transport, trayTip } from "./controls";
+import { Action, FilePill, HelpToggle, HoldStepper, PlayGlyph, RUN_CELLS, Section, Slider, Stepper, StopGlyph, Switch, Transport, trayTip } from "./controls";
 import { HELP_SECTIONS, helpPaneStore, goToSection } from "../state/helpPane";
 import { TEXT } from "../controlText";
 import {
@@ -103,9 +102,7 @@ function ZoomSection({ slot }: { slot: SlotId }) {
 }
 
 // Every graph pane's last two sections. Auto Sweep, on its own white tray:
-// Run, Stop or Resume (a paused sweep ends with Resume, then Stop), then the
-// round sound button, live even while idle (its click is the gesture a
-// browser wants before it plays anything). Sweep
+// Run, Stop or Resume (a paused sweep ends with Resume, then Stop). Sweep
 // controls, on a gray tray: Vertical, on by default (down the diagonal in
 // the matrix), off the band runs left to right (Labels' rows run one way, so it has none),
 // the band's area (% of the axis's extent), its speed, and the Manual pill,
@@ -125,7 +122,6 @@ function SweepSection({ slot, type, blocked = false }: { slot: SlotId; type: Pan
   // The pill draws the band's way: the sweeping pane's, else this one's.
   const sweeping = useStore(sweepRunStore, (s) => s.slot);
   const bandType = useStore(paneRowStore, (s) => s.slots.find((x) => x.slot === sweeping)?.type ?? type);
-  const sound = useStore(sweepSoundStore, (s) => s.on);
   const idle = state === "idle";
   return (
     <>
@@ -137,7 +133,6 @@ function SweepSection({ slot, type, blocked = false }: { slot: SlotId; type: Pan
           disabled={idle && blocked}
           onClick={() => (idle ? startSweep(slot) : state === "running" ? stopSweep() : resumeSweep())}
         />
-        <SoundToggle on={sound} onToggle={toggleSweepSound} label={TEXT.sweep.sound} />
       </Section>
       <Section
         label="Sweep controls"

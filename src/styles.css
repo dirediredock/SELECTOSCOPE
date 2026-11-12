@@ -787,16 +787,6 @@ textarea {
   cursor: pointer;
 }
 
-/* The sweep's sound button: the same round track, inside the Auto Sweep
-   tray, its glyph sized as a button's. */
-.sound-toggle {
-  flex: none;
-}
-
-.sound-toggle .help-glyph {
-  font-size: var(--fs-control);
-}
-
 .help-thumb {
   position: absolute;
   inset: 0.25rem; /* 3px */

@@ -10,7 +10,6 @@ import {
   PlayGlyph,
   RUN_CELLS,
   Slider,
-  SoundToggle,
   Stepper,
   Switch,
   Transport,
@@ -30,6 +29,7 @@ const ADD_COPY = [
 import { Choice } from "../../components/Choice";
 import { SetCountView } from "../../components/TopBar";
 import { CONTRAST, controlsStore } from "../../state/controls";
+import { sweepSoundStore, toggleSweepSound } from "../../state/sweepSound";
 import {
   CENSUS_MEASURES,
   FORMS,
@@ -84,6 +84,7 @@ export function HelpPane() {
   const padEnd = useInsetEnd(ref, LIST_ROWS);
   const goto = useStore(helpPaneStore, (s) => s.goto);
   const figures = useStore(controlsStore, (s) => s.figures);
+  const sound = useStore(sweepSoundStore, (s) => s.on);
   const [scrolling, setScrolling] = useState(false);
   const idleTimer = useRef(0);
 
@@ -754,13 +755,14 @@ export function HelpPane() {
             within panes does not stop an active sweep.
           </p>
           <p>
-            Click the round sound button beside RUN to hear the sweep. Each mark
+            Turn on the SOUND toggle below to hear the sweep. Each mark
             of the swept pane plays a note as it comes into the band, pitched by
             its place across the band, and shows in red in every pane.
           </p>
-          <Replica>
-            <SoundToggle on onToggle={none} label={TEXT.sweep.sound} />
-          </Replica>
+          {/* The real toggle, not a copy: live, and shown with Figures off. */}
+          <div className="help-replica-row help-live-row">
+            <Switch label="Sound" on={sound} onToggle={toggleSweepSound} />
+          </div>
         </Sec>
 
         <Sec id="data" title="Using your own data">
