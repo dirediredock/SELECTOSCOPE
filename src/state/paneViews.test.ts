@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { homeOf, IDENTITY, zoomAt } from "./paneViews";
+import { homeOf, IDENTITY, zoomAt, zoomStepped } from "./paneViews";
 import type { Transform } from "./paneViews";
 
 // screen = c + (fitted - c) * k + t, written relative to the centre c.
@@ -40,5 +40,26 @@ describe("zoomAt", () => {
     const fitted = { k: 0.1, tx: 0, ty: 0 };
     expect(zoomAt(fitted, 0.5, 0, 0).k).toBe(0.1);
     expect(zoomAt(fitted, 1.5, 0, 0).k).toBeCloseTo(0.15, 10);
+  });
+});
+
+describe("zoomStepped", () => {
+  it("steps 5% from a multiple of it", () => {
+    expect(zoomStepped(1, 1)).toBeCloseTo(1.05, 10);
+    expect(zoomStepped(1, -1)).toBeCloseTo(0.95, 10);
+  });
+
+  it("lands on the next multiple from between two", () => {
+    expect(zoomStepped(0.87, 1)).toBeCloseTo(0.9, 10);
+    expect(zoomStepped(0.87, -1)).toBeCloseTo(0.85, 10);
+  });
+
+  it("never sticks on a multiple it reached by stepping", () => {
+    let k = 1;
+    for (let i = 0; i < 40; i++) k = zoomStepped(k, 1);
+    expect(k).toBeCloseTo(3, 10);
+    for (let i = 0; i < 59; i++) k = zoomStepped(k, -1);
+    expect(k).toBeCloseTo(0.05, 10);
+    expect(zoomStepped(k, -1)).toBeCloseTo(0.05, 10);
   });
 });

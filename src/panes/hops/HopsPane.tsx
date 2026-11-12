@@ -6,6 +6,7 @@ import { useStore } from "../../state/createStore";
 import { useFadeIn } from "../../components/fadeIn";
 import { WaitingOn } from "../../components/PaneMessage";
 import { hoverStore } from "../../state/hover";
+import { soundingInk, soundingStore } from "../../state/sounding";
 import { selectionStore } from "../../state/selection";
 import { registerSweepAxis, shownSets, sweepRunStore } from "../../state/sweepRun";
 import { controlsStore, inkChanged } from "../../state/controls";
@@ -55,7 +56,7 @@ export function HopsPane({ slot }: { slot: SlotId }) {
 
     let structure: { graph: Graph; census: HopCensus; st: CensusStructure } | null = null;
     // The shape order for the current measure, shared by the lines and the sweep.
-    let ordered: { graph: Graph; st: CensusStructure; measure: CensusMeasure; rank: boolean; order: CensusOrder } | null = null;
+    let ordered: { graph: Graph; st: CensusStructure; measure: CensusMeasure; order: CensusOrder } | null = null;
     // What is on screen: each line's place along the order, which trails the
     // order's while a glide runs. A new order mid-glide starts from where the
     // lines are.
@@ -67,10 +68,11 @@ export function HopsPane({ slot }: { slot: SlotId }) {
     let scene: CensusScene | null = null;
 
     const orderOf = (g: Graph, st: CensusStructure) => {
-      const { measure, rank } = hopsOf(slot);
+      const { measure } = hopsOf(slot);
       const o = ordered;
-      if (o?.graph === g && o.st === st && o.measure === measure && o.rank === rank) return o.order;
-      ordered = { graph: g, st, measure, rank, order: censusOrder(st, measure, rank) };
+      if (o?.graph === g && o.st === st && o.measure === measure) return o.order;
+      // Each line at its value, so gaps and outliers show.
+      ordered = { graph: g, st, measure, order: censusOrder(st, measure, false) };
       return ordered.order;
     };
 
@@ -133,7 +135,10 @@ export function HopsPane({ slot }: { slot: SlotId }) {
 
     const paintHover = () => {
       const { ctx } = sizeCanvas(hoverRef.current!);
-      if (scene) drawHover(ctx, scene, readInk(stack), hoverStore.get().item);
+      if (!scene) return;
+      const ink = readInk(stack);
+      drawSets(ctx, scene, soundingInk(ink), soundingStore.get().nodes);
+      drawHover(ctx, scene, ink, hoverStore.get().item);
     };
 
     const paintAll = () => {
@@ -178,7 +183,7 @@ export function HopsPane({ slot }: { slot: SlotId }) {
         // included; a dataset switch, which resets the settings before its
         // layout, never does.
         const g = datasetStore.get().graph;
-        const reordered = now.measure !== was.measure || now.rank !== was.rank;
+        const reordered = now.measure !== was.measure;
         if (g && reordered && structure?.graph === g && shown.length === g.n) {
           glide = { graph: g, from: shown.slice(), start: performance.now() };
         }
@@ -189,6 +194,7 @@ export function HopsPane({ slot }: { slot: SlotId }) {
       selectionStore.subscribe((s, prev) => s.nodes !== prev.nodes && frame.schedule(paintSets)),
       sweepRunStore.subscribe((s, prev) => s.nodes !== prev.nodes && frame.schedule(paintSets)),
       hoverStore.subscribe(() => frame.schedule(paintHover)),
+      soundingStore.subscribe(() => frame.schedule(paintHover)),
     ];
     const hit = polylineHitTester(
       () => view.pos,

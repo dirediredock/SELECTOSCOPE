@@ -76,6 +76,25 @@ export function HelpToggle(props: { on: boolean; onToggle: () => void; label: st
   );
 }
 
+// The sweep's sound, on or off: Help's round track and thumb again, in the
+// Auto Sweep tray after Run, with a speaker for its glyph.
+export function SoundToggle(props: { on: boolean; onToggle: () => void; label: string }) {
+  return (
+    <button
+      type="button"
+      className="help-track sound-toggle"
+      aria-label={props.label}
+      aria-pressed={props.on}
+      onClick={props.onToggle}
+    >
+      <span className="help-thumb" aria-hidden="true" />
+      <span className="help-glyph" aria-hidden="true">
+        <SoundGlyph />
+      </span>
+    </button>
+  );
+}
+
 // Do it now: an outline with no fill, since it holds no state. The label is a
 // verb and its object.
 // A file to open at once (not kept, as a file pill's is): an Action whose
@@ -140,6 +159,14 @@ export function Action(props: {
 export const PlayGlyph = () => (
   <svg className="glyph" viewBox="0 0 9 10" aria-hidden="true" style={{ width: "0.64em", height: "0.71em", display: "block" }}>
     <path d="M1 1 8 5 1 9Z" fill="currentColor" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+  </svg>
+);
+
+// A speaker and two waves.
+export const SoundGlyph = () => (
+  <svg className="glyph" viewBox="0 0 12 10" aria-hidden="true" style={{ width: "0.9em", height: "0.75em", display: "block" }}>
+    <path d="M1 3.6h1.9L5.6 1.3v7.4L2.9 6.4H1Z" fill="currentColor" stroke="currentColor" strokeWidth="0.8" strokeLinejoin="round" />
+    <path d="M7.6 3.3a2.4 2.4 0 0 1 0 3.4M9.3 1.8a4.5 4.5 0 0 1 0 6.4" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" />
   </svg>
 );
 

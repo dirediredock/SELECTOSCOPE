@@ -69,6 +69,15 @@ describe("sweepAxis", () => {
   it("runs along the places on the circle sideways when the band wraps", () => {
     expect(fixed(sweepAxis(st, order, true, true).nodes!)).toEqual([0.3333, 0, 0.6667, 0, 0]);
   });
+
+  it("voices its nodes, each way pitched by the other: the order, or the top bin highest", () => {
+    const down = sweepAxis(st, order).voice!;
+    expect(down.type).toBe("node");
+    expect(fixed(down.pitch)).toEqual([0.5, 0, 1, 0, 0]);
+    const across = sweepAxis(st, order, true).voice!;
+    expect(fixed(across.at)).toEqual([0.5, 0, 1, 0, 0]);
+    expect(fixed(across.pitch)).toEqual(p.map((y) => +(1 - y).toFixed(4)));
+  });
 });
 
 describe("strideFor", () => {

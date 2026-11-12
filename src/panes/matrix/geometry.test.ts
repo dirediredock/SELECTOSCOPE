@@ -9,6 +9,7 @@ import {
   POSE,
   poseAt,
   rowsOf,
+  sweepAxis,
   toLayout,
   unposed,
 } from "./geometry";
@@ -110,5 +111,27 @@ describe("columns", () => {
     expect(columnsInQuad([-3, -1, 1.5, -1, 1.5, -3, -3, -3], POSE.square, 10)).toEqual([0, 1]);
     expect(columnsInQuad([-3, -1, -1, -1, -1, -3, -3, -3], POSE.square, 10)).toBeNull();
     expect(columnsInQuad([2, 1, 4, 1, 4, 3, 2, 3], POSE.square, 10)).toBeNull();
+  });
+});
+
+describe("sweepAxis's voice", () => {
+  // Four nodes in row order; a neighbouring pair, and the pair furthest apart.
+  const row = Uint32Array.of(0, 1, 2, 3);
+  const source = Uint32Array.of(0, 0);
+  const target = Uint32Array.of(1, 3);
+
+  it("sounds each node once as its row comes in, the same both ways", () => {
+    const down = sweepAxis(row, source, target).voice!;
+    const { nodes, voice } = sweepAxis(row, source, target, true);
+    expect(voice!.type).toBe("node");
+    expect(voice!.at).toBe(nodes);
+    expect(Array.from(down.at)).toEqual([1 / 8, 3 / 8, 5 / 8, 7 / 8]);
+    expect(Array.from(down.pitch)).toEqual(Array.from(voice!.pitch));
+  });
+
+  it("pitches a node by its edges' mean reach from the diagonal, in rows", () => {
+    const { pitch } = sweepAxis(row, source, target).voice!;
+    // Node 0 reaches 1 and 3 (mean 2), node 1 reaches 1, node 3 the whole way.
+    expect(Array.from(pitch)).toEqual([2, 1, 0, 3]); // node 2 has no edge
   });
 });

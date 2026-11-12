@@ -9,6 +9,7 @@ import { TooltipLayer } from "./components/Tooltip";
 import { initData } from "./state/dataset";
 import { stopBuild } from "./engine/engine";
 import { watchRowMode } from "./state/paneRow";
+import "./audio/sweepSonify";
 
 export default function App() {
   useEffect(() => {

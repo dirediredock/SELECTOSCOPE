@@ -3,6 +3,7 @@ import { useStore } from "../../state/createStore";
 import { datasetStore } from "../../state/dataset";
 import type { Graph } from "../../data/graph";
 import { hoverStore } from "../../state/hover";
+import { soundingStore } from "../../state/sounding";
 import { selectionStore } from "../../state/selection";
 import { registerSweepAxis, shownSets, sweepRunStore } from "../../state/sweepRun";
 import { controlsStore, inkChanged } from "../../state/controls";
@@ -33,7 +34,7 @@ import { project } from "./rotation";
 import { startLive } from "./live";
 import type { LiveSim } from "./live";
 import { attachNodeDrag } from "./nodeDrag";
-import { drawHover, drawScene } from "./render";
+import { drawHover, drawScene, drawSounding } from "./render";
 import { useFadeIn } from "../../components/fadeIn";
 import { PaneAction, PaneMessage, WaitingOn } from "../../components/PaneMessage";
 import { MissingFilePill } from "../../components/UserFilePill";
@@ -165,7 +166,11 @@ export function NodeLinkPane({ slot }: { slot: SlotId }) {
     const paintHover = () => {
       const { ctx } = sizeCanvas(hoverRef.current!);
       const s = current();
-      if (s) drawHover(ctx, s.graph, view.pos, radius, readInk(stack), hoverStore.get().item);
+      if (!s) return;
+      const ink = readInk(stack);
+      const { nodes, edges } = soundingStore.get();
+      drawSounding(ctx, s.graph, view.pos, radius, ink, nodes, edges);
+      drawHover(ctx, s.graph, view.pos, radius, ink, hoverStore.get().item);
     };
 
     const full = () => {
@@ -223,6 +228,7 @@ export function NodeLinkPane({ slot }: { slot: SlotId }) {
       selectionStore.subscribe(() => frame.schedule(paintScene)),
       sweepRunStore.subscribe(() => frame.schedule(paintScene)),
       hoverStore.subscribe(() => frame.schedule(paintHover)),
+      soundingStore.subscribe(() => frame.schedule(paintHover)),
     ];
     const hit = withEdgePicks(
       pointHitTester(

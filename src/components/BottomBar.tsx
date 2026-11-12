@@ -32,9 +32,10 @@ import {
 } from "../state/sweepRun";
 import { labelSortIn, labelsMissing, labelsPaneStore, setLabelSort } from "../state/labelsPane";
 import { fitView } from "../state/fitRequests";
-import { viewIn, paneViewsStore, ZOOM_STEP, zoomBy, zoomLabel } from "../state/paneViews";
+import { sweepSoundStore, toggleSweepSound } from "../state/sweepSound";
+import { viewIn, paneViewsStore, zoomLabel, zoomStep } from "../state/paneViews";
 import { Choice } from "./Choice";
-import { Action, FilePill, HelpToggle, HoldStepper, PlayGlyph, RUN_CELLS, Section, Slider, Stepper, StopGlyph, Switch, Transport, trayTip } from "./controls";
+import { Action, FilePill, HelpToggle, HoldStepper, PlayGlyph, RUN_CELLS, Section, Slider, SoundToggle, Stepper, StopGlyph, Switch, Transport, trayTip } from "./controls";
 import { HELP_SECTIONS, helpPaneStore, goToSection } from "../state/helpPane";
 import { TEXT } from "../controlText";
 import {
@@ -64,7 +65,6 @@ import {
   SLIDE_RAIL,
   slideFromRail,
   slideText,
-  toggleRank,
 } from "../state/hopsPane";
 import {
   shellsIn,
@@ -72,7 +72,6 @@ import {
   BIN_SPACING,
   setOrdering,
   setBinSpacing,
-  toggleGridlines,
   toggleGroup,
 } from "../state/shellsPane";
 import {
@@ -84,8 +83,8 @@ import {
   setNodeLinkLive,
 } from "../state/nodelinkPane";
 
-// The header's zoom percent again, between − and +, which step about the
-// pane's centre. A click on the percent fits all, as in the header.
+// The header's zoom percent again, between − and +, which step it 5% about
+// the pane's centre. A click on the percent fits all, as in the header.
 function ZoomSection({ slot }: { slot: SlotId }) {
   const k = useStore(paneViewsStore, (s) => viewIn(s, slot).k);
   return (
@@ -93,8 +92,8 @@ function ZoomSection({ slot }: { slot: SlotId }) {
       <Stepper
         label={TEXT.zoom.name}
         readout={zoomLabel(k)}
-        onLess={() => zoomBy(slot, 1 / ZOOM_STEP)}
-        onMore={() => zoomBy(slot, ZOOM_STEP)}
+        onLess={() => zoomStep(slot, -1)}
+        onMore={() => zoomStep(slot, 1)}
         onReadout={() => fitView(slot)}
         lessLabel={TEXT.zoom.out}
         moreLabel={TEXT.zoom.in}
@@ -104,7 +103,9 @@ function ZoomSection({ slot }: { slot: SlotId }) {
 }
 
 // Every graph pane's last two sections. Auto Sweep, on its own white tray:
-// Run, Stop or Resume (a paused sweep ends with Resume, then Stop). Sweep
+// Run, Stop or Resume (a paused sweep ends with Resume, then Stop), then the
+// round sound button, live even while idle (its click is the gesture a
+// browser wants before it plays anything). Sweep
 // controls, on a gray tray: Vertical, on by default (down the diagonal in
 // the matrix), off the band runs left to right (Labels' rows run one way, so it has none),
 // the band's area (% of the axis's extent), its speed, and the Manual pill,
@@ -124,6 +125,7 @@ function SweepSection({ slot, type, blocked = false }: { slot: SlotId; type: Pan
   // The pill draws the band's way: the sweeping pane's, else this one's.
   const sweeping = useStore(sweepRunStore, (s) => s.slot);
   const bandType = useStore(paneRowStore, (s) => s.slots.find((x) => x.slot === sweeping)?.type ?? type);
+  const sound = useStore(sweepSoundStore, (s) => s.on);
   const idle = state === "idle";
   return (
     <>
@@ -135,6 +137,7 @@ function SweepSection({ slot, type, blocked = false }: { slot: SlotId; type: Pan
           disabled={idle && blocked}
           onClick={() => (idle ? startSweep(slot) : state === "running" ? stopSweep() : resumeSweep())}
         />
+        <SoundToggle on={sound} onToggle={toggleSweepSound} label={TEXT.sweep.sound} />
       </Section>
       <Section
         label="Sweep controls"
@@ -547,11 +550,6 @@ function ShellsControls({ slot }: { slot: SlotId }) {
           value={s.spacing}
           onChange={(v) => setBinSpacing(slot, v)}
         />
-        <Switch
-          label="Gridlines"
-          on={s.gridlines}
-          onToggle={() => toggleGridlines(slot)}
-        />
       </Section>
       <ZoomSection slot={slot} />
       <SweepSection slot={slot} type="shells" />
@@ -559,9 +557,9 @@ function ShellsControls({ slot }: { slot: SlotId }) {
   );
 }
 
-// Horizontal order by shape: the measure that orders the lines sideways,
-// whether they are spaced by rank or by its value (Ranking), and how far they
-// slide (Spacing, multiples of a bin's side, on a squared rail).
+// Horizontal order by shape: the measure that orders the lines sideways, each
+// at its value, and how far they slide (Spacing, multiples of a bin's side,
+// on a squared rail).
 function HopsControls({ slot }: { slot: SlotId }) {
   const s = useStore(hopsPaneStore, (st) => hopsIn(st, slot));
   return (
@@ -580,7 +578,6 @@ function HopsControls({ slot }: { slot: SlotId }) {
           readout={slideText(s.slide)}
           onChange={(r) => setSlide(slot, slideFromRail(r))}
         />
-        <Switch label="Ranking" on={s.rank} onToggle={() => toggleRank(slot)} />
       </Section>
       <ZoomSection slot={slot} />
       <SweepSection slot={slot} type="hops" />

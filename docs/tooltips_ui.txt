@@ -30,11 +30,11 @@ EVERY PANE'S BOTTOM CONTROL STRIP
 
 ZOOM: Click + and - to zoom in and out, click % to fit.
 
-AUTO SWEEP, IDLE: Click RUN to automatically sweep a selection area across the pane, highlighting what it covers in every pane.
+AUTO SWEEP, IDLE: Click RUN to automatically sweep a selection area across the pane, highlighting what it covers in every pane. Click the round sound button to hear the sweep.
 
-AUTO SWEEP, RUNNING: Click STOP to end the AUTO SWEEP and resume manual selection.
+AUTO SWEEP, RUNNING: Click STOP to end the AUTO SWEEP and resume manual selection. Click the round sound button to hear the sweep.
 
-AUTO SWEEP, PAUSED: RESUME carries on a paused sweep.
+AUTO SWEEP, PAUSED: RESUME carries on a paused sweep. Click the round sound button to hear the sweep.
 
 SWEEP CONTROLS: Turn off VERTICAL to sweep left to right. AREA sets how much of the pane the band covers, and SPEED how fast it travels. MANUAL steps the band, by click or with the arrow keys.
 
@@ -92,9 +92,9 @@ SHELLS PANE
 
 HORIZONTAL ORDER BY: Sets the horizontal order of connected components, by SIZE or BARYCENTER. Toggle GROUP SINGLETONS to aggregate all the singleton nodes within their respective k-core shell.
 
-VERTICAL: Adjusts the aspect ratio of the visual pattern with SPACING, and GRIDLINES makes visible the connected component bins.
+VERTICAL: Adjusts the aspect ratio of the visual pattern with SPACING.
 
 
 HOPS PANE
 
-HORIZONTAL ORDER BY SHAPE: Orders the polylines by shape similarity, SPACING sets how far they move horizontally, and RANKING places them in an evenly spaced ranking, with equal values superimposed.
+HORIZONTAL ORDER BY SHAPE: Orders the polylines by shape similarity, and SPACING sets how far they move horizontally.

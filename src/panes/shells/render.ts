@@ -25,7 +25,6 @@ export interface SnakeScene {
   islands: Uint32Array[]; // each island's members, in the order the tubes run
   pills: ScenePill[];
   inPill: Uint8Array | null; // node -> drawn as part of a pill, not a dot
-  cuts: number[][] | null; // each row's bin boundaries, x at 100%; null hides them
   tube: number; // island width, outline included, px
   r: number; // node radius, px
   stepPx: number; // one onion layer on screen
@@ -128,15 +127,6 @@ export function drawBase(ctx: CanvasRenderingContext2D, s: SnakeScene, ink: Ink)
     ctx.moveTo(0, sy);
     ctx.lineTo(s.w, sy);
   }
-  s.cuts?.forEach((xs, row) => {
-    const [y0, y1] = s.heights.bands[row]!;
-    for (const x of xs) {
-      const [sx, sy0] = s.view.project(x, y0);
-      const sy1 = s.view.project(x, y1)[1];
-      ctx.moveTo(Math.round(sx) + 0.5, sy0);
-      ctx.lineTo(Math.round(sx) + 0.5, sy1);
-    }
-  });
   ctx.stroke();
   drawTubes(ctx, s, ink);
   drawMarks(ctx, s, ink);

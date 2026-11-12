@@ -5,6 +5,7 @@ import { useFadeIn } from "../../components/fadeIn";
 import { WaitingOn } from "../../components/PaneMessage";
 import type { Graph } from "../../data/graph";
 import { hoverStore } from "../../state/hover";
+import { soundingInk, soundingStore } from "../../state/sounding";
 import { selectionStore } from "../../state/selection";
 import { registerSweepAxis, shownSets, sweepRunStore } from "../../state/sweepRun";
 import { controlsStore, inkChanged } from "../../state/controls";
@@ -36,6 +37,8 @@ const PAD = 24; // px between the form and the pane edge, fitted
 // inside it, or in Nodes mode the columns it crosses. The same four canvases
 // as NodeLink, each redrawn only when its own inputs change: base, sets,
 // hover, gesture.
+const NO_NODES: ReadonlySet<number> = new Set();
+
 export function MatrixPane({ slot }: { slot: SlotId }) {
   const stackRef = useRef<HTMLDivElement>(null);
   const baseRef = useRef<HTMLCanvasElement>(null);
@@ -153,7 +156,12 @@ export function MatrixPane({ slot }: { slot: SlotId }) {
 
     const paintHover = () => {
       const { ctx } = sizeCanvas(hoverRef.current!);
-      if (scene) drawHover(ctx, scene, readInk(stack), hoverStore.get().item);
+      if (!scene) return;
+      const ink = readInk(stack);
+      // Sounding edges show as their points alone, not their ends' lines too.
+      const { nodes, edges } = soundingStore.get();
+      drawSets(ctx, scene, soundingInk(ink), edges.size ? NO_NODES : nodes, edges);
+      drawHover(ctx, scene, ink, hoverStore.get().item);
     };
 
     const paintAll = () => {
@@ -195,6 +203,7 @@ export function MatrixPane({ slot }: { slot: SlotId }) {
       selectionStore.subscribe(() => frame.schedule(paintSets)),
       sweepRunStore.subscribe(() => frame.schedule(paintSets)),
       hoverStore.subscribe(() => frame.schedule(paintHover)),
+      soundingStore.subscribe(() => frame.schedule(paintHover)),
     ];
     // Hits land on points; an edge drawn twice answers once. A Nodes-mode
     // shape takes the columns it crosses instead, in the order picked.

@@ -24,3 +24,21 @@ describe("sweepAxis", () => {
     expect(Array.from(sweepAxis(row, false, 2, true).nodes!)).toEqual([0, 1]);
   });
 });
+
+describe("sweepAxis's voice", () => {
+  // Node 0 top left, node 1 bottom right (layout y is up).
+  const xy = Float32Array.of(-1, 1, 1, -1);
+
+  it("pitches a downward sweep left to right", () => {
+    const { voice } = sweepAxis(xy, false, 2);
+    expect(voice!.type).toBe("node");
+    expect(Array.from(voice!.at)).toEqual([0, 1]);
+    expect(Array.from(voice!.pitch)).toEqual([0, 1]);
+  });
+
+  it("pitches a sideways sweep bottom to top", () => {
+    const { voice } = sweepAxis(xy, false, 2, true);
+    expect(Array.from(voice!.at)).toEqual([0, 1]);
+    expect(Array.from(voice!.pitch)).toEqual([1, 0]);
+  });
+});

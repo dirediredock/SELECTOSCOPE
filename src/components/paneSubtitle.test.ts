@@ -26,10 +26,9 @@ describe("pane subtitles", () => {
     expect(shellsSubtitle({ ordering: "packed", group: true })).toBe("Size, grouped");
   });
 
-  it("names Hops' shape order, and Ranking while it is on", () => {
-    expect(hopsSubtitle({ measure: "spread", rank: true })).toBe("Spread similarity, ranked");
-    expect(hopsSubtitle({ measure: "reach", rank: false })).toBe("Reach similarity");
-    expect(hopsSubtitle({ measure: "skew", rank: false })).toBe("Skew similarity");
+  it("names Hops' shape order", () => {
+    expect(hopsSubtitle({ measure: "reach" })).toBe("Reach similarity");
+    expect(hopsSubtitle({ measure: "skew" })).toBe("Skew similarity");
   });
 
   it("gives Data none", () => {

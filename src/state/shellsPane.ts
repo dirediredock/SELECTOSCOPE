@@ -25,14 +25,12 @@ export const K_GAP = 2;
 export interface ShellsSettings {
   ordering: Ordering;
   group: boolean; // the singleton group
-  gridlines: boolean; // the hairlines between bins
   spacing: number; // the pattern's width, % of the room between the axis gutters
 }
 
 const OPENING: ShellsSettings = {
   ordering: "packed",
   group: true,
-  gridlines: false,
   spacing: BIN_SPACING.opening,
 };
 
@@ -54,10 +52,6 @@ export function setOrdering(slot: SlotId, ordering: Ordering) {
 
 export function toggleGroup(slot: SlotId) {
   update(slot, { group: !shellsOf(slot).group });
-}
-
-export function toggleGridlines(slot: SlotId) {
-  update(slot, { gridlines: !shellsOf(slot).gridlines });
 }
 
 // A new spacing refits, so the new shape shows whole.

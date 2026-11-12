@@ -2,8 +2,9 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { datasetStore } from "../../state/dataset";
 import { useStore } from "../../state/createStore";
 import { hoverStore, hoveredNodes } from "../../state/hover";
+import { soundingStore } from "../../state/sounding";
 import { selectionStore } from "../../state/selection";
-import { registerSweepAxis, shownIn, sweepRunStore } from "../../state/sweepRun";
+import { nodeVoiced, registerSweepAxis, shownIn, sweepRunStore } from "../../state/sweepRun";
 import { labelSortIn, labelSortOf, labelsMissing, labelsPaneStore } from "../../state/labelsPane";
 import type { SlotId } from "../../state/paneRow";
 import { LIST_ROWS, VirtualList } from "../../components/VirtualList";
@@ -98,7 +99,14 @@ export function LabelsPane({ slot }: { slot: SlotId }) {
       const order = orderRef.current;
       const nodes = new Float64Array(order.length);
       order.forEach((v, i) => (nodes[v] = i / order.length));
-      return { nodes };
+      // Rows have no place across the band, so the voice's pitch is the
+      // value the sort shows: the onion layer, or the degree. Labels (A–Z)
+      // shows none, so it keeps the degree.
+      const g = datasetStore.get().graph;
+      if (!g || g.n !== nodes.length) return { nodes };
+      const sort = labelSortOf(slot);
+      const onion = sort === "onion" && sortReady(g, sort) ? sortKeys(g).onion : null;
+      return nodeVoiced(nodes, onion ?? g.degree);
     };
 
     // Hover changes at pointer rate, so it skips React: toggle the classes on
@@ -107,10 +115,13 @@ export function LabelsPane({ slot }: { slot: SlotId }) {
       scroller
         .querySelectorAll(".is-hover, .is-edge-hover")
         .forEach((r) => r.classList.remove("is-hover", "is-edge-hover"));
-      const item = hoverStore.get().item;
       const g = datasetStore.get().graph;
-      if (!item || !g) return;
+      if (!g) return;
       const mark = (id: number, cls: string) => scroller.querySelector(`[data-node="${id}"]`)?.classList.add(cls);
+      // The sweep's sounding nodes: a red dot, lighter than hover's ring.
+      soundingStore.get().nodes.forEach((v) => mark(v, "is-edge-hover"));
+      const item = hoverStore.get().item;
+      if (!item) return;
       if (item.type === "node") hoveredNodes(item).forEach((v) => mark(v, "is-hover"));
       else {
         mark(g.edgeSource[item.id]!, "is-edge-hover");
@@ -130,6 +141,7 @@ export function LabelsPane({ slot }: { slot: SlotId }) {
         if (s.bySlot[slot] !== prev.bySlot[slot]) resort(false);
       }),
       hoverStore.subscribe(paintHover),
+      soundingStore.subscribe(paintHover),
       registerSweepAxis(slot, axis),
     ];
     resort(true);

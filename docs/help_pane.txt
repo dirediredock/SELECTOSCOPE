@@ -106,7 +106,7 @@ SIZE packs components within a k-core shell horizontally from sparse to dense: b
 
 BARYCENTER places each component at the barycenter, or mean horizontal position, of its neighbors in denser shells, nearer shells counting more, so components that connect across shells line up, a layout that results from reducing edge crossings.
 
-The aspect ratio of the visual pattern can be adjusted with the SPACING slider. The vertical GRIDLINES that bin component locations for horizontal SIZE or BARYCENTER ordering can be made visible as well.
+The aspect ratio of the visual pattern can be adjusted with the SPACING slider.
 
 Sometimes a k-core shell can have many singleton nodes, which can make the visual pattern crowded. Singletons are bare node points with no enclosure, placed vertically according to their onion value. The GROUP SINGLETONS toggle collects singletons within a k-core shell, holding one enclosure per onion value that aggregates and counts all of its singletons. A group's enclosure acts as all its singletons: hovering highlights them all, a click selects them all, and once some are selected it reads selected over total.
 
@@ -126,8 +126,6 @@ SPREAD is a measure of how much of the polyline shape spreads horizontally over 
 
 SKEW is a measure of how much of the polyline shape exists before or after the mean hop. Polylines whose bulk shape occurs in early hops and trail off in a long tail move to the left, while a polyline shape that starts shallow and climbs later moves to the right. In percent, how much further the polyline's last tenth of stubs lies past its mean hop, versus its first tenth lies before the mean hop, as a share of length in hops.
 
-The RANKING toggle places polyline shapes following an evenly spaced horizontal ranking, with polylines of equal values superimposed. When off, each polyline sits at its numeric value, so gaps and outliers show.
-
 AUTO SWEEP
 
 Click RUN in the bottom control strip to automatically sweep a selection area across the extent of the focused pane. By default the scan runs from the top of the pane to the bottom. Turn off VERTICAL to sweep left to right. The AREA setting sets how much of the pane the band covers, while SPEED sets how fast the band travels. The band highlights what a drawn area would take with the current SELECTION SET mode. The animated thin strip in the pane footer reports the progress of the sweep; click to toggle wrap around behavior that restarts as it leaves the end, rather than restarting after a full sweep.
@@ -135,6 +133,8 @@ Click RUN in the bottom control strip to automatically sweep a selection area ac
 While a sweep is active, BRUSH and EXTEND SET are on hold and inactive, so the SELECTION COUNT follows the band. At any time press ↓ or → for a MANUAL step forward, or ↑ or ← to step back; or hold to keep the band moving. A step pauses the sweep; click RESUME to carry on automatically.
 
 Click STOP, or change the selection by drawing an area, clicking an item, or loading a dataset, to end the AUTO SWEEP and resume manual selection. General navigation like zooming, panning and rotating within panes does not stop an active sweep.
+
+Click the round sound button beside RUN to hear the sweep. Each mark of the swept pane plays a note as it comes into the band, pitched by its place across the band, and shows in red in every pane.
 
 USING YOUR OWN DATA
 
