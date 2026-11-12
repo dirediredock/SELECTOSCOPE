@@ -50,12 +50,20 @@ export function zoomAt(t: Transform, factor: number, x: number, y: number): Tran
   return { k, tx: x - (x - t.tx) * f, ty: y - (y - t.ty) * f };
 }
 
-// The strip's − and + steps: two steps double or halve the zoom.
-export const ZOOM_STEP = Math.SQRT2;
+// The strip's − and + step the zoom to the next multiple of 5% that way, about
+// the pane's centre: 100% to 105%, a pinched 87% to 90% or 85%.
+export const ZOOM_STEP = 0.05;
 
-// A step about the pane's centre, as the strip's − and + do.
-export function zoomBy(slot: SlotId, factor: number) {
-  setView(slot, zoomAt(viewOf(slot), factor, 0, 0));
+export function zoomStepped(k: number, dir: 1 | -1): number {
+  const at = k / ZOOM_STEP;
+  // A zoom a hair off a multiple (float error) counts as on it.
+  const next = dir > 0 ? Math.floor(at + 1e-6) + 1 : Math.ceil(at - 1e-6) - 1;
+  return Math.max(1, next) * ZOOM_STEP;
+}
+
+export function zoomStep(slot: SlotId, dir: 1 | -1) {
+  const t = viewOf(slot);
+  setView(slot, zoomAt(t, zoomStepped(t.k, dir) / t.k, 0, 0));
 }
 
 // The zoom as the header and the strip show it.

@@ -1,5 +1,6 @@
 import type { HopCensus } from "../../data/graph";
 import type { CensusMeasure } from "../../state/hopsPane";
+import { nodeVoiced } from "../../state/sweepRun";
 import type { SweepAxis } from "../../state/sweepRun";
 
 // Hops placement, in layout units with y up: one polyline per node
@@ -179,11 +180,12 @@ export function sweepAxis(
   sideways = false,
   wrap = false,
 ): SweepAxis {
-  if (sideways) return { nodes: Float64Array.from(wrap ? sweep : place) };
   const bins = eccs.length;
-  const nodes = new Float64Array(n);
-  for (let v = 0; v < n; v++) nodes[v] = (binOf[v]! + sweep[v]!) / bins;
-  return { nodes };
+  const down = new Float64Array(n);
+  for (let v = 0; v < n; v++) down[v] = (binOf[v]! + sweep[v]!) / bins;
+  // Each way is the other's pitch: along the order, or the top bin highest.
+  if (sideways) return nodeVoiced(Float64Array.from(wrap ? sweep : place), down.map((y) => 1 - y));
+  return nodeVoiced(down, place);
 }
 
 export interface CensusBin {

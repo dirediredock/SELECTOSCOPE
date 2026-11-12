@@ -32,11 +32,10 @@ export const slideText = (s: number) => `${s < 10 ? +s.toFixed(1) : Math.round(s
 
 export interface HopsSettings {
   measure: CensusMeasure; // what orders the lines sideways
-  rank: boolean; // lines spaced by their rank along the order, else by the measure's value
   slide: number; // multiples of the side
 }
 
-const OPENING: HopsSettings = { measure: "reach", rank: false, slide: SLIDE.opening };
+const OPENING: HopsSettings = { measure: "reach", slide: SLIDE.opening };
 
 type BySlot = Partial<Record<SlotId, HopsSettings>>;
 
@@ -54,10 +53,6 @@ function update(slot: SlotId, patch: Partial<HopsSettings>) {
 // move.
 export function setMeasure(slot: SlotId, measure: CensusMeasure) {
   update(slot, { measure });
-}
-
-export function toggleRank(slot: SlotId) {
-  update(slot, { rank: !hopsOf(slot).rank });
 }
 
 // The fit covers every slid line, so the view refits and the new pattern

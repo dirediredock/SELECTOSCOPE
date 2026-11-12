@@ -102,6 +102,29 @@ export function drawScene(ctx: CanvasRenderingContext2D, s: SceneInput) {
   ctx.globalAlpha = 1;
 }
 
+// The sweep's sounding marks: red, at a selected mark's weight.
+export function drawSounding(
+  ctx: CanvasRenderingContext2D,
+  g: Graph,
+  pos: Float32Array,
+  r: number,
+  ink: Ink,
+  nodes: ReadonlySet<number>,
+  edges: ReadonlySet<number>,
+) {
+  if (edges.size) {
+    ctx.strokeStyle = ink.hover;
+    ctx.lineWidth = 2;
+    strokeEdges(ctx, g, pos, [...edges]);
+  }
+  if (nodes.size) {
+    ctx.fillStyle = ink.panel;
+    fillNodes(ctx, pos, [...nodes], r + 2);
+    ctx.fillStyle = ink.hover;
+    fillNodes(ctx, pos, [...nodes], r + 1);
+  }
+}
+
 // An edge lights only its own line, never its endpoints.
 export function drawHover(
   ctx: CanvasRenderingContext2D,

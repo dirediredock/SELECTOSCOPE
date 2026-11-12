@@ -110,15 +110,32 @@ export function outline(pose: number, n: number): number[] {
 // columns in seriation order, each node at 2 row + 1, each edge lit when both
 // its ends are, as in a node pane.
 export function sweepAxis(row: Uint32Array, source: Uint32Array, target: Uint32Array, sideways = false): SweepAxis {
-  const span = 2 * row.length;
-  if (sideways) {
-    const nodes = new Float64Array(row.length);
-    for (let v = 0; v < row.length; v++) nodes[v] = (2 * row[v]! + 1) / span;
-    return { nodes };
+  const n = row.length;
+  const span = 2 * n;
+  const m = source.length;
+  // The voice, the same both ways: each node once, as its row and column come
+  // in (its diagonal cell, down the diamond), pitched by how far its edges
+  // reach from the diagonal on average, in rows. Why not the edges: by their
+  // own distance nearly all of them sound one low note, the more so the
+  // larger the graph.
+  const nodes = new Float64Array(n);
+  for (let v = 0; v < n; v++) nodes[v] = (2 * row[v]! + 1) / span;
+  const reach = new Float64Array(n);
+  const degree = new Uint32Array(n);
+  for (let e = 0; e < m; e++) {
+    const s = source[e]!, t = target[e]!;
+    const d = Math.abs(row[s]! - row[t]!);
+    reach[s]! += d;
+    reach[t]! += d;
+    degree[s]!++;
+    degree[t]!++;
   }
-  const edges = new Float64Array(source.length);
-  for (let e = 0; e < source.length; e++) edges[e] = (row[source[e]!]! + row[target[e]!]! + 1) / span;
-  return { edges };
+  const pitch = Float64Array.from(reach, (r, v) => (degree[v] ? r / degree[v]! : 0));
+  const voice = { type: "node", at: nodes, pitch } as const;
+  if (sideways) return { nodes, voice };
+  const edges = new Float64Array(m);
+  for (let e = 0; e < m; e++) edges[e] = (row[source[e]!]! + row[target[e]!]! + 1) / span;
+  return { edges, voice };
 }
 
 export interface MatrixPoints {

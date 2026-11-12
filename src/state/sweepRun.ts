@@ -3,7 +3,7 @@ import { datasetStore } from "./dataset";
 import { paneRowStore, retyped } from "./paneRow";
 import type { SlotId } from "./paneRow";
 import { selectionStore } from "./selection";
-import type { SelectionState, SelectTarget } from "./selection";
+import type { ItemType, SelectionState, SelectTarget } from "./selection";
 import { controlsStore } from "./controls";
 import { sweepSettingsStore } from "./sweepSettings";
 
@@ -64,7 +64,24 @@ export const shownSets = () => shownIn(selectionStore.get(), sweepRunStore.get()
 export interface SweepAxis {
   nodes?: ArrayLike<number>;
   edges?: ArrayLike<number>;
+  voice?: SweepVoice;
 }
+
+// What the sweep sounds (audio/sweepSonify.ts): the pane's own marks, whatever
+// the Select mode. `at` is each mark's place along the axis, as above, and
+// `pitch` its place across it, at right angles to the sweep, on any linear
+// scale: the sound spreads the lowest to the highest over its range.
+export interface SweepVoice {
+  type: ItemType;
+  at: ArrayLike<number>;
+  pitch: ArrayLike<number>;
+}
+
+// A node axis that sounds its nodes.
+export const nodeVoiced = (at: ArrayLike<number>, pitch: ArrayLike<number>): SweepAxis => ({
+  nodes: at,
+  voice: { type: "node", at, pitch },
+});
 
 // The step `by` steps on from `step`, wrapping at both ends.
 export const wrapStep = (step: number, by: number) => (((step + by) % SWEEP_STEPS) + SWEEP_STEPS) % SWEEP_STEPS;
@@ -154,10 +171,16 @@ let lastRead = 0;
 
 const stepMs = (speed: number) => PERIOD_MS / SWEEP_STEPS / (speed / 100);
 
+// The slot's axis as it is now, the way the settings run it.
+export function sweepAxisOf(slot: SlotId): SweepAxis | null {
+  const { sideways, wrap } = sweepSettingsStore.get();
+  return axes.get(slot)?.(sideways, wrap) ?? null;
+}
+
 function bandAt(slot: SlotId, step: number): { nodes: ReadonlySet<number>; edges: ReadonlySet<number> } {
   const graph = datasetStore.get().graph;
-  const { sideways, area, wrap } = sweepSettingsStore.get();
-  const axis = axes.get(slot)?.(sideways, wrap) ?? null;
+  const { area, wrap } = sweepSettingsStore.get();
+  const axis = sweepAxisOf(slot);
   if (!graph || !axis) return { nodes: EMPTY, edges: EMPTY };
   return bandSets(axis, step, area / 100, controlsStore.get().selectMode, graph.edgeSource, graph.edgeTarget, wrap);
 }

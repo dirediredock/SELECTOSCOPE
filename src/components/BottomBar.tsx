@@ -32,7 +32,7 @@ import {
 } from "../state/sweepRun";
 import { labelSortIn, labelsMissing, labelsPaneStore, setLabelSort } from "../state/labelsPane";
 import { fitView } from "../state/fitRequests";
-import { viewIn, paneViewsStore, ZOOM_STEP, zoomBy, zoomLabel } from "../state/paneViews";
+import { viewIn, paneViewsStore, zoomLabel, zoomStep } from "../state/paneViews";
 import { Choice } from "./Choice";
 import { Action, FilePill, HelpToggle, HoldStepper, PlayGlyph, RUN_CELLS, Section, Slider, Stepper, StopGlyph, Switch, Transport, trayTip } from "./controls";
 import { HELP_SECTIONS, helpPaneStore, goToSection } from "../state/helpPane";
@@ -64,7 +64,6 @@ import {
   SLIDE_RAIL,
   slideFromRail,
   slideText,
-  toggleRank,
 } from "../state/hopsPane";
 import {
   shellsIn,
@@ -72,7 +71,6 @@ import {
   BIN_SPACING,
   setOrdering,
   setBinSpacing,
-  toggleGridlines,
   toggleGroup,
 } from "../state/shellsPane";
 import {
@@ -84,8 +82,8 @@ import {
   setNodeLinkLive,
 } from "../state/nodelinkPane";
 
-// The header's zoom percent again, between − and +, which step about the
-// pane's centre. A click on the percent fits all, as in the header.
+// The header's zoom percent again, between − and +, which step it 5% about
+// the pane's centre. A click on the percent fits all, as in the header.
 function ZoomSection({ slot }: { slot: SlotId }) {
   const k = useStore(paneViewsStore, (s) => viewIn(s, slot).k);
   return (
@@ -93,8 +91,8 @@ function ZoomSection({ slot }: { slot: SlotId }) {
       <Stepper
         label={TEXT.zoom.name}
         readout={zoomLabel(k)}
-        onLess={() => zoomBy(slot, 1 / ZOOM_STEP)}
-        onMore={() => zoomBy(slot, ZOOM_STEP)}
+        onLess={() => zoomStep(slot, -1)}
+        onMore={() => zoomStep(slot, 1)}
         onReadout={() => fitView(slot)}
         lessLabel={TEXT.zoom.out}
         moreLabel={TEXT.zoom.in}
@@ -547,11 +545,6 @@ function ShellsControls({ slot }: { slot: SlotId }) {
           value={s.spacing}
           onChange={(v) => setBinSpacing(slot, v)}
         />
-        <Switch
-          label="Gridlines"
-          on={s.gridlines}
-          onToggle={() => toggleGridlines(slot)}
-        />
       </Section>
       <ZoomSection slot={slot} />
       <SweepSection slot={slot} type="shells" />
@@ -559,9 +552,9 @@ function ShellsControls({ slot }: { slot: SlotId }) {
   );
 }
 
-// Horizontal order by shape: the measure that orders the lines sideways,
-// whether they are spaced by rank or by its value (Ranking), and how far they
-// slide (Spacing, multiples of a bin's side, on a squared rail).
+// Horizontal order by shape: the measure that orders the lines sideways, each
+// at its value, and how far they slide (Spacing, multiples of a bin's side,
+// on a squared rail).
 function HopsControls({ slot }: { slot: SlotId }) {
   const s = useStore(hopsPaneStore, (st) => hopsIn(st, slot));
   return (
@@ -580,7 +573,6 @@ function HopsControls({ slot }: { slot: SlotId }) {
           readout={slideText(s.slide)}
           onChange={(r) => setSlide(slot, slideFromRail(r))}
         />
-        <Switch label="Ranking" on={s.rank} onToggle={() => toggleRank(slot)} />
       </Section>
       <ZoomSection slot={slot} />
       <SweepSection slot={slot} type="hops" />

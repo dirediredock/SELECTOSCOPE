@@ -5,8 +5,9 @@ import { useFadeIn } from "../../components/fadeIn";
 import { WaitingOn } from "../../components/PaneMessage";
 import type { Graph } from "../../data/graph";
 import { hoverStore } from "../../state/hover";
+import { soundingInk, soundingStore } from "../../state/sounding";
 import { selectionStore } from "../../state/selection";
-import { registerSweepAxis, shownSets, sweepRunStore } from "../../state/sweepRun";
+import { nodeVoiced, registerSweepAxis, shownSets, sweepRunStore } from "../../state/sweepRun";
 import { controlsStore, inkChanged } from "../../state/controls";
 import { K_GAP, shellsIn, shellsOf, shellsPaneStore, modeOf } from "../../state/shellsPane";
 import type { ShellsSettings } from "../../state/shellsPane";
@@ -189,7 +190,6 @@ export function ShellsPane({ slot }: { slot: SlotId }) {
         islands: order.islands,
         pills,
         inPill,
-        cuts: shellsOf(slot).gridlines ? p.cuts : null,
         tube,
         r,
         stepPx,
@@ -220,7 +220,11 @@ export function ShellsPane({ slot }: { slot: SlotId }) {
 
     const paintHover = () => {
       const { ctx } = sizeCanvas(hoverRef.current!);
-      if (scene) drawHover(ctx, scene, readInk(stack), hoverStore.get().item);
+      if (!scene) return;
+      const ink = readInk(stack);
+      const { nodes, edges } = soundingStore.get();
+      drawSets(ctx, scene, soundingInk(ink), nodes, edges);
+      drawHover(ctx, scene, ink, hoverStore.get().item);
     };
 
     const paintAll = () => {
@@ -251,9 +255,12 @@ export function ShellsPane({ slot }: { slot: SlotId }) {
     const axis = (sideways: boolean) => {
       const b = current();
       if (!b) return null;
-      if (!sideways) return sweepAxis(b.graph.ksnakes!.onion, b.heights);
+      // Each way is the other's pitch: left to right, or the top layer highest.
+      const down = sweepAxis(b.graph.ksnakes!.onion, b.heights).nodes!;
       const p = placement();
-      return p ? sweepAxisX(p, b.width) : null;
+      const across = p && sweepAxisX(p, b.width).nodes!;
+      if (!sideways) return across ? nodeVoiced(down, across) : { nodes: down };
+      return across ? nodeVoiced(across, Float64Array.from(down, (y) => 1 - y)) : null;
     };
 
     const ro = new ResizeObserver(() => frame.schedule(full));
@@ -285,6 +292,7 @@ export function ShellsPane({ slot }: { slot: SlotId }) {
       selectionStore.subscribe(() => frame.schedule(paintSets)),
       sweepRunStore.subscribe(() => frame.schedule(paintSets)),
       hoverStore.subscribe(() => frame.schedule(paintHover)),
+      soundingStore.subscribe(() => frame.schedule(paintHover)),
     ];
     // A pill answers for all its members: the press lands on the capsule,
     // and hover and click take the whole pill.

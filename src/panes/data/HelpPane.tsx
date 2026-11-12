@@ -29,6 +29,7 @@ const ADD_COPY = [
 import { Choice } from "../../components/Choice";
 import { SetCountView } from "../../components/TopBar";
 import { CONTRAST, controlsStore } from "../../state/controls";
+import { sweepSoundStore, toggleSweepSound } from "../../state/sweepSound";
 import {
   CENSUS_MEASURES,
   FORMS,
@@ -83,6 +84,7 @@ export function HelpPane() {
   const padEnd = useInsetEnd(ref, LIST_ROWS);
   const goto = useStore(helpPaneStore, (s) => s.goto);
   const figures = useStore(controlsStore, (s) => s.figures);
+  const sound = useStore(sweepSoundStore, (s) => s.on);
   const [scrolling, setScrolling] = useState(false);
   const idleTimer = useRef(0);
 
@@ -565,9 +567,7 @@ export function HelpPane() {
             </p>
             <p>
               The aspect ratio of the visual pattern can be adjusted with the
-              SPACING slider. The vertical GRIDLINES that bin component
-              locations for horizontal SIZE or BARYCENTER ordering can be made
-              visible as well.
+              SPACING slider.
             </p>
             <Replica>
               <Slider
@@ -576,7 +576,6 @@ export function HelpPane() {
                 value={BIN_SPACING.opening}
                 onChange={none}
               />
-              <Switch label="Gridlines" on={false} onToggle={none} />
             </Replica>
             <p>
               Sometimes a k-core shell can have many singleton nodes, which can
@@ -676,15 +675,6 @@ export function HelpPane() {
               the mean hop, as a share of length in hops.
             </p>
             <ShapeOrder measure="skew" />
-            <p>
-              The RANKING toggle places polyline shapes following an evenly
-              spaced horizontal ranking, with polylines of equal values
-              superimposed. When off, each polyline sits at its numeric value,
-              so gaps and outliers show.
-            </p>
-            <Replica>
-              <Switch label="Ranking" on={false} onToggle={none} />
-            </Replica>
           </PaneBlock>
         </Sec>
 
@@ -764,6 +754,15 @@ export function HelpPane() {
             selection. General navigation like zooming, panning and rotating
             within panes does not stop an active sweep.
           </p>
+          <p>
+            Turn on the SOUND toggle below to hear the sweep. Each mark
+            of the swept pane plays a note as it comes into the band, pitched by
+            its place across the band, and shows in red in every pane.
+          </p>
+          {/* The real toggle, not a copy: live, and shown with Figures off. */}
+          <div className="help-replica-row help-live-row">
+            <Switch label="Sound" on={sound} onToggle={toggleSweepSound} />
+          </div>
         </Sec>
 
         <Sec id="data" title="Using your own data">

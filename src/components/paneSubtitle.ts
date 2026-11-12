@@ -39,11 +39,10 @@ export const matrixSubtitle = ({ seriation, form }: MatrixSettings) =>
 export const shellsSubtitle = ({ ordering, group }: Pick<ShellsSettings, "ordering" | "group">) =>
   labelOf(ORDERINGS, ordering) + (group ? ", grouped" : "");
 
-// The shape order, as its measure's similarity, and Ranking while it is on,
-// even at Spacing 0, where the lines don't slide but the sweep still follows
-// the order.
-export const hopsSubtitle = ({ measure, rank }: Pick<HopsSettings, "measure" | "rank">) =>
-  labelOf(CENSUS_MEASURES, measure) + " similarity" + (rank ? ", ranked" : "");
+// The shape order, as its measure's similarity, even at Spacing 0, where the
+// lines don't slide but the sweep still follows the order.
+export const hopsSubtitle = ({ measure }: Pick<HopsSettings, "measure">) =>
+  labelOf(CENSUS_MEASURES, measure) + " similarity";
 
 export function paneSubtitle(type: PaneType, slot: SlotId): string | null {
   switch (type) {
