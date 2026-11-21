@@ -5,7 +5,7 @@ import { hoverStore, hoveredNodes } from "../../state/hover";
 import { soundingStore } from "../../state/sounding";
 import { selectionStore } from "../../state/selection";
 import { nodeVoiced, registerSweepAxis, shownIn, sweepRunStore } from "../../state/sweepRun";
-import { labelSortIn, labelSortOf, labelsMissing, labelsPaneStore } from "../../state/labelsPane";
+import { labelsIn, labelsMissing, labelsOf, labelsPaneStore } from "../../state/labelsPane";
 import type { SlotId } from "../../state/paneRow";
 import { LIST_ROWS, VirtualList } from "../../components/VirtualList";
 import { labelOrder, sameOrder, sortRank, sortValue } from "./order";
@@ -41,7 +41,7 @@ const sortKeys = (g: Graph): SortKeys => ({
 // endpoints dotted); the order still follows the node set, so rows stay put
 // while it runs. This pane's own sweep walks the rows top to bottom; the list
 // stays where the user put it.
-// Order: selected rows first, each group by the strip's Sort. Frozen while
+// Order: selected rows first, each group by the strip's Sort (Reverse flips it). Frozen while
 // the pointer is over the list, so nothing moves under the cursor; re-sorted
 // when it leaves, live while it is elsewhere, and at once on a new Sort,
 // which is deliberate. A re-sort that changes the order scrolls to the top.
@@ -53,7 +53,7 @@ export function LabelsPane({ slot }: { slot: SlotId }) {
     useStore(selectionStore, (s) => s),
     useStore(sweepRunStore, (s) => s),
   );
-  const sort = useStore(labelsPaneStore, (s) => labelSortIn(s, slot));
+  const sort = useStore(labelsPaneStore, (s) => labelsIn(s, slot).sort);
   const [order, setOrder] = useState(EMPTY);
   // Onion arrives with the Shells stage; until then it waits, and Degree and
   // Labels (A–Z) work at once.
@@ -85,8 +85,8 @@ export function LabelsPane({ slot }: { slot: SlotId }) {
     // No rows while the message shows, so nothing to hover, band or sweep.
     const resort = (force: boolean) => {
       const g = datasetStore.get().graph;
-      const sort = labelSortOf(slot);
-      const rank = g && !labelsMissing(g, sort) && sortReady(g, sort) && sortRank(sort, sortKeys(g));
+      const { sort, reverse } = labelsOf(slot);
+      const rank = g && !labelsMissing(g, sort) && sortReady(g, sort) && sortRank(sort, sortKeys(g), reverse);
       const next = rank ? labelOrder(rank, selectionStore.get().nodes) : EMPTY;
       if (!force && sameOrder(orderRef.current, next)) return;
       orderRef.current = next;
@@ -104,7 +104,7 @@ export function LabelsPane({ slot }: { slot: SlotId }) {
       // shows none, so it keeps the degree.
       const g = datasetStore.get().graph;
       if (!g || g.n !== nodes.length) return { nodes };
-      const sort = labelSortOf(slot);
+      const { sort } = labelsOf(slot);
       const onion = sort === "onion" && sortReady(g, sort) ? sortKeys(g).onion : null;
       return nodeVoiced(nodes, onion ?? g.degree);
     };

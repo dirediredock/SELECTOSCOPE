@@ -3,9 +3,10 @@ import { hopsSubtitle, shellsSubtitle, labelsSubtitle, matrixSubtitle, nodelinkS
 
 describe("pane subtitles", () => {
   it("names the Labels sort", () => {
-    expect(labelsSubtitle("degree")).toBe("Degree");
-    expect(labelsSubtitle("onion")).toBe("Onion");
-    expect(labelsSubtitle("alpha")).toBe("Labels (A–Z)");
+    expect(labelsSubtitle({ sort: "degree", reverse: false })).toBe("Degree");
+    expect(labelsSubtitle({ sort: "degree", reverse: true })).toBe("Degree, reversed");
+    expect(labelsSubtitle({ sort: "onion", reverse: false })).toBe("Onion");
+    expect(labelsSubtitle({ sort: "alpha", reverse: false })).toBe("Labels (A–Z)");
   });
 
   it("names the NodeLink layout, and the one Interactive started from", () => {

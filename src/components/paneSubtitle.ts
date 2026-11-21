@@ -3,8 +3,8 @@ import type { Store } from "../state/createStore";
 import type { PaneType } from "../state/panes";
 import type { SlotId } from "../state/paneRow";
 import { CENSUS_MEASURES, LABEL_SORTS, LAYOUTS, ORDERINGS, SERIATIONS } from "../controlOptions";
-import { labelSortOf, labelsPaneStore } from "../state/labelsPane";
-import type { LabelSort } from "../state/labelsPane";
+import { labelsOf, labelsPaneStore } from "../state/labelsPane";
+import type { LabelsSettings } from "../state/labelsPane";
 import { nodelinkOf, nodelinkPaneStore } from "../state/nodelinkPane";
 import type { NodeLinkSettings } from "../state/nodelinkPane";
 import { matrixOf, matrixPaneStore } from "../state/matrixPane";
@@ -26,8 +26,10 @@ import { useStore } from "../state/createStore";
 const labelOf = <T extends { id: string; label: string }>(options: readonly T[], id: string) =>
   options.find((o) => o.id === id)!.label;
 
-// The sort's name alone, so it fits Labels at its Minimum.
-export const labelsSubtitle = (sort: LabelSort) => labelOf(LABEL_SORTS, sort);
+// The sort's name, and whether it runs backwards: short, so it fits Labels at
+// its Minimum.
+export const labelsSubtitle = ({ sort, reverse }: LabelsSettings) =>
+  labelOf(LABEL_SORTS, sort) + (reverse ? ", reversed" : "");
 
 // The layout, and while Interactive is on the layout it started from.
 export const nodelinkSubtitle = ({ layout, live }: Pick<NodeLinkSettings, "layout" | "live">) =>
@@ -47,7 +49,7 @@ export const hopsSubtitle = ({ measure }: Pick<HopsSettings, "measure">) =>
 export function paneSubtitle(type: PaneType, slot: SlotId): string | null {
   switch (type) {
     case "labels":
-      return labelsSubtitle(labelSortOf(slot));
+      return labelsSubtitle(labelsOf(slot));
     case "nodelink":
       return nodelinkSubtitle(nodelinkOf(slot));
     case "matrix":
@@ -78,7 +80,7 @@ const never = () => () => {};
 function stagesOf(type: PaneType, slot: SlotId): Stage[] {
   switch (type) {
     case "labels": {
-      const sort = labelSortOf(slot);
+      const { sort } = labelsOf(slot);
       return sort === "onion" ? ["shells"] : [];
     }
     case "nodelink": {
