@@ -16,17 +16,21 @@ const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "bas
 // randomized id, so no sort leaks the source file's order. Labels (A–Z) puts
 // empty labels last, so an unlabelled dataset keeps the random order. Onion
 // puts the deepest first, then the largest degree.
-export function sortRank(sort: LabelSort, keys: SortKeys): Uint32Array {
+// Reverse flips the sort's key (onion's degree tiebreak with it); empty labels
+// stay last and node_id ties stay ascending, so only the key reads backwards.
+export function sortRank(sort: LabelSort, keys: SortKeys, reverse = false): Uint32Array {
   const { labels, degree } = keys;
   const byDegree = (a: number, b: number) => degree[b]! - degree[a]!;
   const by = (k: ArrayLike<number>) => (a: number, b: number) => k[b]! - k[a]! || byDegree(a, b);
-  const compare: Record<LabelSort, (a: number, b: number) => number> = {
-    alpha: (a, b) => Number(!labels[a]) - Number(!labels[b]) || collator.compare(labels[a]!, labels[b]!),
+  const key: Record<LabelSort, (a: number, b: number) => number> = {
+    alpha: (a, b) => collator.compare(labels[a]!, labels[b]!),
     degree: byDegree,
     onion: by(keys.onion),
   };
+  const fixed = sort === "alpha" ? (a: number, b: number) => Number(!labels[a]) - Number(!labels[b]) : () => 0;
+  const sign = reverse ? -1 : 1;
   const ids = Array.from({ length: labels.length }, (_, i) => i);
-  ids.sort((a, b) => compare[sort](a, b) || a - b);
+  ids.sort((a, b) => fixed(a, b) || sign * key[sort](a, b) || a - b);
   return Uint32Array.from(ids);
 }
 

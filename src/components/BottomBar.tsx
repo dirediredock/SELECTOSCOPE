@@ -30,7 +30,7 @@ import {
   startSweep,
   stopSweep,
 } from "../state/sweepRun";
-import { labelSortIn, labelsMissing, labelsPaneStore, setLabelSort } from "../state/labelsPane";
+import { labelsIn, labelsMissing, labelsPaneStore, setLabelSort, toggleReverse } from "../state/labelsPane";
 import { fitView } from "../state/fitRequests";
 import { viewIn, paneViewsStore, zoomLabel, zoomStep } from "../state/paneViews";
 import { Choice } from "./Choice";
@@ -448,14 +448,21 @@ export function StripHelp() {
   );
 }
 
-// The rows' order under the selected rows, which always come first.
+// The rows' order under the selected rows, which always come first, and
+// Reverse, which flips it.
 function LabelsControls({ slot }: { slot: SlotId }) {
-  const sort = useStore(labelsPaneStore, (s) => labelSortIn(s, slot));
+  const { sort, reverse } = useStore(labelsPaneStore, (s) => labelsIn(s, slot));
   const g = useStore(datasetStore, (st) => st.graph);
   return (
     <>
       <Section label="Vertical order by" tip={TEXT.labels.sortTip}>
         <Choice label="Vertical order by" options={LABEL_SORTS} value={sort} onPick={(v) => setLabelSort(slot, v)} />
+        <Switch
+          label="Reverse"
+          on={reverse}
+          onToggle={() => toggleReverse(slot)}
+          disabled={labelsMissing(g, sort)}
+        />
       </Section>
       <SweepSection slot={slot} type="labels" blocked={labelsMissing(g, sort)} />
     </>

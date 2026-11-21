@@ -46,6 +46,19 @@ describe("sortRank", () => {
   it("keeps node_id order when there are no labels", () => {
     expect(ids(sortRank("alpha", { ...keys, labels: ["", "", "", "", "", ""] }))).toEqual([0, 1, 2, 3, 4, 5]);
   });
+
+  it("reverses Z–A, empty labels still last, ties still by node_id", () => {
+    expect(ids(sortRank("alpha", keys, true))).toEqual([3, 4, 0, 2, 5, 1]);
+    expect(ids(sortRank("alpha", { ...keys, labels: ["", "", "", "", "", ""] }, true))).toEqual([0, 1, 2, 3, 4, 5]);
+  });
+
+  it("reverses degree, fewest first, ties still by node_id", () => {
+    expect(ids(sortRank("degree", keys, true))).toEqual([0, 5, 3, 1, 2, 4]);
+  });
+
+  it("reverses onion, shallowest first, then smallest degree, then node_id", () => {
+    expect(ids(sortRank("onion", keys, true))).toEqual([0, 5, 3, 1, 2, 4]);
+  });
 });
 
 describe("sameOrder", () => {

@@ -71,7 +71,7 @@ SHOW: Turn off the HELP illustrations, leaving only text.
 
 LABELS PANE
 
-VERTICAL ORDER BY: Sorts the vertical order of rows by LABELS (A–Z), DEGREE, ONION or EIGENVECTOR.
+VERTICAL ORDER BY: Sorts the vertical order of rows by LABELS (A–Z), DEGREE, ONION or EIGENVECTOR. Toggle REVERSE to flip the order.
 
 
 NODELINK PANE
